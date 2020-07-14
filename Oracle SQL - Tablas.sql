@@ -63,3 +63,37 @@ BEGIN
     :new.id := detta_usuarios_roles_seq.nextval;
 END;
 /
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_acciones
+----------------------------------------------------------------------------------------------------
+CREATE TABLE detta_acciones (
+    id NUMBER NOT NULL,
+    fecha DATE DEFAULT SYSDATE NOT NULL,
+    hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    descripcion VARCHAR2(250) NOT NULL,
+    categoria VARCHAR2(25) NOT NULL,
+    usuario_id NUMBER NOT NULL
+);
+/
+
+-- Llave primaria
+ALTER TABLE detta_acciones
+    ADD CONSTRAINT detta_acciones_pk PRIMARY KEY (id);
+
+-- Llave foránea
+ALTER TABLE detta_acciones
+    ADD CONSTRAINT detta_acciones_fk FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (id);
+
+-- Secuencia
+CREATE SEQUENCE detta_acciones_seq START WITH 1 NOCACHE ORDER;
+
+-- Disparador
+CREATE OR REPLACE TRIGGER detta_acciones_trg BEFORE
+    INSERT ON detta_acciones
+    FOR EACH ROW
+BEGIN
+	:new.id := detta_acciones_seq.nextval;
+END;
+/
