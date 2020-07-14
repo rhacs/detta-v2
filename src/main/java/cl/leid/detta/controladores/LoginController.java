@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(path = "/login")
+@RequestMapping(path = "/")
 public class LoginController {
 
     // Atributos
@@ -26,7 +26,7 @@ public class LoginController {
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
 
-    @GetMapping
+    @GetMapping(path = "/login")
     public ModelAndView mostrarFormulario(Locale locale) {
         // Obtener objeto de autenticación
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -42,6 +42,18 @@ public class LoginController {
 
         // Agregar atributos
         modeloVista.addObject("titulo", messageSource.getMessage("title.login", null, locale));
+
+        // Devolver modeloVista
+        return modeloVista;
+    }
+    
+    @GetMapping(path = "/denied")
+    public ModelAndView permisoDenegado(Locale locale) {
+        // Crear nuevo modelo-vista
+        ModelAndView modeloVista = new ModelAndView("denied");
+
+        // Agregar atributos
+        modeloVista.addObject("titulo", messageSource.getMessage("title.access_denied", null, locale));
 
         // Devolver modeloVista
         return modeloVista;
