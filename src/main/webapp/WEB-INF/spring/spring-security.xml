@@ -16,11 +16,11 @@
         <intercept-url pattern="/res/**" access="permitAll" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores -->
-        <intercept-url pattern="/profesionales/**" access="hasRole('admin')" />
+        <intercept-url pattern="/profesionales/**" access="hasAuthority('admin')" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores y profesionales -->
         <intercept-url pattern="/clientes/**"
-            access="hasAnyRole('admin', 'profesional')" />
+            access="hasAnyAuthority('admin', 'profesional')" />
 
         <!-- Interceptores: Permitir acceso a todos los registrados -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
