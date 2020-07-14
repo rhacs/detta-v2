@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Configuración de la Base de Datos -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!-- Driver -->
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+
+        <!-- URL de conexión -->
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+
+        <!-- Nombre de Usuario -->
+        <property name="username" value="detta" />
+
+        <!-- Contraseña de Acceso -->
+        <property name="password" value="VMhx0OeVPzKPkZkOiR17xjIa39ZmIf" />
+    </bean>
+
+</beans>

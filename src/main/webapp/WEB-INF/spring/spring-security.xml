@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Configuración de seguridad -->
+    <http>
+        <!-- Interceptores: Permitir acceso a todos -->
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/logout" access="permitAll" />
+        <intercept-url pattern="/res/**" access="permitAll" />
+
+        <!-- Interceptores: Permitir acceso sólo a administradores -->
+        <intercept-url pattern="/profesionales/**" access="hasRole('admin')" />
+
+        <!-- Interceptores: Permitir acceso sólo a administradores y profesionales -->
+        <intercept-url pattern="/clientes/**"
+            access="hasAnyRole('admin', 'profesional')" />
+
+        <!-- Interceptores: Permitir acceso a todos los registrados -->
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/accidentes/**" access="isAuthenticated()" />
+        <intercept-url pattern="/capacitaciones/**" access="isAuthenticated()" />
+        <intercept-url pattern="/asesorias/**" access="isAuthenticated()" />
+        <intercept-url pattern="/visitas/**" access="isAuthenticated()" />
+
+        <!-- Página de acceso denegado. Cuando el usuario no cumple los requisitos de rol -->
+        <access-denied-handler error-page="/denied" />
+
+        <!-- Formulario de Inicio de Sesión -->
+        <form-login always-use-default-target="false"
+            authentication-failure-url="/login?error" default-target-url="/" login-page="/login"
+            login-processing-url="/login" password-parameter="password" username-parameter="email" />
+
+        <!-- Cierre de sesión -->
+        <logout delete-cookies="JSESSIONID" invalidate-session="true"
+            logout-success-url="/login?logout" logout-url="/logout" />
+
+        <!-- Protección CSRF -->
+        <csrf disabled="false" />
+    </http>
+
+    <!-- Administrador de Autenticación -->
+    <authentication-manager>
+        <!-- Proveedor de autenticación -->
+        <authentication-provider>
+            <!-- Referencia al dataSource definido en root-context.xml -->
+            <jdbc-user-service data-source-ref="dataSource"
+                authorities-by-username-query="SELECT email, rol FROM detta_usuarios_roles WHERE email = ?"
+                users-by-username-query="SELECT email, password, habilitado FROM detta_usuarios WHERE email = ?" />
+
+            <!-- Proveedor de encriptación -->
+            <password-encoder hash="bcrypt" />
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
