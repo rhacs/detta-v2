@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="fragmentos/general :: cabecera"></head>
+    <body>
+        <!-- Navegación -->
+        <nav th:replace="fragmentos/general :: navegacion"></nav>
+        <!-- /Navegación -->
+
+        <!-- Contenido -->
+        <div class="container py-4">
+            <div class="row">
+                <!-- Sidebar -->
+                <div th:replace="fragmentos/general :: sidebar"></div>
+                <!-- /Sidebar -->
+
+                <div class="col-lg-9 col-md-8 col-sm-12 pt-4">
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /Contenido -->
+
+        <!-- Dependencias JavaScript -->
+        <!-- jQuery -->
+        <script th:replace="fragmentos/general :: js-jquery"></script>
+        <!-- Popper.js -->
+        <script th:replace="fragmentos/general :: js-popper"></script>
+        <!-- Bootstrap -->
+        <script th:replace="fragmentos/general :: js-bootstrap"></script>
+        <!-- FontAwesome -->
+        <script th:replace="fragmentos/general :: js-fontawesome"></script>
+
+        <script type="text/javascript" th:src="@{/res/js/panel.js}"></script>
+        <!-- /Dependencias JavaScript -->
+    </body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:fragment="cabecera">
+        <!-- Codificación de caracteres -->
+        <meta charset="UTF-8">
+
+        <!-- Configuración inicial de ancho y escala para todos los dispositivos -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Título -->
+        <title th:text="${ titulo } ? 'detta - ' + ${titulo} : 'detta'"></title>
+
+        <!-- Hojas de Estilo -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha512-rO2SXEKBSICa/AfyhEK5ZqWFCOok1rcgPYfGOqtX35OyiraBg6Xa4NnBJwXgpIRoXeWjcAmcQniMhp22htDc6g=="
+            crossorigin="anonymous" />
+
+        <link rel="stylesheet" th:href="@{/res/css/estilo.css}">
+    </head>
+    <body>
+        <!-- Navegación -->
+        <nav th:fragment="navegacion" class="navbar navbar-expand-md navbar-dark bg-info shadow">
+            <div class="container">
+                <a class="navbar-brand" th:href="@{/}">
+                    detta
+                </a>
+
+                <!-- Botón para dispositivos móviles -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Menú de Navegación">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Botón de idioma -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="idiomaDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-language" style="font-size: 1.25rem"></i>
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="idiomaDropdown">
+                            <a class="dropdown-item" href="?lang=en">English</a>
+                            <a class="dropdown-item" href="?lang=es">Español</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- /Navegación -->
+
+        <!-- Contenido -->
+        <div class="container py-4">
+            <div class="row">
+                <!-- Sidebar -->
+                <div th:fragment="sidebar" id="menu" class="col-lg-3 col-md-4 d-md-block border-right collapse">
+                    <h6 class="text-black-50 font-weight-bold mb-2 text-uppercase" th:text="#{ title.dashboard }">Dashboard</h6>
+                    <ul class="nav nav-custom nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #request.requestURI == '/detta/' ? 'active' : '' }" th:href="@{/}">
+                                <i class="fas fa-clipboard fa-fw mr-1"></i>
+                                <span th:text="#{ title.reports }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'profesionales') ? 'active' : '' }" th:href="@{/profesionales}">
+                                <i class="fas fa-user-tie fa-fw mr-1"></i>
+                                <span th:text="#{ title.professionals }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" sec:authorize="hasAnyAuthority('admin', 'profesional')">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'clientes') ? 'active' : '' }" th:href="@{/clientes}">
+                                <i class="fas fa-address-book fa-fw mr-1"></i>
+                                <span th:text="#{ title.clients }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'accidentes') ? 'active' : '' }" th:href="@{/accidentes}">
+                                <i class="fas fa-notes-medical fa-fw mr-1"></i>
+                                <span th:text="#{ title.accidents }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'capacitaciones') ? 'active' : '' }" th:href="@{/capacitaciones}">
+                                <i class="fas fa-chalkboard-teacher fa-fw mr-1"></i>
+                                <span th:text="#{ title.trainings }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'asesorias') ? 'active' : '' }" th:href="@{/asesorias}">
+                                <i class="fas fa-people-arrows fa-fw mr-1"></i>
+                                <span th:text="#{ title.consulting }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'visitas') ? 'active' : '' }" th:href="@{/visitas}">
+                                <i class="fas fa-calendar-check fa-fw mr-1"></i>
+                                <span th:text="#{ title.visits }"></span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="text-black-50 font-weight-bold mt-5 mb-2 text-uppercase" th:text="#{ title.account }"></h6>
+                    <ul class="nav nav-custom nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${ #strings.contains(#request.requestURI, 'perfil') ? 'active' : '' }" th:href="@{/perfil}">
+                                <i class="fas fa-id-card fa-fw mr-1"></i>
+                                <span th:text="#{ title.profile }"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form id="l" th:action="@{/logout}" method="post">
+                                <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }">
+                                <a id="logout" class="nav-link" th:href="@{/logout}">
+                                    <i class="fas fa-sign-out-alt fa-fw mr-1"></i>
+                                    <span th:text="#{ form.button.logout }"></span>
+                                </a>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /Sidebar -->
+            </div>
+        </div>
+        <!-- /Contenido -->
+
+        <!-- Dependencias JavaScript -->
+        <!-- jQuery -->
+        <script th:fragment="js-jquery" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+            crossorigin="anonymous"></script>
+        <!-- Popper.js -->
+        <script th:fragment="js-popper" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+            integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
+            crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
+        <script th:fragment="js-bootstrap" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha512-I5TkutApDjnWuX+smLIPZNhw+LhTd8WrQhdCKsxCFRSvhFx2km8ZfEpNIhF9nq04msHhOkE8BMOBj5QE07yhMA=="
+            crossorigin="anonymous"></script>
+        <!-- FontAwesome -->
+        <script th:fragment="js-fontawesome" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js"
+            integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog=="
+            crossorigin="anonymous"></script>
+        <!-- /Dependencias JavaScript -->
+    </body>
+</html>
