@@ -28,8 +28,8 @@
         <beans:property name="basenames">
             <beans:list>
                 <beans:value>classpath:mensajes/general</beans:value>
-                <beans:value>classpath:mensajes/formularios</beans:value>
-                <beans:value>classpath:mensajes/errores</beans:value>
+                <beans:value>classpath:mensajes/form</beans:value>
+                <beans:value>classpath:mensajes/error</beans:value>
             </beans:list>
         </beans:property>
 
