@@ -11,9 +11,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <!-- Editar el nombre (name) y la descripción (description) del Proyecto -->
-    <name>AwakeLab Maven Spring MVC</name>
-    <description>Proyecto Spring MVC con implementaciones basicas</description>
+    <name>detta</name>
+    <description>Sistema de Control de Accidentabilidad Laboral</description>
 
     <!-- Propiedades -->
     <properties>
@@ -42,8 +41,6 @@
         <!-- JUnit -->
         <org.junit.jupiter-version>5.6.2</org.junit.jupiter-version>
     </properties>
-
-
 
     <!-- Dependencias -->
     <dependencies>
