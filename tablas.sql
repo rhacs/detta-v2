@@ -2,7 +2,7 @@
 -- Tabla: detta_usuarios
 
 CREATE TABLE detta_usuarios (
-    usuario_id NUMEBER NOT NULL,
+    usuario_id NUMBER NOT NULL,
     email NVARCHAR2(150) NOT NULL,
     password NVARCHAR2(250) NOT NULL,
     enabled CHAR(1) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE detta_usuarios_roles (
     CONSTRAINT detta_usuarios_roles_pk PRIMARY KEY (rol_id),
 
     -- Llave foránea
-    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (email) REFERENCES detta_usuarios (email)
+    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (email) REFERENCES detta_usuarios (email),
 
     -- Columnas únicas
     CONSTRAINT detta_usuarios_roles_uq UNIQUE (email, role)
