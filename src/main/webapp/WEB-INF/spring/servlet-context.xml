@@ -21,6 +21,44 @@
     -->
     <resources mapping="/res/**" location="/recursos/" />
 
+    <!-- Fuente de los mensajes -->
+    <beans:bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!-- Listado de archivos que contienen los mensajes -->
+        <beans:property name="basenames">
+            <beans:list>
+                <beans:value>classpath:mensajes/general</beans:value>
+                <beans:value>classpath:mensajes/formularios</beans:value>
+                <beans:value>classpath:mensajes/errores</beans:value>
+            </beans:list>
+        </beans:property>
+
+        <!-- Codificación por defecto de los mensajes -->
+        <beans:property name="defaultEncoding" value="UTF-8" />
+    </beans:bean>
+
+    <!-- Resolvedor de Idioma -->
+    <beans:bean id="localeResolver"
+        class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <!-- Lenguaje por defecto -->
+        <beans:property name="defaultLocale" value="es" />
+
+        <!-- Nombre de la Cookie -->
+        <beans:property name="cookieName" value="dettaLang" />
+
+        <!-- Duración de la Cookie (segundos) -->
+        <beans:property name="cookieMaxAge" value="3600000" />
+    </beans:bean>
+
+    <!-- Registrar interceptores -->
+    <interceptors>
+        <!-- Interceptor de Idioma -->
+        <beans:bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <!-- Parámetro que se utilizará para cambiar el idioma -->
+            <beans:property name="paramName" value="lang" />
+        </beans:bean>
+    </interceptors>
+
     <!-- Resuelve las vistas seleccionadas por @Controllers -->
     <beans:bean id="viewResolver"
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
