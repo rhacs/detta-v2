@@ -1,7 +1,24 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
+
 *, *::before, *::after {
-    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
 }
 
-h1 {
-    color: blue;
+.nav-custom .nav-link {
+    color: #004ba0;
+}
+
+.nav-custom .nav-link:hover, .nav-custom .nav-link.active {
+    color: #fff;
+    background-color: #004ba0;
+}
+
+.nav-custom svg {
+    opacity: 0.55;
+}
+
+.bg-info {
+    background-color: #004ba0 !important;
 }
