@@ -30,16 +30,16 @@
         <intercept-url pattern="/visitas/**" access="isAuthenticated()" />
 
         <!-- Página de acceso denegado. Cuando el usuario no cumple los requisitos de rol -->
-        <access-denied-handler error-page="/denied" />
+        <access-denied-handler error-page="/youShallNotPass" />
 
         <!-- Formulario de Inicio de Sesión -->
         <form-login always-use-default-target="false"
-            authentication-failure-url="/login?error" default-target-url="/" login-page="/login"
+            authentication-failure-url="/login?error=true" default-target-url="/" login-page="/login"
             login-processing-url="/login" password-parameter="password" username-parameter="email" />
 
         <!-- Cierre de sesión -->
         <logout delete-cookies="JSESSIONID" invalidate-session="true"
-            logout-success-url="/login?logout" logout-url="/logout" />
+            logout-success-url="/login?logout=true" logout-url="/logout" />
 
         <!-- Protección CSRF -->
         <csrf disabled="false" />
