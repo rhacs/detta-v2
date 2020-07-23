@@ -6,14 +6,14 @@
 <html>
     <jsp:include page="../fragmentos/head.jsp" />
 
-    <body class="d-flex flex-column align-items-center justify-content-center bg-info py-4 min-vh-100">
+    <body class="d-flex flex-column align-items-center justify-content-center py-4 min-vh-100">
         <!-- Contenido -->
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-md-6">
                     <div class="card text-white bg-danger">
                         <div class="card-header">
-                            <spring:message code="title.access_denied" />
+                            <spring:message code="titles.access_denied" />
                         </div>
 
                         <div class="card-body">
