@@ -1,6 +1,9 @@
 package cl.leid.detta.modelos;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Accion {
 
@@ -58,21 +61,27 @@ public class Accion {
      * @see Accion#categoria
      */
     public Accion(int id, String email, String detalles, int categoria, Timestamp timestamp) {
+        this(email, detalles, categoria);
+
         this.id = id;
-        this.email = email;
-        this.detalles = detalles;
-        this.categoria = categoria;
+        this.timestamp = timestamp;
     }
 
     // Métodos
     // -----------------------------------------------------------------------------------------
 
     public String getFecha() {
-        return "";
+        // Obtener la fecha
+        LocalDate fecha = timestamp.toLocalDateTime().toLocalDate();
+
+        return fecha.toString();
     }
 
     public String getHora() {
-        return "";
+        // Obtener la hora
+        LocalTime hora = timestamp.toLocalDateTime().toLocalTime();
+
+        return hora.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     // Getters
