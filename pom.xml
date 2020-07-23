@@ -41,6 +41,9 @@
         <!-- JavaServer Pages Standard Tag Library API -->
         <javax.servlet.jstl-version>1.2</javax.servlet.jstl-version>
 
+        <!-- Json in Java -->
+        <org.json-version>20200518</org.json-version>
+
         <!-- JUnit -->
         <org.junit.jupiter-version>5.6.2</org.junit.jupiter-version>
     </properties>
@@ -117,6 +120,13 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>${javax.servlet.jstl-version}</version>
+        </dependency>
+
+        <!-- JSON in Java > https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${org.json-version}</version>
         </dependency>
 
         <!-- JUnit Jupiter API > https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
