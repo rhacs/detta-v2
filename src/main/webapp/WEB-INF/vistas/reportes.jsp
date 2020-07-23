@@ -17,48 +17,50 @@
 
                 <!-- Principal -->
                 <div class="col-lg-9 col-md-8">
-                    <sec:authorize access="hasRole('ROLE_ADMIN')">
-                        <div class="row">
-                            <div class="col-12">
-                                <h3 class="border-bottom pb-2"><spring:message code="titles.reports.statistics" /></h3>
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="border-bottom pb-2"><spring:message code="titles.reports.statistics" /></h3>
 
-                                <div class="row">
-                                    <div class="col-12 mb-4">
-                                        <div class="card">
-                                            <div class="card-header"><spring:message code="titles.reports.statistics.permonth" /></div>
-                                            <div class="card-body">
-                                                <div>
-                                                    <canvas id="aPerMonth" height="320" width="100%"></canvas>
-                                                </div>
+                            <div class="row">
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header"><spring:message code="titles.reports.statistics.permonth" /></div>
+                                        <div class="card-body">
+                                            <div>
+                                                <canvas id="aPerMonth" height="320" width="100%"></canvas>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header"><spring:message code="titles.reports.statistics.pertype" /></div>
-                                            <div class="card-body">
-                                                <div>
-                                                    <canvas id="aPerType" height="320" width="100%"></canvas>
-                                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header"><spring:message code="titles.reports.statistics.pertype" /></div>
+                                        <div class="card-body">
+                                            <div>
+                                                <canvas id="aPerType" height="320" width="100%"></canvas>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header"><spring:message code="titles.reports.statistics.perclass" /></div>
-                                            <div class="card-body">
-                                                <div>
-                                                    <canvas id="aPerClass" height="320" width="100%"></canvas>
-                                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header"><spring:message code="titles.reports.statistics.perclass" /></div>
+                                        <div class="card-body">
+                                            <div>
+                                                <canvas id="aPerClass" height="320" width="100%"></canvas>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="col-12 mt-5">
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <div class="row mt-5">
+                            <div class="col-12">
                                 <h3 class="border-bottom pb-2"><spring:message code="titles.reports.actions" /></h3>
 
                                 <table class="table table-hover table-striped">
