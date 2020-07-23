@@ -68,17 +68,24 @@
             <version>${org.springframework-version}</version>
         </dependency>
 
-        <!-- Spring Security: Web -->
+        <!-- Spring Security: Web > https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
             <version>${org.springframework.security-version}</version>
         </dependency>
 
-        <!-- Spring Security: Config -->
+        <!-- Spring Security: Config > https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
+            <version>${org.springframework.security-version}</version>
+        </dependency>
+
+        <!-- Spring Security: Taglibs > https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
             <version>${org.springframework.security-version}</version>
         </dependency>
 
