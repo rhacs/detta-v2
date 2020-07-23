@@ -55,3 +55,31 @@ BEGIN
     :new.rol_id := detta_usuarios_roles_sq.nextval;
 END;
 /
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_acciones
+
+CREATE TABLE detta_acciones (
+    accion_id NUMBER NOT NULL,
+    email NVARCHAR2(150) NOT NULL,
+    codigo NVARCHAR2(1000) NOT NULL,
+    categoria NUMBER(1) NOT NULL,
+
+    -- Llave primaria
+    CONSTRAINT detta_acciones_pk PRIMARY KEY (accion_id),
+
+    -- Llave foránea
+    CONSTRAINT detta_acciones_fk FOREIGN KEY (email) REFERENCES detta_usuarios (email)
+);
+
+-- Secuencia
+CREATE SEQUENCE detta_acciones_sq
+    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+-- Disparador
+CREATE OR REPLACE TRIGGER detta_acciones_tr
+    BEFORE INSERT ON detta_acciones FOR EACH ROW
+BEGIN
+	:new.accion_id := detta_acciones_sq.nextval;
+END;
+/
