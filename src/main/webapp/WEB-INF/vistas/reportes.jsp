@@ -26,21 +26,33 @@
                                     <div class="col-12 mb-4">
                                         <div class="card">
                                             <div class="card-header"><spring:message code="titles.reports.statistics.permonth" /></div>
-                                            <div class="card-body"></div>
+                                            <div class="card-body">
+                                                <div>
+                                                    <canvas id="aPerMonth" height="320" width="100%"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header"><spring:message code="titles.reports.statistics.pertype" /></div>
-                                            <div class="card-body"></div>
+                                            <div class="card-body">
+                                                <div>
+                                                    <canvas id="aPerType" height="320" width="100%"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header"><spring:message code="titles.reports.statistics.perclass" /></div>
-                                            <div class="card-body"></div>
+                                            <div class="card-body">
+                                                <div>
+                                                    <canvas id="aPerClass" height="320" width="100%"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -99,6 +111,24 @@
 
         <jsp:include page="./fragmentos/dependencias.jsp" />
 
+        <script type="text/javascript">
+            // Número de accidentes
+            var accidentsLabel = "<spring:message javaScriptEscape='true' code='graphs.accidents_number' />";
+
+            // Accidentes por Mes
+            var perMonthLabels = ${perMonthLabels};
+            var perMonthValues = ${perMonthValues};
+
+            // Accidentes por Tipo
+            var perTypeLabels = ${perTypeLabels};
+            var perTypeValues = ${perTypeValues};
+
+            // Accidentes por Clasificación
+            var perClassLabels = ${perClassLabels};
+            var perClassValues = ${perClassValues};
+        </script>
+
         <script type="text/javascript" src="<core:url value="/res/js/general.js" />"></script>
+        <script type="text/javascript" src="<core:url value="/res/js/reportes.js" />"></script>
     </body>
 </html>
