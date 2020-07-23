@@ -62,8 +62,9 @@ END;
 CREATE TABLE detta_acciones (
     accion_id NUMBER NOT NULL,
     email NVARCHAR2(150) NOT NULL,
-    codigo NVARCHAR2(1000) NOT NULL,
+    detalles NVARCHAR2(1000) NOT NULL,
     categoria NUMBER(1) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
     -- Llave primaria
     CONSTRAINT detta_acciones_pk PRIMARY KEY (accion_id),
@@ -80,6 +81,6 @@ CREATE SEQUENCE detta_acciones_sq
 CREATE OR REPLACE TRIGGER detta_acciones_tr
     BEFORE INSERT ON detta_acciones FOR EACH ROW
 BEGIN
-	:new.accion_id := detta_acciones_sq.nextval;
+    :new.accion_id := detta_acciones_sq.nextval;
 END;
 /
