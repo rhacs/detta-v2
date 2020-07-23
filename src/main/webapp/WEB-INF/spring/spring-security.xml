@@ -24,10 +24,6 @@
 
         <!-- Interceptores: Permitir acceso a todos los registrados -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
-        <intercept-url pattern="/accidentes/**" access="isAuthenticated()" />
-        <intercept-url pattern="/capacitaciones/**" access="isAuthenticated()" />
-        <intercept-url pattern="/asesorias/**" access="isAuthenticated()" />
-        <intercept-url pattern="/visitas/**" access="isAuthenticated()" />
 
         <!-- Página de acceso denegado. Cuando el usuario no cumple los requisitos de rol -->
         <access-denied-handler error-page="/youShallNotPass" />
