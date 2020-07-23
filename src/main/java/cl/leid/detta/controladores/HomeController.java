@@ -1,10 +1,12 @@
 package cl.leid.detta.controladores;
 
+import java.text.DateFormatSymbols;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,6 +61,38 @@ public class HomeController {
             // Agregar a la vista
             vista.addObject("acciones", acciones);
         }
+
+        // Inicializar objeto de símbolos
+        DateFormatSymbols simbolos = new DateFormatSymbols(locale);
+
+        // Obtener meses
+        String[] meses = simbolos.getMonths();
+        int[] mesesAccidentes = new int[meses.length];
+
+        // Agregar listado de meses a la vista
+        vista.addObject("perMonthLabels", new JSONArray(meses));
+        vista.addObject("perMonthValues", new JSONArray(mesesAccidentes));
+
+        // Generar arreglo de accidentes por tipo
+        String[] tipos = new String[] { messageSource.getMessage("form.label.accident_type.work", null, locale),
+                messageSource.getMessage("form.label.accident_type.journey", null, locale) };
+        int[] tiposAccidentes = new int[tipos.length];
+
+        // Agregar listado de tipos a la vista
+        vista.addObject("perTypeLabels", new JSONArray(tipos));
+        vista.addObject("perTypeValues", new JSONArray(tiposAccidentes));
+
+        // Generar arreglo para accidentes por clasificación
+        String[] clasificacion = new String[] {
+                messageSource.getMessage("form.label.accident_class.mild", null, locale),
+                messageSource.getMessage("form.label.accident_class.serious", null, locale),
+                messageSource.getMessage("form.label.accident_class.fatal", null, locale),
+                messageSource.getMessage("form.label.accident_class.other", null, locale) };
+        int[] clasificacionAccidentes = new int[clasificacion.length];
+
+        // Agregar a la vista
+        vista.addObject("perClassLabels", new JSONArray(clasificacion));
+        vista.addObject("perClassValues", new JSONArray(clasificacionAccidentes));
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.dashboard", null, locale));
