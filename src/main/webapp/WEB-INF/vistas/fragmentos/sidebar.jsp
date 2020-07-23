@@ -13,7 +13,7 @@
 
                     <ul class="nav nav-custom nav-pills flex-column">
                         <li class="nav-item">
-                            <a class="nav-link ${uri == '/detta/' ? 'active' : ''}" href="<core:url value="/" />">
+                            <a class="nav-link ${fn:contains(uri, 'reportes') ? 'active' : ''}" href="<core:url value="/" />">
                                 <i class="fas fa-clipboard fa-fw mr-1"></i>
                                 <spring:message code="titles.reports" />
                             </a>
@@ -66,7 +66,7 @@
                         </li>
                     </ul>
 
-                    <h6 class="text-black-50 font-weight-bold mb-2 text-uppercase">
+                    <h6 class="text-black-50 font-weight-bold mt-5 mb-2 text-uppercase">
                         <spring:message code="titles.account" />
                     </h6>
 
