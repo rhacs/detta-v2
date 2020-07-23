@@ -15,7 +15,7 @@ public class AccionesRepositorio {
     /** Nombre de la tabla en la base de datos */
     private final String TABLA = "detta_acciones";
 
-    private final String BASE_SELECT = "SELECT id, email, detalles, categoria, timestamp FROM " + TABLA;
+    private final String BASE_SELECT = "SELECT accion_id, email, detalles, categoria, timestamp FROM " + TABLA;
     
     // Atributos
     // -----------------------------------------------------------------------------------------
