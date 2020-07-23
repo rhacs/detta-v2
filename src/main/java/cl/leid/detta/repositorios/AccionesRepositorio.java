@@ -13,10 +13,11 @@ public class AccionesRepositorio {
     // -----------------------------------------------------------------------------------------
 
     /** Nombre de la tabla en la base de datos */
-    private final String TABLA = "detta_acciones";
+    private static final String TABLA = "detta_acciones";
 
-    private final String BASE_SELECT = "SELECT accion_id, email, detalles, categoria, timestamp FROM " + TABLA;
-    
+    /** Consulta base para los SELECT */
+    private static final String BASE_SELECT = "SELECT accion_id, email, detalles, categoria, timestamp FROM " + TABLA;
+
     // Atributos
     // -----------------------------------------------------------------------------------------
 
@@ -53,8 +54,7 @@ public class AccionesRepositorio {
         // Definir consulta
         String sql = "INSERT INTO " + TABLA + " (email, detalles, categoria) VALUES (?, ?, ?)";
 
-        return jdbcTemplate.update(sql,
-                new Object[] { accion.getEmail(), accion.getDetalles(), accion.getCategoria() }) > 0;
+        return jdbcTemplate.update(sql, accion.getEmail(), accion.getDetalles(), accion.getCategoria()) > 0;
     }
 
     /**
