@@ -63,45 +63,47 @@
                             <div class="col-12">
                                 <h3 class="border-bottom pb-2"><spring:message code="titles.reports.actions" /></h3>
 
-                                <table class="table table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="text-nowrap">#</th>
-                                            <th scope="col" class="text-nowrap"><spring:message code="form.label.date" /></th>
-                                            <th scope="col" class="text-nowrap"><spring:message code="form.label.time" /></th>
-                                            <th scope="col" class="text-nowrap"><spring:message code="form.label.user" /></th>
-                                            <th scope="col" class="text-nowrap"><spring:message code="form.label.details" /></th>
-                                        </tr>
-                                    </thead>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-nowrap">#</th>
+                                                <th scope="col" class="text-nowrap"><spring:message code="form.label.date" /></th>
+                                                <th scope="col" class="text-nowrap"><spring:message code="form.label.time" /></th>
+                                                <th scope="col" class="text-nowrap"><spring:message code="form.label.user" /></th>
+                                                <th scope="col" class="text-nowrap"><spring:message code="form.label.details" /></th>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody>
-                                        <core:choose>
-                                            <core:when test="${acciones != null && acciones.size() > 0}">
-                                                <core:forEach end="10" items="${acciones}" var="accion">
-                                                    <core:choose>
-                                                        <core:when test="${accion.getCategoria() == 1}">
-                                                            <tr class="table-danger">
-                                                        </core:when>
-                                                        <core:otherwise>
-                                                            <tr>
-                                                        </core:otherwise>
-                                                    </core:choose>
-                                                    <th scope="row" class="text-nowrap">${accion.getId()}</th>
-                                                    <td class="text-nowrap">${accion.getFecha()}</td>
-                                                    <td class="text-nowrap">${accion.getHora()}</td>
-                                                    <td class="text-nowrap">${accion.getEmail()}</td>
-                                                    <td>${accion.getDetalles()}</td>
-                                                </tr>
-                                                </core:forEach>
-                                            </core:when>
-                                            <core:otherwise>
-                                                <tr>
-                                                    <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
-                                                </tr>
-                                            </core:otherwise>
-                                        </core:choose>
-                                    </tbody>
-                                </table>
+                                        <tbody>
+                                            <core:choose>
+                                                <core:when test="${acciones != null && acciones.size() > 0}">
+                                                    <core:forEach end="10" items="${acciones}" var="accion">
+                                                        <core:choose>
+                                                            <core:when test="${accion.getCategoria() == 1}">
+                                                                <tr class="table-danger">
+                                                            </core:when>
+                                                            <core:otherwise>
+                                                                <tr>
+                                                            </core:otherwise>
+                                                        </core:choose>
+                                                        <th scope="row" class="text-nowrap">${accion.getId()}</th>
+                                                        <td class="text-nowrap">${accion.getFecha()}</td>
+                                                        <td class="text-nowrap">${accion.getHora()}</td>
+                                                        <td class="text-nowrap">${accion.getEmail()}</td>
+                                                        <td>${accion.getDetalles()}</td>
+                                                    </tr>
+                                                    </core:forEach>
+                                                </core:when>
+                                                <core:otherwise>
+                                                    <tr>
+                                                        <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
+                                                    </tr>
+                                                </core:otherwise>
+                                            </core:choose>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </sec:authorize>
