@@ -1,5 +1,6 @@
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_usuarios
+----------------------------------------------------------------------------------------------------
 
 CREATE TABLE detta_usuarios (
     usuario_id NUMBER NOT NULL,
@@ -28,6 +29,7 @@ END;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_usuarios_roles
+----------------------------------------------------------------------------------------------------
 
 CREATE TABLE detta_usuarios_roles (
     rol_id NUMBER NOT NULL,
@@ -58,6 +60,7 @@ END;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_acciones
+----------------------------------------------------------------------------------------------------
 
 CREATE TABLE detta_acciones (
     accion_id NUMBER NOT NULL,
@@ -82,5 +85,37 @@ CREATE OR REPLACE TRIGGER detta_acciones_tr
     BEFORE INSERT ON detta_acciones FOR EACH ROW
 BEGIN
     :new.accion_id := detta_acciones_sq.nextval;
+END;
+/
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_profesionales
+----------------------------------------------------------------------------------------------------
+
+CREATE TABLE detta_profesionales (
+    profesional_id NUMBER NOT NULL,
+    nombre NVARCHAR2(100) NOT NULL,
+    telefono NVARCHAR2(20) NOT NULL,
+    usuario_id NUMBER NOT NULL,
+
+    -- Llave primaria
+    CONSTRAINT detta_profesionales_pk PRIMARY KEY (profesional_id),
+
+    -- Llave foránea
+    CONSTRAINT detta_profesionales_fk FOREIGN KEY (usuario_id) REFERENCES detta_usuarios (id),
+
+    -- Columnas únicas
+    CONSTRAINT detta_profesionales_uq UNIQUE (usuario_id)
+);
+
+-- Secuencia
+CREATE SEQUENCE TRIGGER detta_profesionales_sq
+    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+-- Disparador
+CREATE OR REPLACE detta_profesionales_tr
+    BEFORE INSERT ON detta_profesionales FOR EACH ROW
+BEGIN
+	:new.profesional_id := detta_profesionales_sq.nextval;
 END;
 /
