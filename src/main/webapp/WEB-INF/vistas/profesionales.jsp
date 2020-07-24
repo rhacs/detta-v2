@@ -15,17 +15,24 @@
                 <jsp:include page="./fragmentos/sidebar.jsp" />
 
                 <!-- Principal -->
-                <div class="col-lg-9 col-md-8 border-bottom pb-2">
-                    <div class="row">
-                        <div class="col-10"><h3><spring:message code="titles.professionals.list" /></h3></div>
+                <div class="col-lg-9 col-md-8">
+                    <div class="row border-bottom pb-2">
+                        <div class="col-10">
+                            <h3><spring:message code="titles.professionals.list" /></h3>
+                        </div>
+
                         <div class="col-2 text-right">
                             <button type="button" class="btn btn-sm btn-primary" data-action="agregar" data-type="profesionales">
-                                <i class="fas fa-plus-square"></i>
+                                <i class="fas fa-plus-square fa-fw"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <core:if test="${param.noid}">
+                        <div class="alert alert-warning my-3"><spring:message code="error.noid" arguments="${param.noid}" /></div>
+                    </core:if>
+
+                    <div class="table-responsive mt-4">
                         <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
