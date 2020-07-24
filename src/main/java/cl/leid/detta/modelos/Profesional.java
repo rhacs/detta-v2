@@ -110,8 +110,7 @@ public class Profesional extends Usuario {
     @Override
     public String toString() {
         return "Profesional [id=" + getId() + ", nombre=" + nombre + ", email=" + getEmail() + ", telefono=" + telefono
-                + ", password=" + getPassword() + ", usuarioId=" + usuarioId + ", role=" + getRole() + ", enabled="
-                + isEnabled() + "]";
+                + ", usuarioId=" + usuarioId + ", role=" + getRole() + ", enabled=" + isEnabled() + "]";
     }
 
 }
