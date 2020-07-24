@@ -155,6 +155,15 @@ public class ProfesionalesController {
     // Solicitudes POST
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Procesa el formulario cuando se trata de una solicitud para agregar un nuevo
+     * registro
+     * 
+     * @param profesional objeto {@link Profesional} con la información a agregar
+     * @param locale      objeto {@link Locale} con la información regional del
+     *                    cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
     @PostMapping(path = "/agregar")
     public ModelAndView procesarFormulario(@ModelAttribute Profesional profesional, Locale locale) {
         // Crear vista
@@ -199,6 +208,15 @@ public class ProfesionalesController {
         return vista;
     }
 
+    /**
+     * Procesa el formulario cuando se trata de una actualización de información
+     * 
+     * @param idnt        identificador numérico del {@link Profesional}
+     * @param profesional objeto {@link Profesional} con la información a actualizar
+     * @param locale      objeto {@link Locale} con la información regional del
+     *                    cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
     @PostMapping(path = "/{idnt}/editar")
     public ModelAndView procesarEdicion(@PathVariable int idnt, @ModelAttribute Profesional profesional,
             Locale locale) {
