@@ -31,6 +31,7 @@ public class ClienteRowMapper implements RowMapper<Cliente> {
         cliente.setTelefono(rs.getNString("telefono"));
         cliente.setGiro(rs.getNString("giro"));
         cliente.setEmpleados(rs.getInt("empleados"));
+        cliente.setTipo(rs.getInt("tipo"));
         cliente.setPassword(rs.getNString("password"));
         cliente.setEnabled(rs.getBoolean("enabled"));
         cliente.setRole(rs.getNString("role"));

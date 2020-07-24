@@ -23,7 +23,7 @@ public class ClientesRepositorio {
 
     /** Instrucción base para las consultas SELECT */
     private static final String BASE_SELECT = "SELECT c.cliente_id, c.nombre, c.rut, u.email, c.telefono, "
-            + "c.giro, c.empleados, u.password, u.enabled, r.role, c.usuario_id, c.profesional_id FROM " + TABLA
+            + "c.giro, c.empleados, c.tipo, u.password, u.enabled, r.role, c.usuario_id, c.profesional_id FROM " + TABLA
             + " c INNER JOIN " + TABLA_USUARIOS + " u ON c.usuario_id = u.usuario_id INNER JOIN " + TABLA_ROLES
             + " r ON u.email = r.email";
 
