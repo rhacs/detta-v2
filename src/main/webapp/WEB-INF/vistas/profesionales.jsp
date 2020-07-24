@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
@@ -28,8 +28,8 @@
                         </div>
                     </div>
 
-                    <core:if test="${param.noid}">
-                        <div class="alert alert-warning my-3"><spring:message code="error.noid" arguments="${param.noid}" /></div>
+                    <core:if test="${not empty param.noid}">
+                        <div class="alert alert-warning my-3"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
                     </core:if>
 
                     <div class="table-responsive mt-4">
@@ -48,7 +48,7 @@
                                 <core:choose>
                                     <core:when test="${profesionales != null && profesionales.size() > 0}">
                                         <core:forEach items="${profesionales}" var="profesional" >
-                                            <tr role="button" data-member="profesionales" data-id="${profesional.getId()}" ${!profesional.isEnabled() ? 'class="table-secondary"' : ''}>
+                                            <tr role="button" data-member="profesionales" data-id="${profesional.getId()}" ${!profesional.isEnabled() ? 'class="table-warning"' : ''}>
                                                 <th scope="row" class="text-nowrap">${profesional.getId()}</th>
                                                 <td class="text-nowrap">${profesional.getNombre()}</td>
                                                 <td class="text-nowrap">${profesional.getEmail()}</td>
