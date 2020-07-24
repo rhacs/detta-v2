@@ -109,13 +109,51 @@ CREATE TABLE detta_profesionales (
 );
 
 -- Secuencia
-CREATE SEQUENCE TRIGGER detta_profesionales_sq
+CREATE SEQUENCE detta_profesionales_sq
     START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 -- Disparador
-CREATE OR REPLACE detta_profesionales_tr
+CREATE OR REPLACE TRIGGER detta_profesionales_tr
     BEFORE INSERT ON detta_profesionales FOR EACH ROW
 BEGIN
 	:new.profesional_id := detta_profesionales_sq.nextval;
+END;
+/
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_clientes
+----------------------------------------------------------------------------------------------------
+
+CREATE TABLE detta_clientes (
+    cliente_id NUMBER NOT NULL,
+    nombre NVARCHAR2(250) NOT NULL,
+    rut NVARCHAR2(50) NOT NULL,
+    telefono NVARCHAR2(20) NOT NULL,
+    giro NVARCHAR2(100) NOT NULL,
+    empleados NUMBER NOT NULL,
+    tipo NUMBER(1,0) NOT NULL,
+    usuario_id NUMBER NOT NULL,
+    profesional_id NUMBER DEFAULT NULL NULL,
+
+    -- Llave primaria
+    CONSTRAINT detta_clientes_pk PRIMARY KEY (cliente_id),
+
+    -- Llaves foráneas
+    CONSTRAINT detta_clientes_fku FOREIGN KEY (usuario_id) REFERENCES detta_usuarios (usuario_id),
+    CONSTRAINT detta_clientes_fkp FOREIGN KEY (profesional_id) REFERENCES detta_profesionales (profesional_id),
+
+    -- Columnas únicas
+    CONSTRAINT detta_clientes_uq UNIQUE (usuario_id, rut)
+);
+
+-- Secuencia
+CREATE SEQUENCE detta_clientes_sq
+    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+-- Disparador
+CREATE OR REPLACE TRIGGER detta_clientes_tr
+    BEFORE INSERT ON detta_clientes FOR EACH ROW
+BEGIN
+    :new.cliente_id := detta_clientes_sq.nextval;
 END;
 /
