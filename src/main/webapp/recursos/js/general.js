@@ -33,6 +33,9 @@ $(function() {
 
             // Redireccionar
             $(location).attr('href', '/detta/' + tipo + '/agregar');
+        } else if(accion === 'cancelar') {
+            // Volver atrás
+            history.back(1);
         }
     });
 });
