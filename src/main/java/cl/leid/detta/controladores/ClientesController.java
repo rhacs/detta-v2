@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -79,6 +80,58 @@ public class ClientesController {
 
         // Agregar listado a la vista
         vista.addObject("clientes", clientes);
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
+    /**
+     * Muestra el detalle de un {@link Profesional}
+     * 
+     * @param id      identificador numérico del {@link Profesional}
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le envía el cliente al {@link HttpServlet}
+     * @param auth    objeto {@link Authentication} con la información del usuario
+     *                autenticado
+     * @param locale  objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @GetMapping(path = "/{id}")
+    public ModelAndView mostrarDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth,
+            Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("clientes/detalles");
+
+        // Inicializar repositorios
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+
+        // Buscar información del cliente
+        Cliente cliente = clientesRepositorio.buscarPorId(id);
+
+        // Verificar si no existe
+        if (cliente == null) {
+            // Redireccionar
+            return new ModelAndView("redirect:/clientes", "noid", id);
+        }
+
+        // Agregar cliente a la vista
+        vista.addObject("cliente", cliente);
+
+        // Verificar autoridad
+        if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_CLIENT")) {
+            // Buscar información del profesional
+            Profesional profesional = profesionalesRepositorio.buscarPorId(cliente.getProfesionalId());
+
+            // Verificar si existe
+            if (profesional != null) {
+                // Agregar a la vista
+                vista.addObject("profesional", profesional);
+            }
+        }
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
