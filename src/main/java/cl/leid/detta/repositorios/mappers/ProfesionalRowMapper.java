@@ -24,7 +24,7 @@ public class ProfesionalRowMapper implements RowMapper<Profesional> {
         Profesional profesional = new Profesional();
 
         // Poblar objeto
-        profesional.setId(rs.getInt("id"));
+        profesional.setId(rs.getInt("profesional_id"));
         profesional.setNombre(rs.getNString("nombre"));
         profesional.setEmail(rs.getNString("email"));
         profesional.setTelefono(rs.getNString("telefono"));

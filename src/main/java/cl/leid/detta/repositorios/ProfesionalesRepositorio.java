@@ -22,9 +22,9 @@ public class ProfesionalesRepositorio {
     private static final String TABLA_ROLES = "detta_usuarios_roles";
 
     /** Consulta base para los SELECT */
-    private static final String BASE_SELECT = "SELECT p.id, p.nombre, u.email, p.telefono, u.password, r.role, u.enabled"
-            + ", p.usuario_id FROM " + TABLA + " p INNER JOIN " + TABLA_USUARIOS + " u ON p.usuario_id = u.id INNER "
-            + "JOIN " + TABLA_ROLES + " r ON u.email = r.email";
+    private static final String BASE_SELECT = "SELECT p.profesional_id, p.nombre, u.email, p.telefono, u.password, "
+            + "r.role, u.enabled, p.usuario_id FROM " + TABLA + " p INNER JOIN " + TABLA_USUARIOS
+            + " u ON p.usuario_id = u.usuario_id INNER " + "JOIN " + TABLA_ROLES + " r ON u.email = r.email";
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -60,8 +60,8 @@ public class ProfesionalesRepositorio {
      */
     public boolean agregarRegistro(Profesional profesional) {
         // Definir consulta
-        String sql = "DECLARE\n\ttmp_id NUMBER;\n\ttmp_email NVARCHAR2(150);\nBEGIN\n"
-                + "\tINSERT INTO " + TABLA_USUARIOS + " (email, password, enabled) VALUES (?, ?, ?) RETURNING id, email INTO tmp_id, tmp_email;\n"
+        String sql = "DECLARE\n\ttmp_id NUMBER;\n\ttmp_email NVARCHAR2(150);\nBEGIN\n\tINSERT INTO " + TABLA_USUARIOS
+                + " (email, password, enabled) VALUES (?, ?, ?) RETURNING usuario_id, email INTO tmp_id, tmp_email;\n"
                 + "\tINSERT INTO " + TABLA_ROLES + " (email, role) VALUES (tmp_email, 'ROLE_STAFF');\n"
                 + "\tINSERT INTO " + TABLA + " (nombre, telefono, usuario_id) VALUES (?, ?, tmp_id);\n"
                 + "\tCOMMIT;\nEND;";
@@ -92,7 +92,7 @@ public class ProfesionalesRepositorio {
      */
     public Profesional buscarPorId(int id) {
         // Definir consulta
-        String sql = BASE_SELECT + " WHERE p.id = ?";
+        String sql = BASE_SELECT + " WHERE p.profesional_id = ?";
 
         // Buscar registros
         List<Profesional> profesionales = jdbcTemplate.query(sql, new Object[] { id }, new ProfesionalRowMapper());
@@ -126,8 +126,9 @@ public class ProfesionalesRepositorio {
      */
     public boolean actualizarRegistro(Profesional profesional) {
         // Definir consulta
-        String sql = "BEGIN\n\tUPDATE " + TABLA + " SET nombre = ?, telefono = ? WHERE id = ?;\n"
-                + "\tUPDATE " + TABLA_USUARIOS + " SET password = ?, enabled = ? WHERE id = ?;\n\tCOMMIT;\nEND;";
+        String sql = "BEGIN\n\tUPDATE " + TABLA + " SET nombre = ?, telefono = ? WHERE profesional_id = ?;\n"
+                + "\tUPDATE " + TABLA_USUARIOS + " SET password = ?, enabled = ? WHERE usuario_id = ?;"
+                + "\n\tCOMMIT;\nEND;";
 
         // Ejecutar consulta y devolver resultado
         return jdbcTemplate.update(sql, profesional.getNombre(), profesional.getTelefono(), profesional.getId(),
@@ -143,9 +144,8 @@ public class ProfesionalesRepositorio {
      */
     public boolean eliminarRegistro(Profesional profesional) {
         // Definir consulta
-        String sql = "BEGIN\n\tDELETE FROM " + TABLA + " WHERE id = ?;\n"
-                + "\tDELETE FROM " + TABLA_ROLES + " WHERE email = ?;\n"
-                + "\tDELETE FROM " + TABLA_USUARIOS + " WHERE id = ?;\n\tCOMMIT;\nEND;";
+        String sql = "BEGIN\n\tDELETE FROM " + TABLA + " WHERE profesional_id = ?;\n" + "\tDELETE FROM " + TABLA_ROLES
+                + " WHERE email = ?;\n" + "\tDELETE FROM " + TABLA_USUARIOS + " WHERE usuario_id = ?;\n\tCOMMIT;\nEND;";
 
         // Ejecutar consulta y devolver resultado
         return jdbcTemplate.update(sql, profesional.getId(), profesional.getEmail(), profesional.getUsuarioId()) > 0;
