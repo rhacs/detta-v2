@@ -21,7 +21,7 @@ public class Cliente extends Usuario {
     private int empleados;
 
     /**
-     * Tipo de empresa (1:Principal, 2:Contratista, 3:Subcontratista, 4:De Servicios
+     * Tipo de empresa (1:Principal, 2:Contratista, 3:Subcontratista, 4:Servicios
      * Transitorios)
      */
     private int tipo;
