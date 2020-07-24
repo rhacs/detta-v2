@@ -17,3 +17,12 @@ INSERT INTO detta_usuarios_roles (email, role) VALUES ('profesional.uno@detta.cl
 INSERT INTO detta_usuarios_roles (email, role) VALUES ('profesional.dos@detta.cl', 'ROLE_STAFF');
 INSERT INTO detta_usuarios_roles (email, role) VALUES ('profesional.tres@detta.cl', 'ROLE_STAFF');
 INSERT INTO detta_usuarios_roles (email, role) VALUES ('profesional.cuatro@detta.cl', 'ROLE_STAFF');
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_profesionales
+----------------------------------------------------------------------------------------------------
+
+INSERT INTO detta_profesionales (nombre, telefono, usuario_id) VALUES ('Profesional Uno', '123456789', 2);
+INSERT INTO detta_profesionales (nombre, telefono, usuario_id) VALUES ('Profesional Dos', '234567891', 3);
+INSERT INTO detta_profesionales (nombre, telefono, usuario_id) VALUES ('Profesional Tres', '345678912', 4);
+INSERT INTO detta_profesionales (nombre, telefono, usuario_id) VALUES ('Profesional Cuatro', '456789123', 5);
