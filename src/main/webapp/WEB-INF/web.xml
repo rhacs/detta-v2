@@ -60,7 +60,7 @@
         <!-- Establecer la codificación -->
         <init-param>
             <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
+            <param-value>ISO-8859-1</param-value>
         </init-param>
 
         <!-- Forzar la codificación -->
