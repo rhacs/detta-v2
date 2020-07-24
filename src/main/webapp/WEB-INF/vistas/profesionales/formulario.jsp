@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -24,9 +24,15 @@
                         </core:choose>
                     </h3>
 
+                    <core:if test="${not empty error}">
+                        <div class="alert alert-danger my-3">${error}</div>
+                    </core:if>
+
                     <div class="card mt-4">
                         <div class="card-body">
                             <form:form method="post" modelAttribute="profesional">
+                                <form:hidden path="id" />
+
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
                                     <form:input path="nombre" type="text" class="form-control" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
@@ -34,7 +40,14 @@
 
                                 <div class="form-group">
                                     <form:label path="email"><spring:message code="form.label.email" /></form:label>
-                                    <form:input path="email" type="email" class="form-control" cssErrorClass="invalid" autocomplete="email" required="required" />
+                                    <core:choose>
+                                        <core:when test="${accion eq 'editar'}">
+                                            <form:input path="email" type="email" class="form-control" autocomplete="email" required="required" readonly="true" />
+                                        </core:when>
+                                        <core:otherwise>
+                                            <form:input path="email" type="email" class="form-control" cssErrorClass="invalid" autocomplete="email" required="required" />
+                                        </core:otherwise>
+                                    </core:choose>
                                 </div>
 
                                 <div class="form-group">
@@ -45,8 +58,8 @@
                                 <div class="form-group">
                                     <form:label path="enabled"><spring:message code="form.label.enabled" /></form:label>
                                     <form:select path="enabled" class="form-control" cssErrorClass="invalid">
-                                        <form:option value="1"><spring:message code="form.label.yes" /></form:option>
-                                        <form:option value="0"><spring:message code="form.label.no" /></form:option>
+                                        <form:option value="true"><spring:message code="form.label.yes" /></form:option>
+                                        <form:option value="false"><spring:message code="form.label.no" /></form:option>
                                     </form:select>
                                 </div>
 
