@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -68,6 +68,48 @@
                                         </core:choose>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="border-bottom pb-2 mt-5"><spring:message code="titles.clients.list" /></h3>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-nowrap">#</th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.rut" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.client_name" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.phone" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.enabled" /></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <core:choose>
+                                    <core:when test="${clientes != null && clientes.size() > 0}">
+                                        <core:forEach items="${clientes}" var="cliente">
+                                            <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.isEnabled() ? 'class="table-warning"' : '' }>
+                                                <th scope="row" class="text-nowrap">${cliente.getId()}</th>
+                                                <td class="text-nowrap">${cliente.getRut()}</td>
+                                                <td>${cliente.getNombre()}</td>
+                                                <td class="text-nowrap">${cliente.getTelefono()}</td>
+                                                <td>
+                                                    <core:choose>
+                                                        <core:when test="${cliente.isEnabled()}"><spring:message code="form.label.yes" /></core:when>
+                                                        <core:otherwise><spring:message code="form.label.no" /></core:otherwise>
+                                                    </core:choose>
+                                                </td>
+                                            </tr>
+                                        </core:forEach>
+                                    </core:when>
+                                    <core:otherwise>
+                                        <tr>
+                                            <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
+                                        </tr>
+                                    </core:otherwise>
+                                </core:choose>
                             </tbody>
                         </table>
                     </div>
