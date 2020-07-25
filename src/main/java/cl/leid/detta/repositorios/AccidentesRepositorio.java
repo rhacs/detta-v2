@@ -95,4 +95,17 @@ public class AccidentesRepositorio {
         return jdbcTemplate.query(sql, new AccidenteRowMapper());
     }
 
+    /**
+     * Busca todos los registros del repositorio relacionados con un {@link Cliente}
+     * 
+     * @param clienteId identificador numérico del {@link Cliente}
+     * @return un objeto {@link List} con el resultado
+     */
+    public List<Accidente> buscarPorClienteId(int clienteId) {
+        // Definir consulta
+        String sql = BASE_SELECT + " WHERE cliente_id = ? ORDER BY fecha DESC, hora DESC";
+
+        return jdbcTemplate.query(sql, new Object[] { clienteId }, new AccidenteRowMapper());
+    }
+
 }
