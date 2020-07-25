@@ -16,14 +16,14 @@ CREATE TABLE detta_usuarios (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_usuarios_seq
+CREATE SEQUENCE detta_usuarios_sq
     START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 -- Disparador
-CREATE OR REPLACE TRIGGER detta_usuarios_trg
+CREATE OR REPLACE TRIGGER detta_usuarios_tr
     BEFORE INSERT ON detta_usuarios FOR EACH ROW
 BEGIN
-    :new.usuario_id := detta_usuarios_seq.nextval;
+    :new.usuario_id := detta_usuarios_sq.nextval;
 END;
 /
 
@@ -105,7 +105,7 @@ CREATE TABLE detta_profesionales (
 
     -- Llave foránea
     CONSTRAINT detta_profesionales_fk FOREIGN KEY (usuario_id)
-        REFERENCES detta_usuarios (id) ON DELETE CASCADE,
+        REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
 
     -- Columnas únicas
     CONSTRAINT detta_profesionales_uq UNIQUE (usuario_id)
@@ -186,7 +186,7 @@ CREATE TABLE detta_accidentes (
 
     -- Llaves foráneas
     CONSTRAINT detta_accidentes_fk FOREIGN KEY (cliente_id)
-        REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE,
+        REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE
 );
 
 -- Secuencia
