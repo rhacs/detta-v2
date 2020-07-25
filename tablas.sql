@@ -179,7 +179,6 @@ CREATE TABLE detta_accidentes (
     tipo NUMBER(1) NOT NULL,
     evidencia NUMBER(1) NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     cliente_id NUMBER NOT NULL,
 
     -- Llave primaria
