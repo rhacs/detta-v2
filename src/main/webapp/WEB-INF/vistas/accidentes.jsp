@@ -29,6 +29,14 @@
                         </div>
                     </div>
 
+                    <core:if test="${not empty param.noid}">
+                        <div class="alert alert-warning mt-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                    </core:if>
+
+                    <core:if test="${not empty param.perm}">
+                        <div class="alert alert-danger mt-4"><spring:message code="form.error.noperm" /></div>
+                    </core:if>
+
                     <div class="table-responsive mt-4">
                         <table class="table table-hover">
                             <thead>
