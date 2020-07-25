@@ -75,7 +75,7 @@ CREATE TABLE detta_acciones (
 
     -- Llave foránea
     CONSTRAINT detta_acciones_fk FOREIGN KEY (email)
-        REFERENCES detta_usuarios (email)
+        REFERENCES detta_usuarios (email) ON DELETE CASCADE
 );
 
 -- Secuencia
@@ -160,5 +160,44 @@ CREATE OR REPLACE TRIGGER detta_clientes_tr
     BEFORE INSERT ON detta_clientes FOR EACH ROW
 BEGIN
     :new.cliente_id := detta_clientes_sq.nextval;
+END;
+/
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_accidentes
+----------------------------------------------------------------------------------------------------
+
+CREATE TABLE detta_accidentes (
+    accidente_id NUMBER NOT NULL,
+    fecha DATE NOT NULL,
+    hora NVARCHAR2(5) NOT NULL,
+    direccion NVARCHAR2(250) NOT NULL,
+    lugar NVARCHAR2(250) NOT NULL,
+    circunstancia NVARCHAR2(250) NOT NULL,
+    detalles NVARCHAR2(2000) NOT NULL,
+    clasificacion NUMBER(1) NOT NULL,
+    tipo NUMBER(1) NOT NULL,
+    evidencia NUMBER(1) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    cliente_id NUMBER NOT NULL,
+
+    -- Llave primaria
+    CONSTRAINT detta_accidentes_pk PRIMARY KEY (accidente_id),
+
+    -- Llaves foráneas
+    CONSTRAINT detta_accidentes_fk FOREIGN KEY (cliente_id)
+        REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE,
+);
+
+-- Secuencia
+CREATE SEQUENCE detta_accidentes_sq
+    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+-- Dispara usted o disparo yo
+CREATE OR REPLACE TRIGGER detta_accidentes_tr
+    BEFORE INSERT ON detta_accidentes FOR EACH ROW
+BEGIN
+    :new.accidente_id := detta_accidentes_sq.nextval;
 END;
 /
