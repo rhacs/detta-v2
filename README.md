@@ -19,3 +19,18 @@ Las dependencias **JavaScript** son manejadas a través de la Red de Distribuci�
 ### CSS
  - [Twitter Bootstrap v4.5.0](https://getbootstrap.com)
  - [flag-icon-css v3.5.0](https://github.com/lipis/flag-icon-css)
+
+## Capturas de Pantalla
+
+### Inicio de Sesión
+
+![Login](screenshots/login.png "Página de inicio de sesión")
+
+El botón ubicado en la esquina superior derecha del contenedor blanco, permite seleccionar el idioma de la aplicación. De momento sólo están las versiones en **Español** e **Inglés**
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png "Dashboard")
+
+El menú de la izquierda y el contenido de los gráficos cambia según el rol (autoridad) del usuario que inició sesión. La captura de pantalla muestra el contenido para un **Administrador**
+
