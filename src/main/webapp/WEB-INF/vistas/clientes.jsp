@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -21,11 +22,13 @@
                             <h3><spring:message code="titles.clients.list" /></h3>
                         </div>
 
+                        <sec:authorize access="hasAuthority('ROLE_ADMIN')">
                         <div class="col-2 text-right">
                             <button type="button" class="btn btn-sm btn-primary" data-action="agregar" data-type="clientes">
                                 <i class="fas fa-plus-square fa-fw"></i>
                             </button>
                         </div>
+                        </sec:authorize>
                     </div>
 
                     <core:if test="${not empty param.noid}">
