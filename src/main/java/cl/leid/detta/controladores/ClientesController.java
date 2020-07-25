@@ -354,6 +354,9 @@ public class ClientesController {
             return new ModelAndView("redirect:/clientes", "noid", id);
         }
 
+        // Agregar cliente a la vista
+        vista.addObject("cliente", cliente);
+
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
 
