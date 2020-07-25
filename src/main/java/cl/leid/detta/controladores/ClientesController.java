@@ -2,6 +2,7 @@ package cl.leid.detta.controladores;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -132,6 +133,53 @@ public class ClientesController {
                 vista.addObject("profesional", profesional);
             }
         }
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
+    /**
+     * Muestra el formulario para agregar/editar un {@link Cliente}
+     * 
+     * @param id     identificador numérico del {@link Cliente}
+     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @GetMapping(path = { "/{id}/editar", "/agregar" })
+    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("clientes/formulario");
+
+        // Inicializar acción
+        String accion = null;
+
+        // Inicializar cliente
+        Cliente cliente = new Cliente();
+
+        // Verificar si el id está presente
+        if (id.isPresent()) {
+            // Buscar cliente
+            cliente = new ClientesRepositorio(jdbcTemplate).buscarPorId(id.get());
+
+            // Verificar si no existe
+            if (cliente == null) {
+                // Redireccionar
+                return new ModelAndView("redirect:/clientes", "noid", id.get());
+            }
+
+            accion = "editar";
+        } else {
+            accion = "agregar";
+        }
+
+        // Agregar cliente a la vista
+        vista.addObject("cliente", cliente);
+
+        // Agregar acción
+        vista.addObject("accion", accion);
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
