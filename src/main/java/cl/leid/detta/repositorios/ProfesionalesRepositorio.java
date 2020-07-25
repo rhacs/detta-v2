@@ -144,11 +144,10 @@ public class ProfesionalesRepositorio {
      */
     public boolean eliminarRegistro(Profesional profesional) {
         // Definir consulta
-        String sql = "BEGIN\n\tDELETE FROM " + TABLA + " WHERE profesional_id = ?;\n" + "\tDELETE FROM " + TABLA_ROLES
-                + " WHERE email = ?;\n" + "\tDELETE FROM " + TABLA_USUARIOS + " WHERE usuario_id = ?;\n\tCOMMIT;\nEND;";
+        String sql = "DELETE FROM " + TABLA_USUARIOS + " WHERE email = ?";
 
         // Ejecutar consulta y devolver resultado
-        return jdbcTemplate.update(sql, profesional.getId(), profesional.getEmail(), profesional.getUsuarioId()) > 0;
+        return jdbcTemplate.update(sql, profesional.getEmail()) > 0;
     }
 
 }
