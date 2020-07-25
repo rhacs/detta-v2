@@ -2,10 +2,12 @@ package cl.leid.detta.repositorios;
 
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cl.leid.detta.modelos.Accidente;
+import cl.leid.detta.repositorios.mappers.AccidenteRowMapper;
 
 public class AccidentesRepositorio {
 
@@ -62,6 +64,23 @@ public class AccidentesRepositorio {
                 accidente.getLugar(), accidente.getCircunstancia(), accidente.getDetalles(),
                 accidente.getClasificacion(), accidente.getTipo(), accidente.getEvidencia(),
                 accidente.getClienteId()) > 0;
+    }
+
+    /**
+     * Busca un registro en el repositorio
+     * 
+     * @param id identificador numérico del {@link Accidente}
+     * @return un objeto {@link Accidente} con el resultado, {@code null} en
+     *         cualquier otro caso
+     */
+    public Accidente buscarPorId(int id) {
+        // Definir consulta
+        String sql = BASE_SELECT + " WHERE accidente_id = ?";
+
+        // Ejecutar consulta
+        List<Accidente> accidentes = jdbcTemplate.query(sql, new Object[] { id }, new AccidenteRowMapper());
+
+        return accidentes.isEmpty() ? null : accidentes.get(0);
     }
 
 }
