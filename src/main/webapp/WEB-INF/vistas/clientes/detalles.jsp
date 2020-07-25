@@ -43,6 +43,10 @@
                         </sec:authorize>
                     </div>
 
+                    <core:if test="${not empty error}">
+                        <div class="alert alert-warning mt-4">${error}</div>
+                    </core:if>
+
                     <div class="table-responsive mt-4">
                         <table class="table table-striped">
                             <tbody>
