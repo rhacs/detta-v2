@@ -53,6 +53,15 @@ public class Accidente {
      */
     private int clienteId;
 
+    /** Nombre del {@link Cliente} relacionado con el {@link Accidente} */
+    private String clienteNombre;
+
+    /**
+     * Identificador numérico del {@link Profesional} relacionado con el
+     * {@link Cliente}
+     */
+    private Integer profesionalId;
+
     //
     // -----------------------------------------------------------------------------------------
 
@@ -153,6 +162,20 @@ public class Accidente {
         return clienteId;
     }
 
+    /**
+     * @return el nombre del {@link Cliente}
+     */
+    public String getClienteNombre() {
+        return clienteNombre;
+    }
+
+    /**
+     * @return el identificador numérico del {@link Profesional}
+     */
+    public Integer getProfesionalId() {
+        return profesionalId;
+    }
+
     // Setters
     // -----------------------------------------------------------------------------------------
 
@@ -243,6 +266,21 @@ public class Accidente {
         this.clienteId = clienteId;
     }
 
+    /**
+     * @param clienteNombre el nombre del {@link Cliente} a establecer
+     */
+    public void setClienteNombre(String clienteNombre) {
+        this.clienteNombre = clienteNombre;
+    }
+
+    /**
+     * @param profesionalId el identificador numérico del {@link Profesional} a
+     *                      establecer
+     */
+    public void setProfesionalId(Integer profesionalId) {
+        this.profesionalId = profesionalId;
+    }
+
     // Herencias (Object)
     // -----------------------------------------------------------------------------------------
 
@@ -280,7 +318,8 @@ public class Accidente {
         return "Accidente [id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", direccion=" + direccion + ", lugar="
                 + lugar + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion="
                 + clasificacion + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro
-                + ", clienteId=" + clienteId + "]";
+                + ", clienteId=" + clienteId + ", clienteNombre=" + clienteNombre + ", profesionalId=" + profesionalId
+                + "]";
     }
 
 }

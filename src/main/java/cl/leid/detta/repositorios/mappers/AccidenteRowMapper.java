@@ -38,6 +38,8 @@ public class AccidenteRowMapper implements RowMapper<Accidente> {
         accidente.setEvidencia(rs.getInt("evidencia"));
         accidente.setFechaRegistro(rs.getTimestamp("fecha_registro").toLocalDateTime());
         accidente.setClienteId(rs.getInt("cliente_id"));
+        accidente.setClienteNombre(rs.getNString("nombre"));
+        accidente.setProfesionalId(rs.getInt("profesional_id"));
 
         // Devolver objeto
         return accidente;

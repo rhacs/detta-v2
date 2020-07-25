@@ -17,9 +17,13 @@ public class AccidentesRepositorio {
     /** Nombre de la tabla en base de datos */
     private static final String TABLA = "detta_accidentes";
 
+    /** Nombre de la tabla que guarda la información de los {@link Cliente}s */
+    private static final String TABLA_CLIENTES = "detta_clientes";
+
     /** Instrucción base para las consultas SELECT */
     private static final String BASE_SELECT = "SELECT accidente_id, fecha, hora, direccion, lugar, circunstancia, "
-            + "detalles, clasificacion, tipo, evidencia, fecha_registro, cliente_id FROM " + TABLA;
+            + "detalles, clasificacion, tipo, evidencia, fecha_registro, cliente_id, c.nombre, c.profesional_id FROM "
+            + TABLA + " INNER JOIN " + TABLA_CLIENTES + " c ON " + TABLA + ".cliente_id = c.cliente_id";
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -106,6 +110,20 @@ public class AccidentesRepositorio {
         String sql = BASE_SELECT + " WHERE cliente_id = ? ORDER BY fecha DESC, hora DESC";
 
         return jdbcTemplate.query(sql, new Object[] { clienteId }, new AccidenteRowMapper());
+    }
+
+    /**
+     * Busca todos los registros del repositorio que están relacionados con un
+     * {@link Profesional}
+     * 
+     * @param profesionalId identificador numérico del {@link Profesional}
+     * @return un objeto {@link List} con el resultado
+     */
+    public List<Accidente> buscarPorProfesionalId(int profesionalId) {
+        // Definir consulta
+        String sql = BASE_SELECT + " WHERE c.profesional_id = ?";
+
+        return jdbcTemplate.query(sql, new Object[] { profesionalId }, new AccidenteRowMapper());
     }
 
     /**
