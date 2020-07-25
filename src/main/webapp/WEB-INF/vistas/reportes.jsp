@@ -63,11 +63,10 @@
                             <div class="col-12">
                                 <h3 class="border-bottom pb-2"><spring:message code="titles.reports.actions" /></h3>
 
-                                <div class="table-responsive">
+                                <div class="table-responsive mt-4">
                                     <table class="table table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th scope="col" class="text-nowrap">#</th>
                                                 <th scope="col" class="text-nowrap"><spring:message code="form.label.date" /></th>
                                                 <th scope="col" class="text-nowrap"><spring:message code="form.label.time" /></th>
                                                 <th scope="col" class="text-nowrap"><spring:message code="form.label.user" /></th>
@@ -87,7 +86,6 @@
                                                                 <tr>
                                                             </core:otherwise>
                                                         </core:choose>
-                                                        <th scope="row" class="text-nowrap">${accion.getId()}</th>
                                                         <td class="text-nowrap">${accion.getFecha()}</td>
                                                         <td class="text-nowrap">${accion.getHora()}</td>
                                                         <td class="text-nowrap">${accion.getEmail()}</td>
@@ -97,7 +95,7 @@
                                                 </core:when>
                                                 <core:otherwise>
                                                     <tr>
-                                                        <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
+                                                        <th scope="row" class="text-center" colspan="4"><spring:message code="form.error.no_info" /></th>
                                                     </tr>
                                                 </core:otherwise>
                                             </core:choose>
