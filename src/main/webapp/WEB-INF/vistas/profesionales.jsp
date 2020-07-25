@@ -32,6 +32,10 @@
                         <div class="alert alert-warning my-3"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
                     </core:if>
 
+                    <core:if test="${not empty param.remid}">
+                        <div class="alert alert-warning my-3"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
+                    </core:if>
+
                     <div class="table-responsive mt-4">
                         <table class="table table-hover table-striped">
                             <thead>
