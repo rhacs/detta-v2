@@ -108,4 +108,23 @@ public class AccidentesRepositorio {
         return jdbcTemplate.query(sql, new Object[] { clienteId }, new AccidenteRowMapper());
     }
 
+    /**
+     * Actualiza la información de un registro en el repositorio
+     * 
+     * @param accidente objeto {@link Accidente} con la información a actualizar
+     * @return {@code true} si el registro fue actualizado, {@code false} en
+     *         cualquier otro caso
+     */
+    public boolean actualizarRegistro(Accidente accidente) {
+        // Definir consulta
+        String sql = "UPDATE " + TABLA + " SET fecha = ?, hora = ?, direccion = ?, lugar = ?, circunstancia = ?, "
+                + "detalles = ?, clasificacion = ?, tipo = ? evidencia = ?, cliente_id = ? WHERE accidente_id = ?";
+
+        return jdbcTemplate.update(sql, Date.valueOf(accidente.getFecha()),
+                accidente.getHora().format(DateTimeFormatter.ofPattern("HH:mm")), accidente.getDireccion(),
+                accidente.getLugar(), accidente.getCircunstancia(), accidente.getDetalles(),
+                accidente.getClasificacion(), accidente.getTipo(), accidente.getEvidencia(), accidente.getClienteId(),
+                accidente.getId()) > 0;
+    }
+    
 }
