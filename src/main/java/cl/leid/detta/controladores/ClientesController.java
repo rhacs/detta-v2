@@ -175,6 +175,12 @@ public class ClientesController {
             accion = "agregar";
         }
 
+        // Buscar profesionales
+        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+
+        // Agregar profesionales a la vista
+        vista.addObject("profesionales", profesionales);
+        
         // Agregar cliente a la vista
         vista.addObject("cliente", cliente);
 
