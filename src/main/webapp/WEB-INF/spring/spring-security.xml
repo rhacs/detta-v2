@@ -17,6 +17,8 @@
 
         <!-- Interceptores: Permitir acceso sólo a administradores -->
         <intercept-url pattern="/profesionales/**" access="hasAuthority('ROLE_ADMIN')" />
+        <intercept-url pattern="/clientes/agregar" access="hasAuthority('ROLE_ADMIN')" />
+        <intercept-url pattern="/clientes/{spring:[0-9]+}/editar" access="hasAuthority('ROLE_ADMIN')" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores y profesionales -->
         <intercept-url pattern="/clientes/**"
