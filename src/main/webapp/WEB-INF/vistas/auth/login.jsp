@@ -62,7 +62,7 @@
                         <div class="list-group mt-5">
                             <a href="?lang=es" class="list-group-item list-group-item-action">
                                 <span class="flag-icon flag-icon-es mr-2"></span>
-                                Español
+                                Espa&ntilde;ol
                             </a>
 
                             <a href="?lang=en" class="list-group-item list-group-item-action">
