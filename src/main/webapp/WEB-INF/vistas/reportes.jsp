@@ -19,7 +19,7 @@
                 <div class="col-lg-9 col-md-8">
                     <div class="row">
                         <div class="col-12">
-                            <h3 class="border-bottom pb-2"><spring:message code="titles.reports.statistics" /></h3>
+                            <h3 class="border-bottom pb-2 mb-4"><spring:message code="titles.reports.statistics" /></h3>
 
                             <div class="row">
                                 <div class="col-12 mb-4">
