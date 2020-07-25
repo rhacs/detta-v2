@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +23,7 @@ import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
+import cl.leid.detta.repositorios.UsuariosRepositorio;
 
 @Controller
 @RequestMapping(path = "/clientes")
@@ -180,12 +184,79 @@ public class ClientesController {
 
         // Agregar profesionales a la vista
         vista.addObject("profesionales", profesionales);
-        
+
         // Agregar cliente a la vista
         vista.addObject("cliente", cliente);
 
         // Agregar acción
         vista.addObject("accion", accion);
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
+    // Solicitudes POST
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Procesa el formulario al agregar un nuevo {@link Cliente}
+     * 
+     * @param cliente objeto {@link Cliente} con la información a agregar
+     * @param locale  objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @PostMapping(path = "/agregar")
+    public ModelAndView formularioAgregar(@ModelAttribute Cliente cliente, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("clientes/formulario");
+
+        // Inicializar repositorios
+        UsuariosRepositorio usuariosRepositorio = new UsuariosRepositorio(jdbcTemplate);
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+
+        // Buscar correo electrónico en el repositorio de usuarios
+        if (usuariosRepositorio.buscarPorEmail(cliente.getEmail()) != null) {
+            // Agregar error
+            vista.addObject("error",
+                    messageSource.getMessage("form.error.used_email", new Object[] { cliente.getEmail() }, locale));
+        } else {
+            // Buscar rut en el repositorio de clientes
+            if (clientesRepositorio.buscarPorRut(cliente.getRut()) != null) {
+                // Agregar error
+                vista.addObject("error",
+                        messageSource.getMessage("form.error.used_rut", new Object[] { cliente.getRut() }, locale));
+            } else {
+                // Agregar contraseña
+                cliente.setPassword(new BCryptPasswordEncoder().encode(cliente.getEmail()));
+
+                // Agregar al repositorio
+                if (clientesRepositorio.agregarRegistro(cliente)) {
+                    // Buscar cliente
+                    cliente = clientesRepositorio.buscarPorEmail(cliente.getEmail());
+
+                    // Redireccionar
+                    return new ModelAndView("redirect:/clientes/" + cliente.getId());
+                } else {
+                    // Agregar error
+                    vista.addObject("error", messageSource.getMessage("error.unexpected_add", null, locale));
+                }
+            }
+        }
+
+        // Agregar cliente a la vista
+        vista.addObject("cliente", cliente);
+
+        // Buscar profesionales
+        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+
+        // Agregar profesionales a la vista
+        vista.addObject("profesionales", profesionales);
+
+        // Agregar acción
+        vista.addObject("accion", "agregar");
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
