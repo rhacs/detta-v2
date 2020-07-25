@@ -2,6 +2,7 @@ package cl.leid.detta.controladores;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -151,6 +152,85 @@ public class AccidentesController {
 
         // Agregar accidente a la vista
         vista.addObject("accidente", accidente);
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
+    /**
+     * Muestra el fomulario para agregar/editar un {@link Accidente}
+     * 
+     * @param id      identificador numérico del {@link Accidente}
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le hace el cliente al {@link HttpServlet}
+     * @param auth    objeto {@link Authentication} con la información del
+     *                {@link Usuario} autenticado
+     * @param locale  objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta a la solicitud
+     */
+    @GetMapping(path = { "/{id}/editar", "/agregar" })
+    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id, HttpServletRequest request,
+            Authentication auth, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("accidentes/formulario");
+
+        // Inicializar repositorios
+        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+
+        // Inicializar accidente
+        Accidente accidente = null;
+
+        // Inicializar acción
+        String accion = "agregar";
+
+        // Verificar si el id está presente
+        if (id.isPresent()) {
+            // Obtener información del accidente
+            accidente = accidentesRepositorio.buscarPorId(id.get());
+
+            // Verificar si no existe
+            if (accidente == null) {
+                // Redireccionar
+                return new ModelAndView("redirect:/accidentes", "noid", id.get());
+            }
+
+            accion = "editar";
+        }
+
+        // Verificar rol del usuario
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            // Buscar todos los clientes
+            List<Cliente> clientes = clientesRepositorio.buscarTodos();
+
+            // Agregar listado a la vista
+            vista.addObject("clientes", clientes);
+        } else if (request.isUserInRole("ROLE_STAFF")) {
+            // Buscar información del profesional
+            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
+
+            // Buscar clientes del profesional
+            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
+
+            // Agregar listado a la vista
+            vista.addObject("clientes", clientes);
+        } else if (request.isUserInRole("ROLE_CLIENT")) {
+            // Buscar información del cliente
+            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
+
+            // Agregar cliente a la vista
+            vista.addObject("cliente", cliente);
+        }
+
+        // Agregar acción a la vista
+        vista.addObject("accion", accion);
+
+        // Agregar accidente a la vista
+        vista.addObject("accidente", accidente == null ? new Accidente() : accidente);
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
