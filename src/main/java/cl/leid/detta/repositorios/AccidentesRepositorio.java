@@ -21,9 +21,9 @@ public class AccidentesRepositorio {
     private static final String TABLA_CLIENTES = "detta_clientes";
 
     /** Instrucción base para las consultas SELECT */
-    private static final String BASE_SELECT = "SELECT accidente_id, fecha, hora, direccion, lugar, circunstancia, "
-            + "detalles, clasificacion, tipo, evidencia, fecha_registro, cliente_id, c.nombre, c.profesional_id FROM "
-            + TABLA + " INNER JOIN " + TABLA_CLIENTES + " c ON " + TABLA + ".cliente_id = c.cliente_id";
+    private static final String BASE_SELECT = "SELECT a.accidente_id, a.fecha, a.hora, a.direccion, a.lugar, a.circunstancia, "
+            + "a.detalles, a.clasificacion, a.tipo, a.evidencia, a.fecha_registro, a.cliente_id, c.nombre, c.profesional_id FROM "
+            + TABLA + " a INNER JOIN " + TABLA_CLIENTES + " c ON a.cliente_id = c.cliente_id";
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ public class AccidentesRepositorio {
      */
     public Accidente buscarPorId(int id) {
         // Definir consulta
-        String sql = BASE_SELECT + " WHERE accidente_id = ?";
+        String sql = BASE_SELECT + " WHEREa. accidente_id = ?";
 
         // Ejecutar consulta
         List<Accidente> accidentes = jdbcTemplate.query(sql, new Object[] { id }, new AccidenteRowMapper());
@@ -107,7 +107,7 @@ public class AccidentesRepositorio {
      */
     public List<Accidente> buscarPorClienteId(int clienteId) {
         // Definir consulta
-        String sql = BASE_SELECT + " WHERE cliente_id = ? ORDER BY fecha DESC, hora DESC";
+        String sql = BASE_SELECT + " WHERE a.cliente_id = ? ORDER BY fecha DESC, hora DESC";
 
         return jdbcTemplate.query(sql, new Object[] { clienteId }, new AccidenteRowMapper());
     }
@@ -121,7 +121,7 @@ public class AccidentesRepositorio {
      */
     public List<Accidente> buscarPorProfesionalId(int profesionalId) {
         // Definir consulta
-        String sql = BASE_SELECT + " WHERE c.profesional_id = ?";
+        String sql = BASE_SELECT + " WHERE c.profesional_id = ? ORDER BY fecha DESC, hora DESC";
 
         return jdbcTemplate.query(sql, new Object[] { profesionalId }, new AccidenteRowMapper());
     }
