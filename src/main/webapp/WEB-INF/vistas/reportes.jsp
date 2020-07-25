@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-lg-6 mb-4">
                                     <div class="card">
                                         <div class="card-header"><spring:message code="titles.reports.statistics.pertype" /></div>
                                         <div class="card-body">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-lg-6 mb-4">
                                     <div class="card">
                                         <div class="card-header"><spring:message code="titles.reports.statistics.perclass" /></div>
                                         <div class="card-body">
@@ -59,7 +59,7 @@
                     </div>
 
                     <sec:authorize access="hasRole('ROLE_ADMIN')">
-                        <div class="row mt-5">
+                        <div class="row">
                             <div class="col-12">
                                 <h3 class="border-bottom pb-2"><spring:message code="titles.reports.actions" /></h3>
 
