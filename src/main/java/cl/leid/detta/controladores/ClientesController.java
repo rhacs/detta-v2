@@ -265,4 +265,60 @@ public class ClientesController {
         return vista;
     }
 
+    /**
+     * Procesa el formulario de edición de un {@link Cliente}
+     * 
+     * @param idnt    identificador numérico del {@link Cliente}
+     * @param cliente objeto {@link Cliente} con la información a actualizar
+     * @param locale  objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @PostMapping(path = "/{idnt}/editar")
+    public ModelAndView formularioEditar(@PathVariable int idnt, @ModelAttribute Cliente cliente, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("clientes/formulario");
+
+        // Inicializar repositorio
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+
+        // Buscar información del registro existente
+        Cliente existente = clientesRepositorio.buscarPorId(idnt);
+
+        // Verificar si existe
+        if (existente != null) {
+            // Recuperar contraseña
+            cliente.setPassword(existente.getPassword());
+
+            // Actualizar registro
+            if (clientesRepositorio.actualizarRegistro(cliente)) {
+                // Redireccionar
+                return new ModelAndView("redirect:/clientes/" + cliente.getId());
+            } else {
+                // Agregar error
+                vista.addObject("error", messageSource.getMessage("error.unexpected_edit", null, locale));
+            }
+        } else {
+            // Redireccionar
+            return new ModelAndView("redirect:/clientes", "noid", idnt);
+        }
+
+        // Buscar profesionales
+        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+
+        // Agregar profesionales a la vista
+        vista.addObject("profesionales", profesionales);
+
+        // Agregar cliente a la vista
+        vista.addObject("cliente", cliente);
+
+        // Agregar acción
+        vista.addObject("accion", "editar");
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
 }
