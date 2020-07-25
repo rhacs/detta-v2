@@ -40,7 +40,8 @@ CREATE TABLE detta_usuarios_roles (
     CONSTRAINT detta_usuarios_roles_pk PRIMARY KEY (rol_id),
 
     -- Llave foránea
-    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (email) REFERENCES detta_usuarios (email),
+    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (email)
+        REFERENCES detta_usuarios (email) ON DELETE CASCADE,
 
     -- Columnas únicas
     CONSTRAINT detta_usuarios_roles_uq UNIQUE (email, role)
@@ -73,7 +74,8 @@ CREATE TABLE detta_acciones (
     CONSTRAINT detta_acciones_pk PRIMARY KEY (accion_id),
 
     -- Llave foránea
-    CONSTRAINT detta_acciones_fk FOREIGN KEY (email) REFERENCES detta_usuarios (email)
+    CONSTRAINT detta_acciones_fk FOREIGN KEY (email)
+        REFERENCES detta_usuarios (email)
 );
 
 -- Secuencia
@@ -102,7 +104,8 @@ CREATE TABLE detta_profesionales (
     CONSTRAINT detta_profesionales_pk PRIMARY KEY (profesional_id),
 
     -- Llave foránea
-    CONSTRAINT detta_profesionales_fk FOREIGN KEY (usuario_id) REFERENCES detta_usuarios (id),
+    CONSTRAINT detta_profesionales_fk FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (id) ON DELETE CASCADE,
 
     -- Columnas únicas
     CONSTRAINT detta_profesionales_uq UNIQUE (usuario_id)
@@ -139,8 +142,10 @@ CREATE TABLE detta_clientes (
     CONSTRAINT detta_clientes_pk PRIMARY KEY (cliente_id),
 
     -- Llaves foráneas
-    CONSTRAINT detta_clientes_fku FOREIGN KEY (usuario_id) REFERENCES detta_usuarios (usuario_id),
-    CONSTRAINT detta_clientes_fkp FOREIGN KEY (profesional_id) REFERENCES detta_profesionales (profesional_id),
+    CONSTRAINT detta_clientes_fku FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
+    CONSTRAINT detta_clientes_fkp FOREIGN KEY (profesional_id)
+        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL,
 
     -- Columnas únicas
     CONSTRAINT detta_clientes_uq UNIQUE (usuario_id, rut)
