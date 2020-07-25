@@ -22,6 +22,7 @@
                             <h3><spring:message code="titles.clients.details" /></h3>
                         </div>
 
+                        <sec:authorize access="hasAuthority('ROLE_ADMIN')">
                         <div class="col-2 text-right">
                             <div class="dropdown dropleft">
                                 <button type="button" id="acciones" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,6 +40,7 @@
                                 </div>
                             </div>
                         </div>
+                        </sec:authorize>
                     </div>
 
                     <div class="table-responsive mt-4">
