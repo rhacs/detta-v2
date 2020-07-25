@@ -79,7 +79,7 @@ public class AccidentesRepositorio {
      */
     public Accidente buscarPorId(int id) {
         // Definir consulta
-        String sql = BASE_SELECT + " WHEREa. accidente_id = ?";
+        String sql = BASE_SELECT + " WHERE a.accidente_id = ?";
 
         // Ejecutar consulta
         List<Accidente> accidentes = jdbcTemplate.query(sql, new Object[] { id }, new AccidenteRowMapper());
