@@ -126,5 +126,19 @@ public class AccidentesRepositorio {
                 accidente.getClasificacion(), accidente.getTipo(), accidente.getEvidencia(), accidente.getClienteId(),
                 accidente.getId()) > 0;
     }
-    
+
+    /**
+     * Elimina un registro del repositorio
+     * 
+     * @param id identificador numérico del {@link Accidente}
+     * @return {@code true} si el objeto fue eliminado, {@code false} en cualquier
+     *         otro caso
+     */
+    public boolean eliminarRegistro(int id) {
+        // Definir consulta
+        String sql = "DELETE FROM " + TABLA + " WHERE accidente_id = ?";
+
+        return jdbcTemplate.update(sql, id) > 0;
+    }
+
 }
