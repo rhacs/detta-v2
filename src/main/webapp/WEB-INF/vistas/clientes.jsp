@@ -32,7 +32,11 @@
                     </div>
 
                     <core:if test="${not empty param.noid}">
-                        <div class="alert alert-warning my-3"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                        <div class="alert alert-warning mt-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                    </core:if>
+
+                    <core:if test="${not empty param.remid}">
+                        <div class="alert alert-success mt-4"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
                     </core:if>
 
                     <div class="table-responsive mt-4">
