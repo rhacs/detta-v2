@@ -54,6 +54,26 @@ public class ClientesRepositorio {
     // -----------------------------------------------------------------------------------------
 
     /**
+     * Agrega un nuevo registro al repositorio
+     * 
+     * @param cliente objeto {@link Cliente} con la información a agregar
+     * @return {@code true} si el registro fue agregado, {@code false} en cualquier
+     *         otro caso
+     */
+    public boolean agregarRegistro(Cliente cliente) {
+        // Definir consulta (que asco de consulta FIXME!!!)
+        String sql = "DECLARE\n\ttmp_id NUMERIC;\n\ttmp_email NVARCHAR2(150);\nBEGIN\n" + "\tINSERT INTO "
+                + TABLA_USUARIOS + " (email, password, enabled) VALUES (?, ?, ?) RETURNING usuario_id, email "
+                + "INTO tmp_id, tmp_email;\n\tINSERT INTO " + TABLA_ROLES + " (email, role) VALUES (tmp_email, "
+                + "'ROLE_CLIENT');\n" + "\tINSERT INTO " + TABLA + " (nombre, rut, telefono, giro, empleados, "
+                + "tipo, usuario_id, profesional_id) VALUES (?, ?, ?, ?, ?, ?, tmp_id, ?);\n\tCOMMIT;\nEND;";
+
+        return jdbcTemplate.update(sql, cliente.getEmail(), cliente.getPassword(), cliente.isEnabled(),
+                cliente.getNombre(), cliente.getRut(), cliente.getTelefono(), cliente.getGiro(), cliente.getEmpleados(),
+                cliente.getTipo(), cliente.getProfesionalId()) > 0;
+    }
+
+    /**
      * Busca todos los registros del repositorio
      * 
      * @return un objeto {@link List} con los resultados
