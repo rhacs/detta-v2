@@ -35,7 +35,7 @@
 
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
-                                    <form:input path="nombre" type="text" class="form-control" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
+                                    <form:input path="nombre" type="text" class="form-control" minlength="10" maxlength="100" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
                                 </div>
 
                                 <div class="form-group">
@@ -45,22 +45,24 @@
                                             <form:input path="email" type="email" class="form-control" autocomplete="email" required="required" readonly="true" />
                                         </core:when>
                                         <core:otherwise>
-                                            <form:input path="email" type="email" class="form-control" cssErrorClass="invalid" autocomplete="email" required="required" />
+                                            <form:input path="email" type="email" class="form-control" minlength="10" maxlength="150" cssErrorClass="invalid" autocomplete="email" required="required" />
                                         </core:otherwise>
                                     </core:choose>
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" type="tel" class="form-control" cssErrorClass="invalid" autocomplete="tel" required="required" />
+                                    <form:input path="telefono" pattern="[0-9]+" minlength="7" maxlength="20" type="tel" class="form-control" cssErrorClass="invalid" autocomplete="tel" required="required" aria-labelledby="phoneHelp" />
+                                    <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="enabled"><spring:message code="form.label.enabled" /></form:label>
-                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid">
+                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid" aria-labelledby="enabledHelp">
                                         <form:option value="true"><spring:message code="form.label.yes" /></form:option>
                                         <form:option value="false"><spring:message code="form.label.no" /></form:option>
                                     </form:select>
+                                    <small id="enabledHelp" class="form-text text-muted"><spring:message code="form.label.enabled.help" /></small>
                                 </div>
 
                                 <div class="form-group text-right">
