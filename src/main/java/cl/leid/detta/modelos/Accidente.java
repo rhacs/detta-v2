@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Accidente {
 
     // Atributos
@@ -13,9 +15,11 @@ public class Accidente {
     private int id;
 
     /** Fecha en que ocurrió el {@link Accidente} */
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate fecha;
 
     /** Hora en que ocurrió el {@link Accidente} */
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime hora;
 
     /** Dirección donde ocurrió el {@link Accidente} */
