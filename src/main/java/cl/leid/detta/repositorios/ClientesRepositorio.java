@@ -168,4 +168,19 @@ public class ClientesRepositorio {
                 cliente.getTipo(), cliente.getProfesionalId(), cliente.getId()) > 0;
     }
 
+    /**
+     * Elimina un registro del repositorio
+     * 
+     * @param cliente objeto {@link Cliente} a eliminar
+     * @return {@code true} si el registro fue eliminado, {@code false} en cualquier
+     *         otro caso
+     */
+    public boolean eliminarRegistro(Cliente cliente) {
+        // Definir consulta
+        String sql = "DELETE FROM " + TABLA_USUARIOS + " WHERE email = ?";
+
+        // Ejecutar y devolver resultado
+        return jdbcTemplate.update(sql, cliente.getEmail()) > 0;
+    }
+
 }
