@@ -83,4 +83,16 @@ public class AccidentesRepositorio {
         return accidentes.isEmpty() ? null : accidentes.get(0);
     }
 
+    /**
+     * Busca todos los registros del repositorio
+     * 
+     * @return un objeto {@link List} con el resultado
+     */
+    public List<Accidente> buscarTodos() {
+        // Definir consulta
+        String sql = BASE_SELECT + " ORDER BY fecha DESC, hora DESC";
+
+        return jdbcTemplate.query(sql, new AccidenteRowMapper());
+    }
+
 }
