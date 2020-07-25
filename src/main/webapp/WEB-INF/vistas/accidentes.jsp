@@ -38,6 +38,7 @@
                                     <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.client_name" /></th>
                                     </sec:authorize>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.accident_type" /></th>
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.accident_class" /></th>
                                 </tr>
                             </thead>
@@ -62,17 +63,23 @@
                                                 </sec:authorize>
                                                 <td class="text-nowrap">
                                                     <core:choose>
-                                                        <core:when test="${accidente.getClasificacion() == 1}"><spring:message code="form.label.accident_type.mild" /></core:when>
-                                                        <core:when test="${accidente.getClasificacion() == 2}"><spring:message code="form.label.accident_type.serious" /></core:when>
-                                                        <core:when test="${accidente.getClasificacion() == 3}"><spring:message code="form.label.accident_type.fatal" /></core:when>
-                                                        <core:otherwise><spring:message code="form.label.accident_type.other" /></core:otherwise>
+                                                        <core:when test="${accidente.getTipo() == 1}"><spring:message code="form.label.accident_type.work" /></core:when>
+                                                        <core:otherwise><spring:message code="form.label.accident_type.journey" /></core:otherwise>
+                                                    </core:choose>
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    <core:choose>
+                                                        <core:when test="${accidente.getClasificacion() == 1}"><spring:message code="form.label.accident_class.mild" /></core:when>
+                                                        <core:when test="${accidente.getClasificacion() == 2}"><spring:message code="form.label.accident_class.serious" /></core:when>
+                                                        <core:when test="${accidente.getClasificacion() == 3}"><spring:message code="form.label.accident_class.fatal" /></core:when>
+                                                        <core:otherwise><spring:message code="form.label.accident_class.other" /></core:otherwise>
                                                     </core:choose>
                                                 </td>
                                         </core:forEach>
                                     </core:when>
                                     <core:otherwise>
                                         <tr>
-                                            <th scope="row" class="text-center" colspan="4"><spring:message code="form.error.no_info" /></th>
+                                            <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
                                         </tr>
                                     </core:otherwise>
                                 </core:choose>
