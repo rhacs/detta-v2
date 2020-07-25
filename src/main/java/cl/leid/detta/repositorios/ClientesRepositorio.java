@@ -149,4 +149,23 @@ public class ClientesRepositorio {
         return clientes.isEmpty() ? null : clientes.get(0);
     }
 
+    /**
+     * Actualiza la información de un registro en el repositorio
+     * 
+     * @param cliente objeto {@link Cliente} con la información a actualizar
+     * @return {@code true} si el registro fue actualizado, {@code false} en
+     *         cualquier otro caso
+     */
+    public boolean actualizarRegistro(Cliente cliente) {
+        // Definir consulta
+        String sql = "BEGIN\n\tUPDATE " + TABLA_USUARIOS + " SET password = ?, enabled = ? WHERE usuario_id = ?;\n"
+                + "\tUPDATE " + TABLA + " SET nombre = ?, telefono = ?, giro = ?, empleados = ?, "
+                + "tipo = ?, profesional_id = ? WHERE cliente_id = ?;\n\tCOMMIT;\nEND;";
+
+        // Ejecutar y devolver resultado
+        return jdbcTemplate.update(sql, cliente.getPassword(), cliente.isEnabled(), cliente.getUsuarioId(),
+                cliente.getNombre(), cliente.getTelefono(), cliente.getGiro(), cliente.getEmpleados(),
+                cliente.getTipo(), cliente.getProfesionalId(), cliente.getId()) > 0;
+    }
+
 }
