@@ -260,4 +260,47 @@ public class ProfesionalesController {
         return vista;
     }
 
+    /**
+     * Elimina un registro del repositorio
+     * 
+     * @param id     identificador numérico del {@link Profesional}
+     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @PostMapping(path = "/{id}/eliminar")
+    public ModelAndView eliminarRegistro(@PathVariable int id, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("profesionales/detalles");
+
+        // Inicializar repositorio
+        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+
+        // Buscar profesional
+        Profesional profesional = profesionalesRepositorio.buscarPorId(id);
+
+        // Verificar si existe
+        if (profesional != null) {
+            // Eliminar registro
+            if (profesionalesRepositorio.eliminarRegistro(profesional)) {
+                // Redireccionar
+                return new ModelAndView("redirect:/profesionales", "remid", id);
+            } else {
+                // Agregar error
+                vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
+            }
+        } else {
+            // Redireccionar
+            return new ModelAndView("redirect:/profesionales", "noid", id);
+        }
+
+        // Agregar profesional a la vista
+        vista.addObject("profesional", profesional);
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
 }
