@@ -321,4 +321,44 @@ public class ClientesController {
         return vista;
     }
 
+    /**
+     * Procesa la eliminación de un registro del repositorio
+     * 
+     * @param id     identificador numérico del {@link Cliente}
+     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @PostMapping(path = "/{id}/eliminar")
+    public ModelAndView eliminarRegistro(@PathVariable int id, Locale locale) {
+        // Crear vista
+        ModelAndView vista = new ModelAndView("clientes/detalles");
+
+        // Inicializar repositorio
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+
+        // Buscar información del cliente
+        Cliente cliente = clientesRepositorio.buscarPorId(id);
+
+        // Verificar si existe
+        if (cliente != null) {
+            // Eliminar registro
+            if (clientesRepositorio.eliminarRegistro(cliente)) {
+                // Redireccionar
+                return new ModelAndView("redirect:/clientes", "remid", cliente.getId());
+            } else {
+                // Agregar error
+                vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
+            }
+        } else {
+            // Redireccionar
+            return new ModelAndView("redirect:/clientes", "noid", id);
+        }
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
 }
