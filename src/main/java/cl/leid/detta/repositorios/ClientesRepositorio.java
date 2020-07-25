@@ -112,4 +112,21 @@ public class ClientesRepositorio {
         return jdbcTemplate.query(sql, new Object[] { profesionalId }, new ClienteRowMapper());
     }
 
+    /**
+     * Busca un registro en el repositorio
+     * 
+     * @param rut rol único tributario
+     * @return un objeto {@link Cliente} con el resultado, {@code null} en cualquier
+     *         otro caso
+     */
+    public Cliente buscarPorRut(String rut) {
+        // Definir consulta
+        String sql = BASE_SELECT + " WHERE c.rut = ?";
+
+        // Ejecutar consulta
+        List<Cliente> clientes = jdbcTemplate.query(sql, new Object[] { rut }, new ClienteRowMapper());
+
+        return clientes.isEmpty() ? null : clientes.get(0);
+    }
+
 }
