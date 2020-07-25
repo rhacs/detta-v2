@@ -36,19 +36,20 @@
 
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.client_name" /></form:label>
-                                    <form:input path="nombre" type="text" class="form-control" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
+                                    <form:input path="nombre" type="text" minlength="5" maxlength="250" class="form-control" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="rut"><spring:message code="form.label.rut" /></form:label>
                                     <core:choose>
                                         <core:when test="${accion eq 'editar'}">
-                                            <form:input path="rut" type="text" class="form-control" readonly="true" />
+                                            <form:input path="rut" type="text" class="form-control" readonly="true" aria-labelledby="rutHelp" />
                                         </core:when>
                                         <core:otherwise>
-                                            <form:input path="rut" type="text" class="form-control" cssErrorClass="invalid" required="required" />
+                                            <form:input path="rut" type="text" class="form-control" pattern="[1-9][0-9]{7}[0-9k]" cssErrorClass="invalid" required="required" aria-labelledby="rutHelp" />
                                         </core:otherwise>
                                     </core:choose>
+                                    <small id="rutHelp" class="form-text text-muted"><spring:message code="form.label.rut.help" /></small>
                                 </div>
 
                                 <div class="form-group">
@@ -65,12 +66,13 @@
 
                                 <div class="form-group">
                                     <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" type="tel" class="form-control" cssErrorClass="invalid" autocomplete="tel" required="required" />
+                                    <form:input path="telefono" type="tel" class="form-control" pattern="[0-9]+" minlength="7" maxlength="20" aria-labelledby="phoneHelp" cssErrorClass="invalid" autocomplete="tel" required="required" />
+                                    <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="giro"><spring:message code="form.label.giro" /></form:label>
-                                    <form:input path="giro" type="text" class="form-control" cssErrorClass="invalid" required="required" />
+                                    <form:input path="giro" type="text" class="form-control" minlength="5" maxlength="100" cssErrorClass="invalid" required="required" />
                                 </div>
 
                                 <div class="form-group">
@@ -90,10 +92,11 @@
 
                                 <div class="form-group">
                                     <form:label path="enabled"><spring:message code="form.label.enabled" /></form:label>
-                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid" required="required">
+                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid" required="required" aria-labelledby="enabledHelp">
                                         <form:option value="true"><spring:message code="form.label.yes" /></form:option>
                                         <form:option value="false"><spring:message code="form.label.no" /></form:option>
                                     </form:select>
+                                    <small id="enabledHelp" class="form-text text-muted"><spring:message code="form.label.enabled.help" /></small>
                                 </div>
 
                                 <div class="form-group">
