@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,12 @@ import cl.leid.detta.repositorios.UsuariosRepositorio;
 @Controller
 @RequestMapping(path = "/profesionales")
 public class ProfesionalesController {
+
+    // Constantes
+    // -----------------------------------------------------------------------------------------
+
+    /** Objeto {@link Logger} con los métodos de depuración */
+    private static final Logger logger = LogManager.getLogger(ProfesionalesController.class);
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -105,6 +114,10 @@ public class ProfesionalesController {
             return vista;
         }
 
+        // Depuración
+        logger.info("{} solicitó la información de un profesional que no existe: {}",
+                SecurityContextHolder.getContext().getAuthentication().getName(), id);
+
         return new ModelAndView("redirect:/profesionales", "noid", id);
     }
 
@@ -134,6 +147,10 @@ public class ProfesionalesController {
                 // Agregar acción a la vista
                 vista.addObject("accion", "editar");
             } else {
+                // Depuración
+                logger.error("{} intentó editar la información de un Profesional que no existe: {}",
+                        SecurityContextHolder.getContext().getAuthentication().getName(), id.get());
+
                 // Redireccionar al usuario si el registro no es encontrado
                 return new ModelAndView("profesionales", "noid", id.get());
             }
@@ -182,6 +199,9 @@ public class ProfesionalesController {
             if (profesionalesRepositorio.agregarRegistro(profesional)) {
                 // Buscar registro
                 profesional = profesionalesRepositorio.buscarPorEmail(profesional.getEmail());
+
+                logger.info("{} agregó un nuevo profesional: /detta/profesionales/{}",
+                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getId());
 
                 // Redireccionar
                 return new ModelAndView("redirect:/profesionales/" + profesional.getId());
@@ -236,6 +256,9 @@ public class ProfesionalesController {
 
             // Actualizar registro
             if (profesionalesRepositorio.actualizarRegistro(profesional)) {
+                logger.info("{} editó la información de un Profesional: /detta/profesionales/{}",
+                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getId());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/profesionales/" + profesional.getId());
             } else {
@@ -243,6 +266,8 @@ public class ProfesionalesController {
                 vista.addObject("error", messageSource.getMessage("error.unexpected_edit", null, locale));
             }
         } else {
+            logger.error("{} intentó editar la información de un profesional que no existe",
+                    SecurityContextHolder.getContext().getAuthentication().getName());
             // Redireccionar
             return new ModelAndView("redirect:/profesionales", "noid", idnt);
         }
@@ -282,6 +307,9 @@ public class ProfesionalesController {
         if (profesional != null) {
             // Eliminar registro
             if (profesionalesRepositorio.eliminarRegistro(profesional)) {
+                logger.info("{} eliminó un Profesional: {}",
+                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getEmail());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/profesionales", "remid", id);
             } else {
@@ -289,6 +317,9 @@ public class ProfesionalesController {
                 vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
             }
         } else {
+            logger.error("{} intentó eliminar un Profesional que no existe",
+                    SecurityContextHolder.getContext().getAuthentication().getName());
+
             // Redireccionar
             return new ModelAndView("redirect:/profesionales", "noid", id);
         }

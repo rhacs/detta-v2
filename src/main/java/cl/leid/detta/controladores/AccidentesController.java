@@ -300,11 +300,11 @@ public class AccidentesController {
 
         // Agregar registro
         if (accidentesRepositorio.agregarRegistro(accidente)) {
-            // Depuración
-            logger.info("{} agregó un nuevo accidente: {}", auth.getName(), request.getRequestURI());
-
             // Buscar registro
             accidente = accidentesRepositorio.buscarUltimo();
+
+            // Depuración
+            logger.info("{} agregó un nuevo accidente: /detta/accidentes/{}", auth.getName(), accidente.getId());
 
             // Redireccionar
             return new ModelAndView("redirect:/accidentes/" + accidente.getId());
@@ -374,7 +374,8 @@ public class AccidentesController {
         accidentesRepositorio.actualizarRegistro(accidente);
 
         // Depuración
-        logger.info("{} editó la información de un accidente: {}", request.getRemoteUser(), request.getRequestURI());
+        logger.info("{} editó la información de un accidente: /detta/accidentes/{}", request.getRemoteUser(),
+                accidente.getId());
 
         // Devolver vista
         return new ModelAndView("redirect:/accidentes/" + idnt);

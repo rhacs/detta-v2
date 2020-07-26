@@ -6,10 +6,13 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,12 @@ import cl.leid.detta.repositorios.UsuariosRepositorio;
 @Controller
 @RequestMapping(path = "/clientes")
 public class ClientesController {
+
+    // Constantes
+    // -----------------------------------------------------------------------------------------
+
+    /** Objeto {@link Logger} con los métodos de depuración */
+    private static final Logger logger = LogManager.getLogger(ClientesController.class);
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -119,6 +128,10 @@ public class ClientesController {
 
         // Verificar si no existe
         if (cliente == null) {
+            // Depuración
+            logger.info("{} solicitó la información de un cliente que no existe: {}", request.getRemoteUser(),
+                    request.getRequestURI());
+
             // Redireccionar
             return new ModelAndView("redirect:/clientes", "noid", id);
         }
@@ -148,12 +161,15 @@ public class ClientesController {
     /**
      * Muestra el formulario para agregar/editar un {@link Cliente}
      * 
-     * @param id     identificador numérico del {@link Cliente}
-     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le hizo el cliente al {@link HttpServlet}
+     * @param id      identificador numérico del {@link Cliente}
+     * @param locale  objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping(path = { "/{id}/editar", "/agregar" })
-    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id, Locale locale) {
+    public ModelAndView mostrarFormulario(HttpServletRequest request, @PathVariable Optional<Integer> id,
+            Locale locale) {
         // Crear vista
         ModelAndView vista = new ModelAndView("clientes/formulario");
 
@@ -170,6 +186,10 @@ public class ClientesController {
 
             // Verificar si no existe
             if (cliente == null) {
+                // Depuración
+                logger.info("{} intentó editar la información de un Cliente que no existe: {}", request.getRemoteUser(),
+                        request.getRequestURI());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/clientes", "noid", id.get());
             }
@@ -204,12 +224,14 @@ public class ClientesController {
     /**
      * Procesa el formulario al agregar un nuevo {@link Cliente}
      * 
+     * @param auth    objeto {@link Authentication} con la información del usuario
+     *                autenticado
      * @param cliente objeto {@link Cliente} con la información a agregar
      * @param locale  objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @PostMapping(path = "/agregar")
-    public ModelAndView formularioAgregar(@ModelAttribute Cliente cliente, Locale locale) {
+    public ModelAndView formularioAgregar(Authentication auth, @ModelAttribute Cliente cliente, Locale locale) {
         // Crear vista
         ModelAndView vista = new ModelAndView("clientes/formulario");
 
@@ -236,6 +258,9 @@ public class ClientesController {
                 if (clientesRepositorio.agregarRegistro(cliente)) {
                     // Buscar cliente
                     cliente = clientesRepositorio.buscarPorEmail(cliente.getEmail());
+
+                    // Depuración
+                    logger.info("{} agregó un nuevo cliente: /detta/clientes/{}", auth.getName(), cliente.getId());
 
                     // Redireccionar
                     return new ModelAndView("redirect:/clientes/" + cliente.getId());
@@ -284,6 +309,9 @@ public class ClientesController {
         // Buscar información del registro existente
         Cliente existente = clientesRepositorio.buscarPorId(idnt);
 
+        // Obtener objeto de autenticación
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         // Verificar si existe
         if (existente != null) {
             // Recuperar contraseña
@@ -291,6 +319,10 @@ public class ClientesController {
 
             // Actualizar registro
             if (clientesRepositorio.actualizarRegistro(cliente)) {
+                // Depuración
+                logger.info("{} editó la información de un cliente: /detta/clientes/{}", auth.getName(),
+                        cliente.getId());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/clientes/" + cliente.getId());
             } else {
@@ -298,6 +330,10 @@ public class ClientesController {
                 vista.addObject("error", messageSource.getMessage("error.unexpected_edit", null, locale));
             }
         } else {
+            // Depuración
+            logger.error("{} intentó modificar la información de un cliente que no existe: {}", auth.getName(),
+                    cliente.getId());
+
             // Redireccionar
             return new ModelAndView("redirect:/clientes", "noid", idnt);
         }
@@ -343,6 +379,10 @@ public class ClientesController {
         if (cliente != null) {
             // Eliminar registro
             if (clientesRepositorio.eliminarRegistro(cliente)) {
+                // Depuración
+                logger.info("{} eliminó un cliente: {}",
+                        SecurityContextHolder.getContext().getAuthentication().getName(), cliente.getEmail());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/clientes", "remid", cliente.getId());
             } else {
@@ -350,6 +390,10 @@ public class ClientesController {
                 vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
             }
         } else {
+            // Depuración
+            logger.error("{} intentó eliminar un cliente que no existe: /detta/clientes/{}",
+                    SecurityContextHolder.getContext().getAuthentication().getName(), id);
+
             // Redireccionar
             return new ModelAndView("redirect:/clientes", "noid", id);
         }
