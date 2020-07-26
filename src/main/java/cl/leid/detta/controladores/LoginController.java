@@ -4,11 +4,13 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,12 @@ import cl.leid.detta.repositorios.AccionesRepositorio;
 
 @Controller
 public class LoginController {
+
+    // Constantes
+    // -----------------------------------------------------------------------------------------
+
+    /** Objeto {@link Logger} con los métodos de depuración */
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -65,14 +73,14 @@ public class LoginController {
      */
     @GetMapping(path = "/youShallNotPass")
     public ModelAndView permisoDenegado(HttpServletRequest request, Authentication auth) {
-        // Obtener detalles del usuario
-        UserDetails detalles = (UserDetails) auth.getPrincipal();
-
         // Inicializar repositorio de acciones
         AccionesRepositorio accionesRepositorio = new AccionesRepositorio(jdbcTemplate);
 
+        // Depuración
+        logger.log(Level.ERROR, "[SEC] {} intentó acceder a {}", auth.getName(), request.getRequestURI());
+
         // Crear nueva acción
-        Accion accion = new Accion(detalles.getUsername(), "Intentó acceder a la url: " + request.getContextPath(), 1);
+        Accion accion = new Accion(auth.getName(), "Intentó acceder a la url: " + request.getRequestURI(), 1);
 
         // Agregar acción al repositorio
         accionesRepositorio.agregarRegistro(accion);
