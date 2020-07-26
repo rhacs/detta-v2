@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +28,18 @@ import cl.leid.detta.repositorios.ProfesionalesRepositorio;
 @Controller
 @RequestMapping(path = "/accidentes")
 public class AccidentesController {
+
+    // Constantes
+    // -----------------------------------------------------------------------------------------
+
+    /** Rol del Administrador en el sistema */
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    /** Rol del {@link Profesional} en el sistema */
+    private static final String ROLE_STAFF = "ROLE_STAFF";
+
+    /** Rol del {@link Cliente} en el sistema */
+    private static final String ROLE_CLIENT = "ROLE_CLIENT";
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -71,16 +85,16 @@ public class AccidentesController {
         List<Accidente> accidentes = null;
 
         // Verificar rol del usuario
-        if (request.isUserInRole("ROLE_ADMIN")) {
+        if (request.isUserInRole(ROLE_ADMIN)) {
             // Buscar todos los accidentes
             accidentes = accidentesRepositorio.buscarTodos();
-        } else if (request.isUserInRole("ROLE_STAFF")) {
+        } else if (request.isUserInRole(ROLE_STAFF)) {
             // Buscar información del profesional
             Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
 
             // Buscar listado de accidentes
             accidentes = accidentesRepositorio.buscarPorProfesionalId(profesional.getId());
-        } else if (request.isUserInRole("ROLE_CLIENT")) {
+        } else if (request.isUserInRole(ROLE_CLIENT)) {
             // Buscar información del cliente
             Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
 
@@ -130,7 +144,7 @@ public class AccidentesController {
         }
 
         // Verificar rol del usuario
-        if (request.isUserInRole("ROLE_STAFF")) {
+        if (request.isUserInRole(ROLE_STAFF)) {
             // Obtener información del profesional
             Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
 
@@ -139,7 +153,7 @@ public class AccidentesController {
                 // Redireccionar
                 return new ModelAndView("redirect:/accidentes", "perm", true);
             }
-        } else if (request.isUserInRole("ROLE_CLIENT")) {
+        } else if (request.isUserInRole(ROLE_CLIENT)) {
             // Obtener información del cliente
             Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
 
@@ -203,13 +217,13 @@ public class AccidentesController {
         }
 
         // Verificar rol del usuario
-        if (request.isUserInRole("ROLE_ADMIN")) {
+        if (request.isUserInRole(ROLE_ADMIN)) {
             // Buscar todos los clientes
             List<Cliente> clientes = clientesRepositorio.buscarTodos();
 
             // Agregar listado a la vista
             vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole("ROLE_STAFF")) {
+        } else if (request.isUserInRole(ROLE_STAFF)) {
             // Buscar información del profesional
             Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
 
@@ -218,7 +232,7 @@ public class AccidentesController {
 
             // Agregar listado a la vista
             vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole("ROLE_CLIENT")) {
+        } else if (request.isUserInRole(ROLE_CLIENT)) {
             // Buscar información del cliente
             Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
 
@@ -228,6 +242,82 @@ public class AccidentesController {
 
         // Agregar acción a la vista
         vista.addObject("accion", accion);
+
+        // Agregar accidente a la vista
+        vista.addObject("accidente", accidente == null ? new Accidente() : accidente);
+
+        // Agregar título
+        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
+
+        // Devolver vista
+        return vista;
+    }
+
+    // Solicitudes POST
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Procesa el formulario cuando el {@link Usuario} agrega un nuevo
+     * {@link Accidente}
+     * 
+     * @param request   objeto {@link HttpServletRequest} con la información de la
+     *                  solicitud que le hace el cliente al {@link HttpServlet}
+     * @param auth      objeto {@link Authentication} con la información del
+     *                  {@link Usuario} autenticado
+     * @param accidente objeto {@link Accidente} con la información a agregar
+     * @param locale    objeto {@link Locale} con la información regional del
+     *                  cliente
+     * @return un objeto {@link ModelAndView} con la respuesta de la solicitud
+     */
+    @PostMapping(path = "/agregar")
+    public ModelAndView procesarAgregar(HttpServletRequest request, Authentication auth,
+            @ModelAttribute Accidente accidente, Locale locale) {
+        // Inicializar repositorios
+        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
+        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+
+        // Agregar registro
+        if (accidentesRepositorio.agregarRegistro(accidente)) {
+            // Buscar registro
+            accidente = accidentesRepositorio.buscarUltimo();
+
+            // Redireccionar
+            return new ModelAndView("redirect:/accidentes/" + accidente.getId());
+        }
+
+        // Crear vista
+        ModelAndView vista = new ModelAndView("accidentes/formulario");
+
+        // Agregar accidente a la vista
+        vista.addObject("accidente", accidente);
+
+        // Verificar rol del usuario
+        if (request.isUserInRole(ROLE_ADMIN)) {
+            // Buscar todos los clientes
+            List<Cliente> clientes = clientesRepositorio.buscarTodos();
+
+            // Agregar listado a la vista
+            vista.addObject("clientes", clientes);
+        } else if (request.isUserInRole(ROLE_STAFF)) {
+            // Buscar información del profesional
+            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
+
+            // Buscar clientes del profesional
+            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
+
+            // Agregar listado a la vista
+            vista.addObject("clientes", clientes);
+        } else if (request.isUserInRole(ROLE_CLIENT)) {
+            // Buscar información del cliente
+            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
+
+            // Agregar cliente a la vista
+            vista.addObject("cliente", cliente);
+        }
+
+        // Agregar acción a la vista
+        vista.addObject("accion", "agregar");
 
         // Agregar accidente a la vista
         vista.addObject("accidente", accidente == null ? new Accidente() : accidente);
