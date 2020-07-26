@@ -329,4 +329,25 @@ public class AccidentesController {
         return vista;
     }
 
+    /**
+     * Procesa el formulario cuando el usuario edita un {@link Accidente}
+     * 
+     * @param idnt      identificador numérico del {@link Accidente}
+     * @param accidente objeto {@link Accidente} con la información a actualizar
+     * @param locale    objeto {@link Locale} con la información regional del
+     *                  cliente
+     * @return un objeto {@link ModelAndView} con la respuesta a la solicitud
+     */
+    @PostMapping(path = "/{idnt}/editar")
+    public ModelAndView procesarEdicion(@PathVariable int idnt, @ModelAttribute Accidente accidente, Locale locale) {
+        // Inicializar repositorios
+        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+
+        // Actualizar registro
+        accidentesRepositorio.actualizarRegistro(accidente);
+
+        // Devolver vista
+        return new ModelAndView("redirect:/accidentes/" + idnt);
+    }
+
 }
