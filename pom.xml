@@ -32,6 +32,12 @@
         <!-- Spring Framework Security -->
         <org.springframework.security-version>5.3.3.RELEASE</org.springframework.security-version>
 
+        <!-- Spring Framework Data -->
+        <org.springframework.data-version>2.3.2.RELEASE</org.springframework.data-version>
+
+        <!-- Hibernate -->
+        <org.hibernate-version>5.4.18.Final</org.hibernate-version>
+
         <!-- Java Servlet API -->
         <javax.servlet-api-version>4.0.1</javax.servlet-api-version>
 
@@ -44,6 +50,7 @@
         <!-- Json in Java -->
         <org.json-version>20200518</org.json-version>
 
+        <!-- Apache Log4j2 -->
         <org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
 
         <!-- JUnit -->
@@ -73,6 +80,13 @@
             <version>${org.springframework-version}</version>
         </dependency>
 
+        <!-- Spring Framework: Object/Relational Mapping (ORM) > https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+
         <!-- Spring Security: Web > https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -92,6 +106,20 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
             <version>${org.springframework.security-version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${org.springframework.data-version}</version>
+        </dependency>
+
+        <!-- Hibernate: Core > https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${org.hibernate-version}</version>
         </dependency>
 
         <!-- Oracle JDBC -->
