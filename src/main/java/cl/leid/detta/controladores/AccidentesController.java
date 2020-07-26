@@ -381,4 +381,41 @@ public class AccidentesController {
         return new ModelAndView("redirect:/accidentes/" + idnt);
     }
 
+    /**
+     * Elimina un registro del repositorio de {@link Accidente}s
+     * 
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le hace el cliente al {@link HttpServlet}
+     * @param id      identificador numérico del {@link Accidente}
+     * @param locale  objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ModelAndView} con la respuesta
+     */
+    @PostMapping(path = "/{id}/eliminar")
+    public ModelAndView eliminarRegistro(HttpServletRequest request, @PathVariable int id, Locale locale) {
+        // Inicializar repositorios
+        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+
+        // Obtener información del registro
+        Accidente accidente = accidentesRepositorio.buscarPorId(id);
+
+        // Verificar si existe
+        if (accidente != null) {
+            // Eliminar registro
+            accidentesRepositorio.eliminarRegistro(id);
+
+            // Depuración
+            logger.info("{} eliminó un registro de Accidente: {}", request.getRemoteUser(), request.getRequestURI());
+
+            // Dedireccionar
+            return new ModelAndView("redirect:/accidentes", "rem", id);
+        }
+
+        // Depuración
+        logger.error("{} intentó eliminar un registro de Accidente que no existe: {}", request.getRemoteUser(),
+                request.getRequestURI());
+
+        // Redireccionar
+        return new ModelAndView("redirect:/accidentes", "noid", id);
+    }
+
 }
