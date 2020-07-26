@@ -7,17 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Usuario;
-import cl.leid.detta.repositorios.AccionesRepositorio;
 
 @Controller
 public class LoginController {
@@ -27,16 +23,6 @@ public class LoginController {
 
     /** Objeto {@link Logger} con los métodos de depuración */
     private static final Logger logger = LogManager.getLogger(LoginController.class);
-
-    // Atributos
-    // -----------------------------------------------------------------------------------------
-
-    /**
-     * Objeto {@link JdbcTemplate} con los métodos de manipulación de la base de
-     * datos
-     */
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
@@ -54,6 +40,8 @@ public class LoginController {
     public ModelAndView mostrarFormulario(Authentication auth, Locale locale) {
         // Verificar inicio de sesión
         if (auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated()) {
+            logger.log(Level.INFO, "{} intentó acceder a /login ya estando autenticado", auth.getName());
+
             // Redireccionar al panel
             return new ModelAndView("redirect:/");
         }
@@ -73,18 +61,6 @@ public class LoginController {
      */
     @GetMapping(path = "/youShallNotPass")
     public ModelAndView permisoDenegado(HttpServletRequest request, Authentication auth) {
-        // Inicializar repositorio de acciones
-        AccionesRepositorio accionesRepositorio = new AccionesRepositorio(jdbcTemplate);
-
-        // Depuración
-        logger.log(Level.ERROR, "[SEC] {} intentó acceder a {}", auth.getName(), request.getRequestURI());
-
-        // Crear nueva acción
-        Accion accion = new Accion(auth.getName(), "Intentó acceder a la url: " + request.getRequestURI(), 1);
-
-        // Agregar acción al repositorio
-        accionesRepositorio.agregarRegistro(accion);
-
         return new ModelAndView("auth/denied");
     }
 
