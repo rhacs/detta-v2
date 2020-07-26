@@ -148,7 +148,7 @@ public class AccidentesRepositorio {
     public boolean actualizarRegistro(Accidente accidente) {
         // Definir consulta
         String sql = "UPDATE " + TABLA + " SET fecha = ?, hora = ?, direccion = ?, lugar = ?, circunstancia = ?, "
-                + "detalles = ?, clasificacion = ?, tipo = ? evidencia = ?, cliente_id = ? WHERE accidente_id = ?";
+                + "detalles = ?, clasificacion = ?, tipo = ?, evidencia = ?, cliente_id = ? WHERE accidente_id = ?";
 
         return jdbcTemplate.update(sql, Date.valueOf(accidente.getFecha()),
                 accidente.getHora().format(DateTimeFormatter.ofPattern("HH:mm")), accidente.getDireccion(),
