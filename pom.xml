@@ -44,6 +44,8 @@
         <!-- Json in Java -->
         <org.json-version>20200518</org.json-version>
 
+        <org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
+
         <!-- JUnit -->
         <org.junit.jupiter-version>5.6.2</org.junit.jupiter-version>
     </properties>
@@ -127,6 +129,13 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>${org.json-version}</version>
+        </dependency>
+
+        <!-- Apache Log4j API > https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${org.apache.logging.log4j-version}</version>
         </dependency>
 
         <!-- JUnit Jupiter API > https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
