@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="base_path">/detta/logs</Property>
+        <Property name="log_pattern">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+        <Property name="file_size">10 MB</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${log_pattern}" />
+        </Console>
+
+        <RollingFile name="frameworkLog" fileName="${base_path}/app-framework.log"
+            filePattern="${base_path}/app-framework-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT"
+                onMismatch="DENY" />
+            <PatternLayout pattern="${log_pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${file_size}" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+        <RollingFile name="debugLog" fileName="${base_path}/app-debug.log"
+            filePattern="${base_path}/app-debug-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT"
+                onMismatch="DENY" />
+            <PatternLayout pattern="${log_pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${file_size}" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+        <RollingFile name="infoLog" fileName="${base_path}/app-info.log"
+            filePattern="${base_path}/app-info-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT"
+                onMismatch="DENY" />
+            <PatternLayout pattern="${log_pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${file_size}" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+        <RollingFile name="errorLog" fileName="${base_path}/app-error.log"
+            filePattern="${base_path}/app-error-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT"
+                onMismatch="DENY" />
+            <PatternLayout pattern="${log_pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${file_size}" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="cl.leid.detta" additivity="false" level="debug">
+            <AppenderRef ref="debugLog" />
+            <AppenderRef ref="infoLog" />
+            <AppenderRef ref="errorLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.springframework.core" additivity="false" level="info">
+            <AppenderRef ref="frameworkLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.springframework.beans" additivity="false" level="info">
+            <AppenderRef ref="frameworkLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.springframework.context" additivity="false" level="info">
+            <AppenderRef ref="frameworkLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.springframework.web" additivity="false" level="info">
+            <AppenderRef ref="frameworkLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Root level="warn">
+            <AppenderRef ref="Console" />
+        </Root>
+
+    </Loggers>
+
+</Configuration>
