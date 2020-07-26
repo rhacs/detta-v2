@@ -5,24 +5,47 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import cl.leid.detta.Constantes;
+
+@Entity
+@Table(name = Constantes.TABLA_ACCIONES)
 public class Accion {
 
     // Atributos
     // -----------------------------------------------------------------------------------------
 
     /** Identificador numérico de la {@link Accion} en base de datos */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constantes.SECUENCIA_ACCIONES)
+    @SequenceGenerator(name = Constantes.SECUENCIA_ACCIONES, sequenceName = Constantes.SECUENCIA_ACCIONES, allocationSize = 1, initialValue = 1)
+    @Column(name = "accion_id", nullable = false, updatable = false)
     private int id;
 
     /** Dirección de Correo Electrónico del {@link Usuario} que efectuó la acción */
+    @Column(name = "email", nullable = false, updatable = false)
     private String email;
 
     /** Detalles de la {@link Accion} */
+    @Column(name = "detalles", nullable = false, updatable = false)
     private String detalles;
 
     /** Categoría de la {@link Accion} (1: Seguridad) */
+    @Column(name = "categoria", nullable = false, updatable = false)
     private int categoria;
 
     /** Instante en el que ocurrió la {@link Accion} */
+    @CreationTimestamp
+    @Column(name = "timestamp", nullable = false, updatable = false)
     private Timestamp timestamp;
 
     // Constructores
@@ -70,6 +93,9 @@ public class Accion {
     // Métodos
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * @return la fecha obtenida de {@link #timestamp}
+     */
     public String getFecha() {
         // Obtener la fecha
         LocalDate fecha = timestamp.toLocalDateTime().toLocalDate();
@@ -77,6 +103,9 @@ public class Accion {
         return fecha.toString();
     }
 
+    /**
+     * @return la hora obtenida de {@link #timestamp} con formato HH:mm (24 horas)
+     */
     public String getHora() {
         // Obtener la hora
         LocalTime hora = timestamp.toLocalDateTime().toLocalTime();
