@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +34,9 @@ public class AccidentesController {
 
     // Constantes
     // -----------------------------------------------------------------------------------------
+
+    /** Objeto {@link Logger} con los métodos de depuración */
+    private static final Logger logger = LogManager.getLogger(AccidentesController.class);
 
     /** Rol del Administrador en el sistema */
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -139,6 +145,10 @@ public class AccidentesController {
 
         // Verificar si no existe
         if (accidente == null) {
+            // Depuración
+            logger.log(Level.INFO, "{} solicitó los detalles de un accidente que no existe: {}", auth.getName(),
+                    request.getRequestURI());
+
             // Redireccionar
             return new ModelAndView("redirect:/accidentes", "noid", id);
         }
@@ -150,6 +160,10 @@ public class AccidentesController {
 
             // Verificar que el accidente le pertenezca al profesional
             if (!accidente.getProfesionalId().equals(profesional.getId())) {
+                // Depuración
+                logger.log(Level.ERROR, "[SEC] {} intentó ver los detalles de un accidente que no le corresponde: {}",
+                        auth.getName(), request.getRequestURI());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/accidentes", "perm", true);
             }
@@ -159,6 +173,10 @@ public class AccidentesController {
 
             // Verificar que el accidente le pertenezca al cliente
             if (accidente.getClienteId() != cliente.getId()) {
+                // Depuración
+                logger.log(Level.ERROR, "[SEC] {} intentó ver los detalles de un accidente que no le corresponde: {}",
+                        auth.getName(), request.getRequestURI());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/accidentes", "perm", true);
             }
@@ -209,6 +227,9 @@ public class AccidentesController {
 
             // Verificar si no existe
             if (accidente == null) {
+                // Depuración
+                logger.info("{} intentó editar un registro que no existe: {}", auth.getName(), request.getRequestURI());
+
                 // Redireccionar
                 return new ModelAndView("redirect:/accidentes", "noid", id.get());
             }
@@ -279,6 +300,9 @@ public class AccidentesController {
 
         // Agregar registro
         if (accidentesRepositorio.agregarRegistro(accidente)) {
+            // Depuración
+            logger.info("{} agregó un nuevo accidente: {}", auth.getName(), request.getRequestURI());
+
             // Buscar registro
             accidente = accidentesRepositorio.buscarUltimo();
 
@@ -332,6 +356,8 @@ public class AccidentesController {
     /**
      * Procesa el formulario cuando el usuario edita un {@link Accidente}
      * 
+     * @param request   objeto {@link HttpServletRequest} con la información de la
+     *                  solicitud que le hizo el cliente al {@link HttpServlet}
      * @param idnt      identificador numérico del {@link Accidente}
      * @param accidente objeto {@link Accidente} con la información a actualizar
      * @param locale    objeto {@link Locale} con la información regional del
@@ -339,12 +365,16 @@ public class AccidentesController {
      * @return un objeto {@link ModelAndView} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{idnt}/editar")
-    public ModelAndView procesarEdicion(@PathVariable int idnt, @ModelAttribute Accidente accidente, Locale locale) {
+    public ModelAndView procesarEdicion(HttpServletRequest request, @PathVariable int idnt,
+            @ModelAttribute Accidente accidente, Locale locale) {
         // Inicializar repositorios
         AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
 
         // Actualizar registro
         accidentesRepositorio.actualizarRegistro(accidente);
+
+        // Depuración
+        logger.info("{} editó la información de un accidente: {}", request.getRemoteUser(), request.getRequestURI());
 
         // Devolver vista
         return new ModelAndView("redirect:/accidentes/" + idnt);
