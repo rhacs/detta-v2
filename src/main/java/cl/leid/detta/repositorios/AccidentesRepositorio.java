@@ -127,6 +127,18 @@ public class AccidentesRepositorio {
     }
 
     /**
+     * Busca el último registro insertado en el repositorio
+     * 
+     * @return un objeto {@link Accidente}
+     */
+    public Accidente buscarUltimo() {
+        // Definir consulta
+        String sql = BASE_SELECT + " WHERE a.accidente_id = (SELECT max(accidente_id) FROM " + TABLA + ")";
+
+        return jdbcTemplate.queryForObject(sql, new AccidenteRowMapper());
+    }
+
+    /**
      * Actualiza la información de un registro en el repositorio
      * 
      * @param accidente objeto {@link Accidente} con la información a actualizar
