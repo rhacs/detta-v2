@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <!-- Configuración de la Base de Datos -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -23,5 +29,47 @@
         <!-- Referencia al DataSource previamente configurado -->
         <property name="dataSource" ref="dataSource" />
     </bean>
+
+    <!-- Configuración de JPA -->
+    <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- Referencia la datasource previamente configurado -->
+        <property name="dataSource" ref="dataSource" />
+
+        <!-- Especificar qué paquete contiene los modelos -->
+        <property name="packagesToScan"
+            value="cl.leid.detta" />
+
+        <!-- Vendor Adapter -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+
+        <!-- Propiedades JPA -->
+        <property name="jpaProperties">
+            <props>
+                <!-- Dialecto > https://docs.jboss.org/hibernate/core/3.6/reference/en-US/html/session-configuration.html -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+
+                <!-- Mostrar consultas SQL (depuración) -->
+                <prop key="hibernate.show_sql">true</prop>
+
+                <!-- Darle formato a las consultas SQL (depuración) -->
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Administrador de transacciones -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+    <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+    <jpa:repositories base-package="cl.leid.detta.repositorios" />
+    <context:component-scan base-package="cl.leid.detta" />
 
 </beans>
