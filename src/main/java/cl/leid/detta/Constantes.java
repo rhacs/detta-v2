@@ -29,6 +29,9 @@ public class Constantes {
     /** Secuencia generadora de IDs para {@link Usuario} */
     public static final String SECUENCIA_USUARIOS = "detta_usuarios_sq";
 
+    /** Secuencia generadora de IDs para {@link Rol} */
+    public static final String SECUENCIA_ROLES = "detta_usuarios_roles_sq";
+
     /** Secuencia generadora de IDs para {@link Profesional} */
     public static final String SECUENCIA_PROFESIONALES = "detta_profesionales_sq";
 
@@ -40,5 +43,15 @@ public class Constantes {
 
     /** Secuencia generadora de IDs para {@link Accion} */
     public static final String SECUENCIA_ACCIONES = "detta_acciones_sq";
+
+    // Constructores
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Crea una nueva instancia vacía del objeto {@link Constantes}
+     */
+    private Constantes() {
+
+    }
 
 }
