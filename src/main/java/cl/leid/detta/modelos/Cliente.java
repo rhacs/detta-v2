@@ -63,6 +63,10 @@ public class Cliente {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @OneToOne
+    @JoinColumn(name = "profesional_id")
+    private Profesional profesional;
+
     // Constructores
     // -----------------------------------------------------------------------------------------
 
@@ -71,30 +75,6 @@ public class Cliente {
      */
     public Cliente() {
 
-    }
-
-    /**
-     * Crea una nueva instancia del objeto {@link Cliente}
-     * 
-     * @param id        identificador numérico
-     * @param nombre    nombre o razón social
-     * @param rut       rol único tributario
-     * @param telefono  teléfono de contacto
-     * @param giro      giro o actividad económica
-     * @param empleados cantidad de empleados
-     * @param tipo      {@link #tipo} de empresa
-     * @param usuario   objeto {@link Usuario} relacionado con el {@link Cliente}
-     */
-    public Cliente(int id, String nombre, String rut, String telefono, String giro, int empleados, int tipo,
-            Usuario usuario) {
-        this.id = id;
-        this.nombre = nombre;
-        this.rut = rut;
-        this.telefono = telefono;
-        this.giro = giro;
-        this.empleados = empleados;
-        this.tipo = tipo;
-        this.usuario = usuario;
     }
 
     // Getters
@@ -156,6 +136,13 @@ public class Cliente {
         return usuario;
     }
 
+    /**
+     * @return el {@link Profesional}
+     */
+    public Profesional getProfesional() {
+        return profesional;
+    }
+
     // Setters
     // -----------------------------------------------------------------------------------------
 
@@ -215,6 +202,13 @@ public class Cliente {
         this.usuario = usuario;
     }
 
+    /**
+     * @param profesional el {@link Profesional} a establecer
+     */
+    public void setProfesional(Profesional profesional) {
+        this.profesional = profesional;
+    }
+
     // Herencias (Object)
     // -----------------------------------------------------------------------------------------
 
@@ -264,7 +258,8 @@ public class Cliente {
     @Override
     public String toString() {
         return "Cliente [id=" + id + ", nombre=" + nombre + ", rut=" + rut + ", telefono=" + telefono + ", giro=" + giro
-                + ", empleados=" + empleados + ", tipo=" + tipo + ", usuario=" + usuario + "]";
+                + ", empleados=" + empleados + ", tipo=" + tipo + ", usuario=" + usuario + ", profesional="
+                + profesional + "]";
     }
 
 }
