@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,7 +38,8 @@ public class Rol {
     @Column(name = "role", nullable = false, updatable = false)
     private String role;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "email", optional = false, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "email", nullable = false, unique = true, updatable = false)
     private Usuario usuario;
 
     // Constructores
