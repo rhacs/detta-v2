@@ -88,7 +88,7 @@
                                                         </core:choose>
                                                         <td class="text-nowrap">${accion.getFecha()}</td>
                                                         <td class="text-nowrap">${accion.getHora()}</td>
-                                                        <td class="text-nowrap">${accion.getEmail()}</td>
+                                                        <td class="text-nowrap">${accion.getUsuario().getEmail()}</td>
                                                         <td>${accion.getDetalles()}</td>
                                                     </tr>
                                                     </core:forEach>
