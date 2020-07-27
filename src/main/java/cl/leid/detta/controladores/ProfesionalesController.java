@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,6 +53,12 @@ public class ProfesionalesController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private ProfesionalesRepositorio profesionalesRepositorio;
+
+    @Autowired
+    private ClientesRepositorio clientesRepositorio;
+
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
 
@@ -66,8 +73,8 @@ public class ProfesionalesController {
         // Crear vista
         ModelAndView vista = new ModelAndView("profesionales");
 
-        // Buscar todos los profesionales
-        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+        // Buscar listado de profesionales
+        List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by(Sort.Direction.ASC, "nombre"));
 
         // Agregar listado a la vista
         vista.addObject("profesionales", profesionales);
@@ -87,23 +94,19 @@ public class ProfesionalesController {
      */
     @GetMapping(path = "/{id}")
     public ModelAndView mostrarDetalles(@PathVariable int id, Locale locale) {
-        // Inicializar los repositorios
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-
         // Buscar el profesional
-        Profesional profesional = profesionalesRepositorio.buscarPorId(id);
+        Optional<Profesional> profesional = profesionalesRepositorio.findById(id);
 
         // Verificar si existe
-        if (profesional != null) {
+        if (profesional.isPresent()) {
             // Crear vista
             ModelAndView vista = new ModelAndView("profesionales/detalles");
 
             // Agregar profesional a la vista
-            vista.addObject("profesional", profesional);
+            vista.addObject("profesional", profesional.get());
 
-            // Buscar los clientes del profesional
-            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
+            // Buscar listado de clientes
+            List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get());
 
             // Agregar listado a la vista
             vista.addObject("clientes", clientes);

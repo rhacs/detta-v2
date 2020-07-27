@@ -51,7 +51,7 @@
 
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.email" /></th>
-                                    <td class="text-nowrap">${profesional.getEmail()}</td>
+                                    <td class="text-nowrap">${profesional.getUsuario().getEmail()}</td>
                                 </tr>
 
                                 <tr>
@@ -63,7 +63,7 @@
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.enabled" /></th>
                                     <td class="text-nowrap">
                                         <core:choose>
-                                            <core:when test="${profesional.isEnabled()}"><spring:message code="form.label.yes" /></core:when>
+                                            <core:when test="${profesional.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>
                                             <core:otherwise><spring:message code="form.label.no" /></core:otherwise>
                                         </core:choose>
                                     </td>
@@ -90,14 +90,14 @@
                                 <core:choose>
                                     <core:when test="${clientes != null && clientes.size() > 0}">
                                         <core:forEach items="${clientes}" var="cliente">
-                                            <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.isEnabled() ? 'class="table-warning"' : '' }>
+                                            <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.getUsuario().isEnabled() ? 'class="table-warning"' : '' }>
                                                 <th scope="row" class="text-nowrap">${cliente.getId()}</th>
                                                 <td class="text-nowrap">${cliente.getRut()}</td>
                                                 <td>${cliente.getNombre()}</td>
                                                 <td class="text-nowrap">${cliente.getTelefono()}</td>
                                                 <td>
                                                     <core:choose>
-                                                        <core:when test="${cliente.isEnabled()}"><spring:message code="form.label.yes" /></core:when>
+                                                        <core:when test="${cliente.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>
                                                         <core:otherwise><spring:message code="form.label.no" /></core:otherwise>
                                                     </core:choose>
                                                 </td>
