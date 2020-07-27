@@ -1,41 +1,67 @@
 package cl.leid.detta.modelos;
 
-public class Cliente extends Usuario {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import cl.leid.detta.Constantes;
+
+@Entity
+@Table(name = Constantes.TABLA_CLIENTES)
+@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_CLIENTES, sequenceName = Constantes.SECUENCIA_CLIENTES)
+public class Cliente {
 
     // Atributos
     // -----------------------------------------------------------------------------------------
 
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_CLIENTES, strategy = GenerationType.SEQUENCE)
+    @Column(name = "cliente_id", nullable = false, unique = true, updatable = false)
+    private int id;
+
     /** Nombre o Razón Social del {@link Cliente} */
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     /** Rol Único Tributario del {@link Cliente} */
+    @Column(name = "rut", nullable = false, unique = true, updatable = false)
     private String rut;
 
     /** Teléfono de contacto del {@link Cliente} */
+    @Column(name = "telefono", nullable = false)
     private String telefono;
 
     /** Giro o Actividad Económica del {@link Cliente} */
+    @Column(name = "giro", nullable = false)
     private String giro;
 
     /** Cantidad de empleados que trabajan para el {@link Cliente} */
+    @Column(name = "empleados", nullable = false)
     private int empleados;
 
     /**
-     * Tipo de empresa (1:Principal, 2:Contratista, 3:Subcontratista, 4:Servicios
-     * Transitorios)
+     * Tipo de empresa. Posibles valores
+     * <ul>
+     * <li>1: Principal</li>
+     * <li>2: Contratista</li>
+     * <li>3: Subcontratista</li>
+     * <li>4: Servicios Transitorios</li>
+     * </ul>
      */
+    @Column(name = "tipo", nullable = false)
     private int tipo;
 
-    /**
-     * Identificador numérico del {@link Usuario} relacionado con el {@link Cliente}
-     */
-    private int usuarioId;
-
-    /**
-     * Identificador numérico del {@link Profesional} que está a cargo del
-     * {@link Cliente}
-     */
-    private int profesionalId;
+    /** Objeto {@link Usuario} con la información de acceso al sistema */
+    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     // Constructores
     // -----------------------------------------------------------------------------------------
@@ -47,8 +73,39 @@ public class Cliente extends Usuario {
 
     }
 
+    /**
+     * Crea una nueva instancia del objeto {@link Cliente}
+     * 
+     * @param id        identificador numérico
+     * @param nombre    nombre o razón social
+     * @param rut       rol único tributario
+     * @param telefono  teléfono de contacto
+     * @param giro      giro o actividad económica
+     * @param empleados cantidad de empleados
+     * @param tipo      {@link #tipo} de empresa
+     * @param usuario   objeto {@link Usuario} relacionado con el {@link Cliente}
+     */
+    public Cliente(int id, String nombre, String rut, String telefono, String giro, int empleados, int tipo,
+            Usuario usuario) {
+        this.id = id;
+        this.nombre = nombre;
+        this.rut = rut;
+        this.telefono = telefono;
+        this.giro = giro;
+        this.empleados = empleados;
+        this.tipo = tipo;
+        this.usuario = usuario;
+    }
+
     // Getters
     // -----------------------------------------------------------------------------------------
+
+    /**
+     * @return el identificador numérico
+     */
+    public int getId() {
+        return id;
+    }
 
     /**
      * @return el nombre o razón social
@@ -86,29 +143,28 @@ public class Cliente extends Usuario {
     }
 
     /**
-     * @return el tipo de empresa
-     * @see Cliente#tipo
+     * @return el {@link #tipo} de empresa
      */
     public int getTipo() {
         return tipo;
     }
 
     /**
-     * @return el identificador numérico del {@link Usuario}
+     * @return el {@link Usuario} relacionado
      */
-    public int getUsuarioId() {
-        return usuarioId;
-    }
-
-    /**
-     * @return el identificador numérico del {@link Profesional}
-     */
-    public int getProfesionalId() {
-        return profesionalId;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     // Setters
     // -----------------------------------------------------------------------------------------
+
+    /**
+     * @param id el identificador numérico a establecer
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * @param nombre el nombre o razón social a establecer
@@ -146,26 +202,17 @@ public class Cliente extends Usuario {
     }
 
     /**
-     * @param tipo el tipo de empresa a establecer
-     * @see Cliente#tipo
+     * @param tipo el {@link #tipo} a establecer
      */
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 
     /**
-     * @param usuarioId el identificador numérico del {@link Usuario} a establecer
+     * @param usuario el {@link Usuario} a establecer
      */
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    /**
-     * @param profesionalId el identificador numérico del {@link Profesional} a
-     *                      establecer
-     */
-    public void setProfesionalId(int profesionalId) {
-        this.profesionalId = profesionalId;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     // Herencias (Object)
@@ -176,8 +223,9 @@ public class Cliente extends Usuario {
         final int prime = 31;
         int result = super.hashCode();
 
+        result = prime * result + id;
         result = prime * result + ((rut == null) ? 0 : rut.hashCode());
-        result = prime * result + usuarioId;
+        result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 
         return result;
     }
@@ -195,13 +243,19 @@ public class Cliente extends Usuario {
 
         Cliente other = (Cliente) obj;
 
+        if (id != other.id)
+            return false;
+
         if (rut == null) {
             if (other.rut != null)
                 return false;
         } else if (!rut.equals(other.rut))
             return false;
 
-        if (usuarioId != other.usuarioId)
+        if (usuario == null) {
+            if (other.usuario != null)
+                return false;
+        } else if (!usuario.equals(other.usuario))
             return false;
 
         return true;
@@ -209,10 +263,8 @@ public class Cliente extends Usuario {
 
     @Override
     public String toString() {
-        return "Cliente [nombre=" + nombre + ", rut=" + rut + ", telefono=" + telefono + ", giro=" + giro
-                + ", empleados=" + empleados + ", tipo=" + tipo + ", usuarioId=" + usuarioId + ", profesionalId="
-                + profesionalId + ", getEmail()=" + getEmail() + ", getRole()=" + getRole() + ", isEnabled()="
-                + isEnabled() + "]";
+        return "Cliente [id=" + id + ", nombre=" + nombre + ", rut=" + rut + ", telefono=" + telefono + ", giro=" + giro
+                + ", empleados=" + empleados + ", tipo=" + tipo + ", usuario=" + usuario + "]";
     }
 
 }

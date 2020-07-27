@@ -1,21 +1,44 @@
 package cl.leid.detta.modelos;
 
-public class Profesional extends Usuario {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import cl.leid.detta.Constantes;
+
+@Entity
+@Table(name = Constantes.TABLA_PROFESIONALES)
+@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_PROFESIONALES, sequenceName = Constantes.SECUENCIA_PROFESIONALES)
+public class Profesional {
 
     // Atributos
     // -----------------------------------------------------------------------------------------
 
+    /** Identificador numérico del {@link Profesional} en la base de datos */
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_PROFESIONALES, strategy = GenerationType.SEQUENCE)
+    @Column(name = "profesional_id", nullable = false, unique = true, updatable = false)
+    private int id;
+
     /** Nombre completo del {@link Profesional} */
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     /** Teléfono de contacto del {@link Profesional} */
+    @Column(name = "telefono", nullable = false)
     private String telefono;
 
-    /**
-     * Identificador numérico del {@link Usuario} relacionado con el
-     * {@link Profesional}
-     */
-    private int usuarioId;
+    /** Objeto {@link Usuario} con la información de acceso al sistema */
+    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     // Constructores
     // -----------------------------------------------------------------------------------------
@@ -24,11 +47,33 @@ public class Profesional extends Usuario {
      * Crea una nueva instancia vacía del objeto {@link Profesional}
      */
     public Profesional() {
-        super();
+
+    }
+
+    /**
+     * Crea una nueva instancia del objeto {@link Profesional}
+     * 
+     * @param id       identificador numérico
+     * @param nombre   nombre completo
+     * @param telefono teléfono de contacto
+     * @param usuario  objeto {@link Usuario} relacionado
+     */
+    public Profesional(int id, String nombre, String telefono, Usuario usuario) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.usuario = usuario;
     }
 
     // Getters
     // -----------------------------------------------------------------------------------------
+
+    /**
+     * @return el identificador numérico
+     */
+    public int getId() {
+        return id;
+    }
 
     /**
      * @return el nombre completo
@@ -45,14 +90,21 @@ public class Profesional extends Usuario {
     }
 
     /**
-     * @return el identificador numérico del {@link Usuario} relacionado
+     * @return el {@link Usuario}
      */
-    public int getUsuarioId() {
-        return usuarioId;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     // Setters
     // -----------------------------------------------------------------------------------------
+
+    /**
+     * @param id el identificador numérico a establecer
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * @param nombre el nombre completo a establecer
@@ -69,10 +121,10 @@ public class Profesional extends Usuario {
     }
 
     /**
-     * @param usuarioId el identificador numérico del {@link Usuario} a establecer
+     * @param usuario el {@link Usuario} a establecer
      */
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     // Herencias (Object)
@@ -81,9 +133,10 @@ public class Profesional extends Usuario {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = super.hashCode();
+        int result = 1;
 
-        result = prime * result + usuarioId;
+        result = prime * result + id;
+        result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 
         return result;
     }
@@ -93,7 +146,7 @@ public class Profesional extends Usuario {
         if (this == obj)
             return true;
 
-        if (!super.equals(obj))
+        if (obj == null)
             return false;
 
         if (getClass() != obj.getClass())
@@ -101,7 +154,13 @@ public class Profesional extends Usuario {
 
         Profesional other = (Profesional) obj;
 
-        if (usuarioId != other.usuarioId)
+        if (id != other.id)
+            return false;
+
+        if (usuario == null) {
+            if (other.usuario != null)
+                return false;
+        } else if (!usuario.equals(other.usuario))
             return false;
 
         return true;
@@ -109,8 +168,7 @@ public class Profesional extends Usuario {
 
     @Override
     public String toString() {
-        return "Profesional [id=" + getId() + ", nombre=" + nombre + ", email=" + getEmail() + ", telefono=" + telefono
-                + ", usuarioId=" + usuarioId + ", role=" + getRole() + ", enabled=" + isEnabled() + "]";
+        return "Profesional [id=" + id + ", nombre=" + nombre + ", telefono=" + telefono + ", usuario=" + usuario + "]";
     }
 
 }

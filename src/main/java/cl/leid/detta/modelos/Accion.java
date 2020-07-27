@@ -1,15 +1,16 @@
 package cl.leid.detta.modelos;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,6 +20,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_ACCIONES)
+@SequenceGenerator(name = Constantes.SECUENCIA_ACCIONES, sequenceName = Constantes.SECUENCIA_ACCIONES, allocationSize = 1, initialValue = 1)
 public class Accion {
 
     // Atributos
@@ -27,19 +29,22 @@ public class Accion {
     /** Identificador numérico de la {@link Accion} en base de datos */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constantes.SECUENCIA_ACCIONES)
-    @SequenceGenerator(name = Constantes.SECUENCIA_ACCIONES, sequenceName = Constantes.SECUENCIA_ACCIONES, allocationSize = 1, initialValue = 1)
     @Column(name = "accion_id", nullable = false, updatable = false)
     private int id;
-
-    /** Dirección de Correo Electrónico del {@link Usuario} que efectuó la acción */
-    @Column(name = "email", nullable = false, updatable = false)
-    private String email;
 
     /** Detalles de la {@link Accion} */
     @Column(name = "detalles", nullable = false, updatable = false)
     private String detalles;
 
-    /** Categoría de la {@link Accion} (1: Seguridad) */
+    /**
+     * Categoría de la {@link Accion}
+     * <ul>
+     * <li>1: Seguridad</li>
+     * <li>2: Profesionales</li>
+     * <li>3: Clientes</li>
+     * <li>4: Accidentes</li>
+     * <ul>
+     */
     @Column(name = "categoria", nullable = false, updatable = false)
     private int categoria;
 
@@ -47,6 +52,10 @@ public class Accion {
     @CreationTimestamp
     @Column(name = "timestamp", nullable = false, updatable = false)
     private Timestamp timestamp;
+
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     // Constructores
     // -----------------------------------------------------------------------------------------
@@ -61,30 +70,27 @@ public class Accion {
     /**
      * Crea una nueva instancia del objeto {@link Accion}
      * 
-     * @param email     correo electrónico del {@link Usuario}
      * @param detalles  detalles de la {@link Accion}
-     * @param categoria número correspondiente a la categoría
-     * @see Accion#categoria
+     * @param categoria {@link #categoria} de la {@link Accion}
+     * @param usuario   información del {@link Usuario}
      */
-    public Accion(String email, String detalles, int categoria) {
-        this.email = email;
+    public Accion(String detalles, int categoria, Usuario usuario) {
         this.detalles = detalles;
         this.categoria = categoria;
+        this.usuario = usuario;
     }
 
     /**
      * Crea una nueva instancia del objeto {@link Accion}
      * 
      * @param id        identificador numérico
-     * @param email     correo electrónico del {@link Usuario}
-     * @param detalles  detalles de la {@link Accion}
+     * @param detalles  detalles
      * @param categoria categoría
-     * @param timestamp instante de tiempo
-     * 
-     * @see Accion#categoria
+     * @param timestamp marca de tiempo
+     * @param usuario   {@link Usuario}
      */
-    public Accion(int id, String email, String detalles, int categoria, Timestamp timestamp) {
-        this(email, detalles, categoria);
+    public Accion(int id, String detalles, int categoria, Timestamp timestamp, Usuario usuario) {
+        this(detalles, categoria, usuario);
 
         this.id = id;
         this.timestamp = timestamp;
@@ -94,23 +100,18 @@ public class Accion {
     // -----------------------------------------------------------------------------------------
 
     /**
-     * @return la fecha obtenida de {@link #timestamp}
+     * @return la fecha a partir del {@link #timestamp} con el formato yyyy/MM/dd
      */
     public String getFecha() {
-        // Obtener la fecha
-        LocalDate fecha = timestamp.toLocalDateTime().toLocalDate();
-
-        return fecha.toString();
+        return timestamp.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 
     /**
-     * @return la hora obtenida de {@link #timestamp} con formato HH:mm (24 horas)
+     * @return la hora a partir del {@link #timestamp} con el formato HH:mm (24
+     *         horas)
      */
     public String getHora() {
-        // Obtener la hora
-        LocalTime hora = timestamp.toLocalDateTime().toLocalTime();
-
-        return hora.format(DateTimeFormatter.ofPattern("HH:mm"));
+        return timestamp.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     // Getters
@@ -124,13 +125,6 @@ public class Accion {
     }
 
     /**
-     * @return el correo electrónico del {@link Usuario}
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
      * @return los detalles
      */
     public String getDetalles() {
@@ -138,18 +132,24 @@ public class Accion {
     }
 
     /**
-     * @return la categoría
-     * @see Accion#categoria
+     * @return la {@link #categoria}
      */
     public int getCategoria() {
         return categoria;
     }
 
     /**
-     * @return el instante de tiempo
+     * @return la marca de tiempo
      */
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * @return el {@link Usuario}
+     */
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     // Setters
@@ -163,13 +163,6 @@ public class Accion {
     }
 
     /**
-     * @param email el correo electrónico a establecer
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
      * @param detalles los detalles a establecer
      */
     public void setDetalles(String detalles) {
@@ -177,18 +170,24 @@ public class Accion {
     }
 
     /**
-     * @param categoria la categoría a establecer
-     * @see Accion#categoria
+     * @param categoria la {@link #categoria} a establecer
      */
     public void setCategoria(int categoria) {
         this.categoria = categoria;
     }
 
     /**
-     * @param timestamp el instante de tiempo a establecer
+     * @param timestamp la marca de tiempo a establecer
      */
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * @param usuario el {@link Usuario} a establecer
+     */
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     // Herencias (Object)
@@ -225,8 +224,8 @@ public class Accion {
 
     @Override
     public String toString() {
-        return "Accion [id=" + id + ", email=" + email + ", detalles=" + detalles + ", categoria=" + categoria
-                + ", timestamp=" + timestamp + "]";
+        return "Accion [id=" + id + ", detalles=" + detalles + ", categoria=" + categoria + ", timestamp=" + timestamp
+                + ", usuario=" + usuario + "]";
     }
 
 }

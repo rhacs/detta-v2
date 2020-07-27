@@ -1,72 +1,109 @@
 package cl.leid.detta.modelos;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import cl.leid.detta.Constantes;
+
+@Entity
+@Table(name = Constantes.TABLA_ACCIDENTES)
+@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_ACCIDENTES, sequenceName = Constantes.SECUENCIA_ACCIDENTES)
 public class Accidente {
 
     // Atributos
     // -----------------------------------------------------------------------------------------
 
     /** Identificador numérico del {@link Accidente} en base de datos */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constantes.SECUENCIA_ACCIDENTES)
+    @Column(name = "accidente_id", nullable = false, updatable = false)
     private int id;
 
     /** Fecha en que ocurrió el {@link Accidente} */
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private LocalDate fecha;
+    @Column(name = "fecha", nullable = false)
+    private Date fecha;
 
     /** Hora en que ocurrió el {@link Accidente} */
     @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime hora;
+    @Column(name = "hora", nullable = false)
+    private Time hora;
 
     /** Dirección donde ocurrió el {@link Accidente} */
+    @Column(name = "direccion", nullable = false)
     private String direccion;
 
     /** Lugar específico de la dirección donde ocurrió el {@link Accidente} */
+    @Column(name = "lugar", nullable = false)
     private String lugar;
 
     /** Qué estaba haciendo el trabajador al momento del {@link Accidente} */
+    @Column(name = "circunstancia", nullable = false)
     private String circunstancia;
 
     /** Qué pasó o cómo ocurrió el {@link Accidente} */
+    @Column(name = "detalles", nullable = false)
     private String detalles;
 
     /**
-     * Clasificación del {@link Accidente} (1: Leve, 2: Grave, 3: Fatal, 4: Otro)
+     * Clasificación del {@link Accidente}
+     * <ul>
+     * <li>1: Leve</li>
+     * <li>2: Grave</li>
+     * <li>3: Fatal</li>
+     * <li>4: Otro</li>
+     * </ul>
      */
+    @Column(name = "clasificacion", nullable = false)
     private int clasificacion;
 
-    /** Tipo de {@link Accidente} (1: Trabajo, 2: Trayecto) */
+    /**
+     * Tipo de {@link Accidente}
+     * <ul>
+     * <li>1: Trabajo</li>
+     * <li>2: Trayecto</li>
+     * </ul>
+     */
+    @Column(name = "tipo", nullable = false)
     private int tipo;
 
     /**
-     * Evidencia o medio de prueba que respalda al {@link Accidente} (1: Parte de
-     * Carabineros, 2: Declaración, 3: Testigos, 4: Otro)
+     * Evidencia o medio de prueba que respalda al {@link Accidente}
+     * <ul>
+     * <li>1: Parte Policial</li>
+     * <li>2: Declaración</li>
+     * <li>3: Testigos</li>
+     * <li>4: Otro</li>
      */
+    @Column(name = "evidencia", nullable = false)
     private int evidencia;
 
     /** Fecha en que se registró el {@link Accidente} en el repositorio */
-    private LocalDateTime fechaRegistro;
+    @CreationTimestamp
+    @Column(name = "fecha_registro", nullable = false, updatable = false)
+    private Timestamp fechaRegistro;
 
-    /**
-     * Identificador numérico del {@link Cliente} relacionado con el
-     * {@link Accidente}
-     */
-    private int clienteId;
+    /** {@link Cliente} asociado al {@link Accidente} */
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
-    /** Nombre del {@link Cliente} relacionado con el {@link Accidente} */
-    private String clienteNombre;
-
-    /**
-     * Identificador numérico del {@link Profesional} relacionado con el
-     * {@link Cliente}
-     */
-    private Integer profesionalId;
-
-    //
+    // Constructores
     // -----------------------------------------------------------------------------------------
 
     /**
@@ -89,14 +126,14 @@ public class Accidente {
     /**
      * @return la fecha
      */
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
     /**
      * @return la hora
      */
-    public LocalTime getHora() {
+    public Time getHora() {
         return hora;
     }
 
@@ -129,24 +166,21 @@ public class Accidente {
     }
 
     /**
-     * @return la clasificacion
-     * @see Accidente#clasificacion
+     * @return la {@link #clasificacion}
      */
     public int getClasificacion() {
         return clasificacion;
     }
 
     /**
-     * @return el tipo
-     * @see Accidente#tipo
+     * @return el {@link #tipo}
      */
     public int getTipo() {
         return tipo;
     }
 
     /**
-     * @return la evidencia de respaldo
-     * @see Accidente#evidencia
+     * @return la {@link #evidencia}
      */
     public int getEvidencia() {
         return evidencia;
@@ -155,29 +189,15 @@ public class Accidente {
     /**
      * @return la fecha de registro en el sistema
      */
-    public LocalDateTime getFechaRegistro() {
+    public Timestamp getFechaRegistro() {
         return fechaRegistro;
     }
 
     /**
-     * @return el identificador numérico del {@link Cliente}
+     * @return el {@link Cliente}
      */
-    public int getClienteId() {
-        return clienteId;
-    }
-
-    /**
-     * @return el nombre del {@link Cliente}
-     */
-    public String getClienteNombre() {
-        return clienteNombre;
-    }
-
-    /**
-     * @return el identificador numérico del {@link Profesional}
-     */
-    public Integer getProfesionalId() {
-        return profesionalId;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     // Setters
@@ -193,14 +213,14 @@ public class Accidente {
     /**
      * @param fecha la fecha a establecer
      */
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
     /**
      * @param hora la hora a establecer
      */
-    public void setHora(LocalTime hora) {
+    public void setHora(Time hora) {
         this.hora = hora;
     }
 
@@ -233,56 +253,38 @@ public class Accidente {
     }
 
     /**
-     * @param clasificacion la clasificación a establecer
-     * @see Accidente#clasificacion
+     * @param clasificacion la {@link #clasificacion} a establecer
      */
     public void setClasificacion(int clasificacion) {
         this.clasificacion = clasificacion;
     }
 
     /**
-     * @param tipo el tipo a establecer
-     * @see Accidente#tipo
+     * @param tipo el {@link #tipo} a establecer
      */
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 
     /**
-     * @param evidencia la evidencia de respaldo a establecer
-     * @see Accidente#evidencia
+     * @param evidencia la {@link #evidencia} a establecer
      */
     public void setEvidencia(int evidencia) {
         this.evidencia = evidencia;
     }
 
     /**
-     * @param fechaRegistro la fecha de registro en el sistema a establecer
+     * @param fechaRegistro la fecha de registro a establecer
      */
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+    public void setFechaRegistro(Timestamp fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
     /**
-     * @param clienteId el identificador numérico del {@link Cliente} a establecer
+     * @param cliente el {@link Cliente} a establecer
      */
-    public void setClienteId(int clienteId) {
-        this.clienteId = clienteId;
-    }
-
-    /**
-     * @param clienteNombre el nombre del {@link Cliente} a establecer
-     */
-    public void setClienteNombre(String clienteNombre) {
-        this.clienteNombre = clienteNombre;
-    }
-
-    /**
-     * @param profesionalId el identificador numérico del {@link Profesional} a
-     *                      establecer
-     */
-    public void setProfesionalId(Integer profesionalId) {
-        this.profesionalId = profesionalId;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     // Herencias (Object)
@@ -322,8 +324,7 @@ public class Accidente {
         return "Accidente [id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", direccion=" + direccion + ", lugar="
                 + lugar + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion="
                 + clasificacion + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro
-                + ", clienteId=" + clienteId + ", clienteNombre=" + clienteNombre + ", profesionalId=" + profesionalId
-                + "]";
+                + ", cliente=" + cliente + "]";
     }
 
 }

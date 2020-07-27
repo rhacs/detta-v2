@@ -1,23 +1,42 @@
 package cl.leid.detta.modelos;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import cl.leid.detta.Constantes;
+
+@Entity
+@Table(name = Constantes.TABLA_USUARIOS)
+@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_USUARIOS, sequenceName = Constantes.SECUENCIA_USUARIOS)
 public class Usuario {
 
     // Atributos
     // -----------------------------------------------------------------------------------------
 
     /** Identificador numérico del {@link Usuario} en la base de datos */
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_USUARIOS, strategy = GenerationType.SEQUENCE)
+    @Column(name = "usuario_id", nullable = false, unique = true, updatable = false)
     private int id;
 
     /** Dirección de correo electrónico del {@link Usuario} */
+    @Column(name = "email", nullable = false, unique = true, updatable = false)
     private String email;
 
     /** Contraseña de acceso al sistema del {@link Usuario} */
+    @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
-    /** Rol del {@link Usuario} en el sistema */
-    private String role;
-
     /** Indica si el {@link Usuario} está o no habilitado para acceder al sistema */
+    @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
     // Constructores
@@ -35,15 +54,14 @@ public class Usuario {
      * 
      * @param id       identificador numérico
      * @param email    dirección de correo electrónico
-     * @param password contraseña de acceso al sistema
-     * @param role     rol en el sistema
-     * @param enabled  habilitado o no para acceder al sistema
+     * @param password contraseña
+     * @param enabled  si se le permitirá ({@code true}) o no ({@code false}) el
+     *                 acceso al sistema
      */
-    public Usuario(int id, String email, String password, String role, boolean enabled) {
+    public Usuario(int id, String email, String password, boolean enabled) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.role = role;
         this.enabled = enabled;
     }
 
@@ -65,21 +83,14 @@ public class Usuario {
     }
 
     /**
-     * @return la contraseña de acceso
+     * @return la contraseña
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * @return el rol del {@link Usuario} en el sistema
-     */
-    public String getRole() {
-        return role;
-    }
-
-    /**
-     * @return si el usuario está o no habilitado para acceder al sistema
+     * @return si el {@link Usuario} está o no habilitado para acceder al sistema
      */
     public boolean isEnabled() {
         return enabled;
@@ -103,21 +114,15 @@ public class Usuario {
     }
 
     /**
-     * @param password la contraseña de acceso a establecer
+     * @param password la contraseña a establecer
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * @param role el rol a establecer
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    /**
-     * @param enabled si el usuario está o no habilitado para acceder al sistema
+     * @param enabled si se le permitirá al {@link Usuario} ingresar ({@code true})
+     *                o no ({@code false}) al sistema
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -164,7 +169,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario [id=" + id + ", email=" + email + ", role=" + role + ", enabled=" + enabled + "]";
+        return "Usuario [id=" + id + ", email=" + email + ", enabled=" + enabled + "]";
     }
 
 }
