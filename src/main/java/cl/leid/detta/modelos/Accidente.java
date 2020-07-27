@@ -1,8 +1,7 @@
 package cl.leid.detta.modelos;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,12 +36,14 @@ public class Accidente {
     /** Fecha en que ocurrió el {@link Accidente} */
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name = "fecha", nullable = false)
-    private Date fecha;
+    private LocalDate fecha;
 
-    /** Hora en que ocurrió el {@link Accidente} */
-    @DateTimeFormat(pattern = "HH:mm")
-    @Column(name = "hora", nullable = false)
-    private Time hora;
+    /* Hora en que ocurrió el {@link Accidente} */
+    /*
+     * @DateTimeFormat(pattern = "HH:mm")
+     * 
+     * @Column(name = "hora", nullable = false) private LocalTime hora;
+     */
 
     /** Dirección donde ocurrió el {@link Accidente} */
     @Column(name = "direccion", nullable = false)
@@ -126,16 +127,16 @@ public class Accidente {
     /**
      * @return la fecha
      */
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    /**
+    /*
      * @return la hora
      */
-    public Time getHora() {
-        return hora;
-    }
+    /*
+     * public LocalTime getHora() { return hora; }
+     */
 
     /**
      * @return la dirección
@@ -213,16 +214,16 @@ public class Accidente {
     /**
      * @param fecha la fecha a establecer
      */
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    /**
+    /*
      * @param hora la hora a establecer
      */
-    public void setHora(Time hora) {
-        this.hora = hora;
-    }
+    /*
+     * public void setHora(LocalTime hora) { this.hora = hora; }
+     */
 
     /**
      * @param direccion la dirección a establecer
@@ -321,10 +322,10 @@ public class Accidente {
 
     @Override
     public String toString() {
-        return "Accidente [id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", direccion=" + direccion + ", lugar="
-                + lugar + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion="
-                + clasificacion + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro
-                + ", cliente=" + cliente + "]";
+        return "Accidente [id=" + id + ", fecha=" + fecha + ", direccion=" + direccion + ", lugar=" + lugar
+                + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion=" + clasificacion
+                + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro + ", cliente="
+                + cliente + "]";
     }
 
 }
