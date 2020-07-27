@@ -59,8 +59,6 @@
     </authentication-manager>
 
     <!-- Definición del Manipulador de Acceso Denegado -->
-    <beans:bean id="customAccessDeniedHandler" class="cl.leid.detta.handlers.CustomAccessDeniedHandler">
-        <beans:property name="jdbcTemplate" ref="jdbcTemplate" />
-    </beans:bean>
+    <beans:bean id="customAccessDeniedHandler" class="cl.leid.detta.handlers.CustomAccessDeniedHandler" />
 
 </beans:beans>
