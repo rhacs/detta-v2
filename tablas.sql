@@ -65,17 +65,17 @@ END;
 
 CREATE TABLE detta_acciones (
     accion_id NUMBER NOT NULL,
-    email NVARCHAR2(150) NOT NULL,
     detalles NVARCHAR2(1000) NOT NULL,
     categoria NUMBER(1) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    usuario_id NUMBER NOT NULL,
 
     -- Llave primaria
     CONSTRAINT detta_acciones_pk PRIMARY KEY (accion_id),
 
     -- Llave foránea
-    CONSTRAINT detta_acciones_fk FOREIGN KEY (email)
-        REFERENCES detta_usuarios (email) ON DELETE CASCADE
+    CONSTRAINT detta_acciones_fk FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE
 );
 
 -- Secuencia
