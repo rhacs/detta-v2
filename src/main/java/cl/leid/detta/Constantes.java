@@ -44,6 +44,18 @@ public class Constantes {
     /** Secuencia generadora de IDs para {@link Accion} */
     public static final String SECUENCIA_ACCIONES = "detta_acciones_sq";
 
+    // Roles
+    // -----------------------------------------------------------------------------------------
+
+    /** Rol del Administrador en el sistema */
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    /** Rol del {@link Profesional} en el sistema */
+    public static final String ROLE_STAFF = "ROLE_STAFF";
+
+    /** Rol del {@link Cliente} en el sistema */
+    public static final String ROLE_CLIENT = "ROLE_CLIENT";
+
     // Constructores
     // -----------------------------------------------------------------------------------------
 
