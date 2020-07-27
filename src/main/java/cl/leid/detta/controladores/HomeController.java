@@ -6,26 +6,29 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cl.leid.detta.Constantes;
 import cl.leid.detta.modelos.Accidente;
 import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
+import cl.leid.detta.modelos.Usuario;
 import cl.leid.detta.repositorios.AccidentesRepositorio;
 import cl.leid.detta.repositorios.AccionesRepositorio;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
+import cl.leid.detta.repositorios.UsuariosRepositorio;
 
 @Controller
 public class HomeController {
@@ -40,12 +43,20 @@ public class HomeController {
     @Autowired
     private MessageSource messageSource;
 
-    /**
-     * Objeto {@link JdbcTemplate} con los métodos de manipulación de la base de
-     * datos
-     */
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private UsuariosRepositorio usuariosRepositorio;
+
+    @Autowired
+    private AccionesRepositorio accionesRepositorio;
+
+    @Autowired
+    private AccidentesRepositorio accidentesRepositorio;
+
+    @Autowired
+    private ProfesionalesRepositorio profesionalesRepositorio;
+
+    @Autowired
+    private ClientesRepositorio clientesRepositorio;
 
     // Solicitudes GET
     // ----------------------------------------------------------------------------------------
@@ -65,112 +76,106 @@ public class HomeController {
         // Crear vista
         ModelAndView vista = new ModelAndView("reportes");
 
-        // Inicializar repositorios
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+        // Obtener información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
-        // Inicializar objeto de símbolos
-        DateFormatSymbols simbolos = new DateFormatSymbols(locale);
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Inicializar listado
+            List<Accidente> accidentes = null;
 
-        // Obtener meses
-        String[] meses = simbolos.getMonths();
-        int[] mesesAccidentes = new int[meses.length];
+            // Verificar autoridad
+            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
+                // Buscar todos los accidentes
+                accidentes = accidentesRepositorio.findAll();
 
-        // Generar arreglo de accidentes por tipo
-        String[] tipos = new String[] { messageSource.getMessage("form.label.accident_type.work", null, locale),
-                messageSource.getMessage("form.label.accident_type.journey", null, locale) };
-        int[] tiposAccidentes = new int[tipos.length];
+                // Buscar todas las acciones
+                List<Accion> acciones = accionesRepositorio.findAll();
 
-        // Generar arreglo para accidentes por clasificación
-        String[] clasificacion = new String[] {
-                messageSource.getMessage("form.label.accident_class.mild", null, locale),
-                messageSource.getMessage("form.label.accident_class.serious", null, locale),
-                messageSource.getMessage("form.label.accident_class.fatal", null, locale),
-                messageSource.getMessage("form.label.accident_class.other", null, locale) };
-        int[] clasificacionAccidentes = new int[clasificacion.length];
+                // Agregar a la vista
+                vista.addObject("acciones", acciones);
+            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                // Buscar información del profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
-        // Inicializar listado de accidentes
-        List<Accidente> accidentes = new ArrayList<>();
+                // Verificar si existe
+                if (profesional.isPresent()) {
+                    // Buscar los clientes del profesional
+                    List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get());
 
-        // Verificar permisos del usuario autenticado
-        if (request.isUserInRole("ROLE_ADMIN")) {
-            // Buscar todas las acciones
-            List<Accion> acciones = new AccionesRepositorio(jdbcTemplate).buscarTodos();
+                    // Verificar si hay clientes
+                    if (clientes != null && !clientes.isEmpty()) {
+                        // Inicializar listado de accidentes
+                        accidentes = new ArrayList<>();
 
-            // Agregar a la vista
-            vista.addObject("acciones", acciones);
+                        // Por cada cliente
+                        for (Cliente c : clientes) {
+                            // Buscar listado de accidentes
+                            List<Accidente> aux = accidentesRepositorio.findByCliente(c);
 
-            // Buscar todos los accidentes
-            accidentes = accidentesRepositorio.buscarTodos();
-        } else if (request.isUserInRole("ROLE_STAFF")) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
-
-            // Buscar todos los clientes del profesional
-            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
-
-            // Verificar si hay resultados
-            if (clientes != null) {
-                // Por cada cliente
-                for (Cliente c : clientes) {
-                    // Buscar los accidentes del cliente
-                    List<Accidente> aux = accidentesRepositorio.buscarPorClienteId(c.getId());
-
-                    // Verificar resultados
-                    if (aux != null) {
-                        accidentes.addAll(aux);
+                            // Si tiene accidentes
+                            if (aux != null && !aux.isEmpty()) {
+                                // Agregar al listado
+                                accidentes.addAll(aux);
+                            }
+                        }
                     }
                 }
-            }
-        } else if (request.isUserInRole("ROLE_CLIENT")) {
-            // Buscar información del cliente
-            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
+            } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                // Buscar información del cliente
+                Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
 
-            // Buscar todos los accidentes del cliente
-            accidentes = accidentesRepositorio.buscarPorClienteId(cliente.getId());
-        }
-
-        // Verificar si hay resultados
-        if (accidentes != null) {
-            // Obtener año actual
-            int year = Year.now().getValue();
-
-            // Por cada accidente, extraer la información necesaria
-            accidentes.forEach(accidente -> {
-                // Obtener fecha
-                LocalDate fecha = accidente.getFecha();
-
-                // Verificar si ocurrió el año actual
-                if (fecha.getYear() == year) {
-                    // Obtener mes
-                    int mes = fecha.getMonthValue();
-
-                    // Sumar una unidad a la cantidad de accidentes por mes
-                    mesesAccidentes[mes - 1] += 1;
-
-                    // Obtener tipo y sumar una unidad
-                    int tipo = accidente.getTipo();
-                    tiposAccidentes[tipo - 1] += 1;
-
-                    // Obtener clasificacion y sumar una unidad
-                    int clas = accidente.getClasificacion();
-                    clasificacionAccidentes[clas - 1] += 1;
+                // Verificar si existe
+                if (cliente.isPresent()) {
+                    // Buscar todos los accidentes del cliente
+                    accidentes = accidentesRepositorio.findByCliente(cliente.get());
                 }
-            });
+            }
+
+            // Verificar que hayan accidentes
+            if (accidentes != null && !accidentes.isEmpty()) {
+                // Inicializar listados
+                String[] meses = new DateFormatSymbols(locale).getMonths();
+                String[] tipos = new String[] { messageSource.getMessage("form.label.accident_type.work", null, locale),
+                        messageSource.getMessage("form.label.accident_type.journey", null, locale) };
+                String[] clasificaciones = new String[] {
+                        messageSource.getMessage("form.label.accident_class.mild", null, locale),
+                        messageSource.getMessage("form.label.accident_class.serious", null, locale),
+                        messageSource.getMessage("form.label.accident_class.fatal", null, locale),
+                        messageSource.getMessage("form.label.accident_class.other", null, locale) };
+
+                int[] mesesValores = new int[meses.length];
+                int[] tiposValores = new int[tipos.length];
+                int[] clasificacionesValores = new int[clasificaciones.length];
+
+                // Por cada accidente
+                accidentes.forEach(accidente -> {
+                    // Obtener fecha
+                    LocalDate fecha = accidente.getFecha();
+
+                    // Año actual
+                    int year = Year.now().getValue();
+
+                    // Capturar los accidentes del año actual
+                    if (fecha.getYear() == year) {
+                        // Sumar una unidad
+                        mesesValores[fecha.getMonthValue() - 1] += 1;
+                        tiposValores[accidente.getTipo() - 1] += 1;
+                        clasificacionesValores[accidente.getClasificacion() - 1] += 1;
+                    }
+                });
+
+                // Agregar valores a la vista
+                vista.addObject("perMonthLabels", new JSONArray(meses));
+                vista.addObject("perMonthValues", new JSONArray(mesesValores));
+
+                vista.addObject("perTypeLabels", new JSONArray(tipos));
+                vista.addObject("perTypeValues", new JSONArray(tiposValores));
+
+                vista.addObject("perClassLabels", new JSONArray(clasificaciones));
+                vista.addObject("perClassValues", new JSONArray(clasificacionesValores));
+            }
         }
-
-        // Agregar listado de meses a la vista
-        vista.addObject("perMonthLabels", new JSONArray(meses));
-        vista.addObject("perMonthValues", new JSONArray(mesesAccidentes));
-
-        // Agregar listado de tipos a la vista
-        vista.addObject("perTypeLabels", new JSONArray(tipos));
-        vista.addObject("perTypeValues", new JSONArray(tiposAccidentes));
-
-        // Agregar a la vista
-        vista.addObject("perClassLabels", new JSONArray(clasificacion));
-        vista.addObject("perClassValues", new JSONArray(clasificacionAccidentes));
 
         // Agregar título
         vista.addObject("titulo", messageSource.getMessage("titles.dashboard", null, locale));
