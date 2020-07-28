@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import cl.leid.detta.Constantes;
 
@@ -29,15 +32,19 @@ public class Profesional {
 
     /** Nombre completo del {@link Profesional} */
     @Column(name = "nombre", nullable = false)
+    @Size(min = 5, max = 100)
     private String nombre;
 
     /** Teléfono de contacto del {@link Profesional} */
     @Column(name = "telefono", nullable = false)
+    @Size(min = 7, max = 20)
+    @Pattern(regexp = "[0-9]+")
     private String telefono;
 
     /** Objeto {@link Usuario} con la información de acceso al sistema */
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
-    @JoinColumn(name = "usuario_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id", unique = true, updatable = false)
+    @Valid
     private Usuario usuario;
 
     // Constructores
@@ -47,7 +54,7 @@ public class Profesional {
      * Crea una nueva instancia vacía del objeto {@link Profesional}
      */
     public Profesional() {
-
+        // this.usuario = new Usuario();
     }
 
     /**
