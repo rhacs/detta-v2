@@ -1,12 +1,16 @@
 package cl.leid.detta.modelos;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,6 +32,8 @@ public class Usuario {
 
     /** Dirección de correo electrónico del {@link Usuario} */
     @Column(name = "email", nullable = false, unique = true, updatable = false)
+    @Email
+    @Size(min = 5, max = 250)
     private String email;
 
     /** Contraseña de acceso al sistema del {@link Usuario} */
@@ -39,6 +45,9 @@ public class Usuario {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Rol rol;
+
     // Constructores
     // -----------------------------------------------------------------------------------------
 
@@ -46,7 +55,7 @@ public class Usuario {
      * Crea una nueva instancia vacía del objeto {@link Usuario}
      */
     public Usuario() {
-
+        this.rol = new Rol();
     }
 
     /**
@@ -57,12 +66,14 @@ public class Usuario {
      * @param password contraseña
      * @param enabled  si se le permitirá ({@code true}) o no ({@code false}) el
      *                 acceso al sistema
+     * @param rol      {@link Rol}
      */
-    public Usuario(int id, String email, String password, boolean enabled) {
+    public Usuario(int id, String email, String password, boolean enabled, Rol rol) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
+        this.rol = rol;
     }
 
     // Getters
@@ -96,6 +107,13 @@ public class Usuario {
         return enabled;
     }
 
+    /**
+     * @return el {@link Rol}
+     */
+    public Rol getRol() {
+        return rol;
+    }
+
     // Setters
     // -----------------------------------------------------------------------------------------
 
@@ -126,6 +144,13 @@ public class Usuario {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * @param rol el {@link Rol} a establecer
+     */
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     // Herencias (Object)
