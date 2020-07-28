@@ -50,7 +50,7 @@
         <authentication-provider>
             <!-- Referencia al dataSource definido en root-context.xml -->
             <jdbc-user-service data-source-ref="dataSource"
-                authorities-by-username-query="SELECT email, role FROM detta_usuarios_roles WHERE email = ?"
+                authorities-by-username-query="SELECT u.email, r.role FROM detta_usuarios u INNER JOIN detta_usuarios_roles r ON u.usuario_id = r.usuario_id WHERE u.email = ?"
                 users-by-username-query="SELECT email, password, enabled FROM detta_usuarios WHERE email = ?" />
 
             <!-- Proveedor de encriptación -->
