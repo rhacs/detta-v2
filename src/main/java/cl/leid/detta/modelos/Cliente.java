@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import cl.leid.detta.Constantes;
 
@@ -28,14 +30,18 @@ public class Cliente {
 
     /** Nombre o Razón Social del {@link Cliente} */
     @Column(name = "nombre", nullable = false)
+    @Size(min = 5, max = 250)
     private String nombre;
 
     /** Rol Único Tributario del {@link Cliente} */
     @Column(name = "rut", nullable = false, unique = true, updatable = false)
+    @Size(min = 9, max = 10)
+    @Pattern(regexp = "[1-9][0-9]{8,9}")
     private String rut;
 
     /** Teléfono de contacto del {@link Cliente} */
     @Column(name = "telefono", nullable = false)
+    @Size(min = 7, max = 20)
     private String telefono;
 
     /** Giro o Actividad Económica del {@link Cliente} */
