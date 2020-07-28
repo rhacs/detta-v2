@@ -72,11 +72,10 @@ public class ProfesionalesController {
     /**
      * Muestra el listado de {@link Profesional}es
      * 
-     * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping
-    public ModelAndView mostrarListado(Locale locale) {
+    public ModelAndView mostrarListado() {
         // Crear vista
         ModelAndView vista = new ModelAndView("profesionales");
 
@@ -86,9 +85,6 @@ public class ProfesionalesController {
         // Agregar listado a la vista
         vista.addObject("profesionales", profesionales);
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
-
         return vista;
     }
 
@@ -96,11 +92,10 @@ public class ProfesionalesController {
      * Muestra los detalles del {@link Profesional} seleccionado
      * 
      * @param id     identificador numérico del {@link Profesional}
-     * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping(path = "/{id}")
-    public ModelAndView mostrarDetalles(@PathVariable int id, Locale locale) {
+    public ModelAndView mostrarDetalles(@PathVariable int id) {
         // Buscar el profesional
         Optional<Profesional> profesional = profesionalesRepositorio.findById(id);
 
@@ -118,9 +113,6 @@ public class ProfesionalesController {
             // Agregar listado a la vista
             vista.addObject("clientes", clientes);
 
-            // Agregar título
-            vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
-
             return vista;
         }
 
@@ -136,11 +128,10 @@ public class ProfesionalesController {
      * 
      * @param id     identificador numérico del {@link Profesional} (opcional, puede
      *               ser {@code null})
-     * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping(path = { "/{id}/editar", "/agregar" })
-    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id, Locale locale) {
+    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id) {
         // Crear vista
         ModelAndView vista = new ModelAndView("profesionales/formulario");
 
@@ -171,9 +162,6 @@ public class ProfesionalesController {
             // Agregar acción
             vista.addObject("accion", "agregar");
         }
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
 
         // Devolver vista
         return vista;
@@ -270,11 +258,10 @@ public class ProfesionalesController {
      * @param id     identificador numérico del {@link Profesional}
      * @param auth   objeto {@link Authentication} con la información del
      *               {@link Usuario} autenticado
-     * @param locale objeto {@link Locale} con la información regional del cliente
      * @return objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{id}/eliminar")
-    public String eliminarRegistro(@PathVariable int id, Authentication auth, Locale locale) {
+    public String eliminarRegistro(@PathVariable int id, Authentication auth) {
         // Obtener información del Profesional
         Optional<Profesional> profesional = profesionalesRepositorio.findById(id);
 
