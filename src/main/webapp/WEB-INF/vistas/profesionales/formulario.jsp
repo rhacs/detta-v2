@@ -35,30 +35,33 @@
 
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
-                                    <form:input path="nombre" type="text" class="form-control" minlength="10" maxlength="100" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
+                                    <form:input path="nombre" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="name" autofocus="autofocus" />
+                                    <form:errors path="nombre" cssClass="invalid-feedback" element="div" />
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="email"><spring:message code="form.label.email" /></form:label>
+                                    <form:label path="usuario.email"><spring:message code="form.label.email" /></form:label>
                                     <core:choose>
                                         <core:when test="${accion eq 'editar'}">
-                                            <form:input path="email" type="email" class="form-control" autocomplete="email" required="required" readonly="true" />
+                                            <form:input path="usuario.email" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="email" readonly="true" />
                                         </core:when>
                                         <core:otherwise>
-                                            <form:input path="email" type="email" class="form-control" minlength="10" maxlength="150" cssErrorClass="invalid" autocomplete="email" required="required" />
+                                            <form:input path="usuario.email" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="email" />
                                         </core:otherwise>
                                     </core:choose>
+                                    <form:errors path="usuario.email" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" pattern="[0-9]+" minlength="7" maxlength="20" type="tel" class="form-control" cssErrorClass="invalid" autocomplete="tel" required="required" aria-labelledby="phoneHelp" />
+                                    <form:input path="telefono" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="tel" aria-labelledby="phoneHelp" />
+                                    <form:errors path="telefono" cssClass="invalid-feedback" />
                                     <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="enabled"><spring:message code="form.label.enabled" /></form:label>
-                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid" aria-labelledby="enabledHelp">
+                                    <form:label path="usuario.enabled"><spring:message code="form.label.enabled" /></form:label>
+                                    <form:select path="usuario.enabled" class="form-control" cssErrorClass="invalid" aria-labelledby="enabledHelp">
                                         <form:option value="true"><spring:message code="form.label.yes" /></form:option>
                                         <form:option value="false"><spring:message code="form.label.no" /></form:option>
                                     </form:select>
