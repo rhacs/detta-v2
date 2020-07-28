@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
                                     <form:input path="nombre" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="name" autofocus="autofocus" />
-                                    <form:errors path="nombre" cssClass="invalid-feedback" element="div" />
+                                    <form:errors path="nombre" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">

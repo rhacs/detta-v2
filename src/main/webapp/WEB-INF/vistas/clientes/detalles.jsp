@@ -93,7 +93,7 @@
                                     </td>
                                 </tr>
 
-                                <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CLIENT')">
+                                <sec:authorize access="hasAuthority('ROLE_ADMIN')">
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.professional" /></th>
                                     <td>

@@ -32,80 +32,87 @@
                         <div class="card-body">
                             <form:form method="post" modelAttribute="cliente">
                                 <form:hidden path="id" />
-                                <form:hidden path="usuarioId" />
+                                <form:hidden path="usuario.id" />
 
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.client_name" /></form:label>
-                                    <form:input path="nombre" type="text" minlength="5" maxlength="250" class="form-control" cssErrorClass="invalid" autocomplete="name" autofocus="autofocus" required="required" />
+                                    <form:input path="nombre" class="form-control" cssErrorClass="form-control is-invalid" autofocus="autofocus" />
+                                    <form:errors path="nombre" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="rut"><spring:message code="form.label.rut" /></form:label>
                                     <core:choose>
                                         <core:when test="${accion eq 'editar'}">
-                                            <form:input path="rut" type="text" class="form-control" readonly="true" aria-labelledby="rutHelp" />
+                                            <form:input path="rut" class="form-control" readonly="true" aria-labelledby="rutHelp" />
                                         </core:when>
                                         <core:otherwise>
-                                            <form:input path="rut" type="text" class="form-control" pattern="[1-9][0-9]{7}[0-9k]" cssErrorClass="invalid" required="required" aria-labelledby="rutHelp" />
+                                            <form:input path="rut" class="form-control" cssErrorClass="form-control is-invalid" aria-labelledby="rutHelp" />
                                         </core:otherwise>
                                     </core:choose>
+                                    <form:errors path="rut" cssClass="invalid-feedback" />
                                     <small id="rutHelp" class="form-text text-muted"><spring:message code="form.label.rut.help" /></small>
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="email"><spring:message code="form.label.email" /></form:label>
+                                    <form:label path="usuario.email"><spring:message code="form.label.email" /></form:label>
                                     <core:choose>
                                         <core:when test="${accion eq 'editar'}">
-                                            <form:input path="email" type="email" class="form-control" autocomplete="email" required="required" readonly="true" />
+                                            <form:input path="usuario.email" class="form-control" readonly="true" />
                                         </core:when>
                                         <core:otherwise>
-                                            <form:input path="email" type="email" class="form-control" cssErrorClass="invalid" autocomplete="email" required="required" />
+                                            <form:input path="usuario.email" class="form-control" cssErrorClass="form-control is-invalid" />
                                         </core:otherwise>
                                     </core:choose>
+                                    <form:errors path="usuario.email" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" type="tel" class="form-control" pattern="[0-9]+" minlength="7" maxlength="20" aria-labelledby="phoneHelp" cssErrorClass="invalid" autocomplete="tel" required="required" />
+                                    <form:input path="telefono" class="form-control" aria-labelledby="phoneHelp" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="telefono" cssClass="invalid-feedback" />
                                     <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="giro"><spring:message code="form.label.giro" /></form:label>
-                                    <form:input path="giro" type="text" class="form-control" minlength="5" maxlength="100" cssErrorClass="invalid" required="required" />
+                                    <form:input path="giro" class="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="giro" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="empleados"><spring:message code="form.label.employees" /></form:label>
-                                    <form:input path="empleados" type="number" class="form-control" min="1" cssErrorClass="invalid" required="required" />
+                                    <form:input path="empleados" class="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="empleados" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="tipo"><spring:message code="form.label.client_type" /></form:label>
-                                    <form:select path="tipo" class="form-control" cssErrorClass="invalid" required="required">
+                                    <form:select path="tipo" class="form-control" cssErrorClass="form-control is-invalid">
                                         <form:option value="1"><spring:message code="form.label.client_type.principal" /></form:option>
                                         <form:option value="2"><spring:message code="form.label.client_type.contractor" /></form:option>
                                         <form:option value="3"><spring:message code="form.label.client_type.subcontractor" /></form:option>
                                         <form:option value="4"><spring:message code="form.label.client_type.transitional" /></form:option>
                                     </form:select>
+                                    <form:errors path="tipo" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="enabled"><spring:message code="form.label.enabled" /></form:label>
-                                    <form:select path="enabled" class="form-control" cssErrorClass="invalid" required="required" aria-labelledby="enabledHelp">
+                                    <form:label path="usuario.enabled"><spring:message code="form.label.enabled" /></form:label>
+                                    <form:select path="usuario.enabled" class="form-control" cssErrorClass="form-control is-invalid" aria-labelledby="enabledHelp">
                                         <form:option value="true"><spring:message code="form.label.yes" /></form:option>
                                         <form:option value="false"><spring:message code="form.label.no" /></form:option>
                                     </form:select>
+                                    <form:errors path="usuario.enabled" cssClass="invalid-feedback" />
                                     <small id="enabledHelp" class="form-text text-muted"><spring:message code="form.label.enabled.help" /></small>
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="profesionalId"><spring:message code="form.label.professional" /></form:label>
-                                    <form:select path="profesionalId" class="form-control" required="required">
-                                        <core:forEach items="${profesionales}" var="profesional">
-                                            <form:option value="${profesional.getId()}">${profesional.getNombre()}</form:option>
-                                        </core:forEach>
+                                    <form:label path="profesional.id"><spring:message code="form.label.professional" /></form:label>
+                                    <form:select path="profesional.id" class="form-control">
+                                        <form:options items="${profesionales}" itemLabel="nombre" itemValue="id" />
                                     </form:select>
+                                    <form:errors path="profesional.id" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group text-right mb-0">
