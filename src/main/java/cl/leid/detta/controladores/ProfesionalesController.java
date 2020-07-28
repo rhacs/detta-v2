@@ -4,24 +4,32 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cl.leid.detta.Constantes;
+import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
+import cl.leid.detta.modelos.Rol;
+import cl.leid.detta.modelos.Usuario;
+import cl.leid.detta.repositorios.AccionesRepositorio;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
 import cl.leid.detta.repositorios.UsuariosRepositorio;
@@ -46,18 +54,17 @@ public class ProfesionalesController {
     @Autowired
     private MessageSource messageSource;
 
-    /**
-     * Objeto {@link JdbcTemplate} con los métodos para la manipulación de la base
-     * de datos
-     */
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private ProfesionalesRepositorio profesionalesRepositorio;
 
     @Autowired
     private ClientesRepositorio clientesRepositorio;
+
+    @Autowired
+    private UsuariosRepositorio usuariosRepositorio;
+
+    @Autowired
+    private AccionesRepositorio accionesRepositorio;
 
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
@@ -140,12 +147,12 @@ public class ProfesionalesController {
         // Verificar si es una edición
         if (id.isPresent()) {
             // Buscar registro
-            Profesional profesional = new ProfesionalesRepositorio(jdbcTemplate).buscarPorId(id.get());
+            Optional<Profesional> profesional = profesionalesRepositorio.findById(id.get());
 
             // Verificar si existe
-            if (profesional != null) {
+            if (profesional.isPresent()) {
                 // Agregar a la vista
-                vista.addObject("profesional", profesional);
+                vista.addObject("profesional", profesional.get());
 
                 // Agregar acción a la vista
                 vista.addObject("accion", "editar");
@@ -176,165 +183,125 @@ public class ProfesionalesController {
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Procesa el formulario cuando se trata de una solicitud para agregar un nuevo
-     * registro
+     * Agrega un nuevo {@link Profesional} al repositorio
      * 
-     * @param profesional objeto {@link Profesional} con la información a agregar
-     * @param locale      objeto {@link Locale} con la información regional del
-     *                    cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param profesional   objeto {@link Profesional} enviado por el cliente
+     * @param bindingResult objeto {@link BindingResult} con los errores de
+     *                      validación
+     * @param locale        objeto {@link Locale} con la información regional del
+     *                      cliente
+     * @param model         objeto {@link Model}
+     * @return un objeto {@link String} con la respuesta al cliente
      */
     @PostMapping(path = "/agregar")
-    public ModelAndView procesarFormulario(@ModelAttribute Profesional profesional, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("profesionales/formulario");
-
-        // Inicializar repositorios
-        UsuariosRepositorio usuariosRepositorio = new UsuariosRepositorio(jdbcTemplate);
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-
-        // Verificar si el correo no existe
-        if (usuariosRepositorio.buscarPorEmail(profesional.getEmail()) == null) {
-            // Agregar contraseña
-            profesional.setPassword(new BCryptPasswordEncoder().encode(profesional.getEmail()));
-
-            // Agregar profesional al repositorio
-            if (profesionalesRepositorio.agregarRegistro(profesional)) {
-                // Buscar registro
-                profesional = profesionalesRepositorio.buscarPorEmail(profesional.getEmail());
-
-                logger.info("{} agregó un nuevo profesional: /detta/profesionales/{}",
-                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getId());
-
-                // Redireccionar
-                return new ModelAndView("redirect:/profesionales/" + profesional.getId());
-            } else {
-                // Agregar error
-                vista.addObject("error", messageSource.getMessage("error.unexpected_add", null, locale));
-            }
+    public String agregarProfesional(@Valid Profesional profesional, BindingResult bindingResult, Locale locale,
+            Model model) {
+        // Verificar que no hayan errores
+        if (bindingResult.hasErrors()) {
+            return "profesionales/formulario";
         } else {
-            // Agregar error
-            vista.addObject("error",
-                    messageSource.getMessage("form.error.used_email", new Object[] { profesional.getEmail() }, locale));
+            // Buscar correo electrónico en el sistema
+            Optional<Usuario> existente = usuariosRepositorio.findByEmail(profesional.getUsuario().getEmail());
+
+            // Verificar que no exista
+            if (existente.isPresent()) {
+                model.addAttribute("error", messageSource.getMessage("form.error.used_email",
+                        new Object[] { profesional.getUsuario().getEmail() }, locale));
+
+                return "profesionales/formulario";
+            }
+
+            // Rellenar campos faltantes
+            Usuario usuario = profesional.getUsuario();
+            usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getEmail()));
+
+            Rol rol = usuario.getRol();
+            rol.setRole(Constantes.ROLE_STAFF);
+            rol.setUsuario(usuario);
+            usuario.setRol(rol);
+
+            // Guardar profesional
+            profesional.setUsuario(usuario);
+            profesional = profesionalesRepositorio.save(profesional);
+
+            // Redireccionar
+            return "redirect:/profesionales/" + profesional.getId();
         }
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
-
-        // Agregar profesional a la vista
-        vista.addObject("profesional", profesional);
-
-        // Agregar acción
-        vista.addObject("accion", "agregar");
-
-        // Devolver vista
-        return vista;
     }
 
     /**
-     * Procesa el formulario cuando se trata de una actualización de información
+     * Edita la información de un {@link Profesional}
      * 
-     * @param idnt        identificador numérico del {@link Profesional}
-     * @param profesional objeto {@link Profesional} con la información a actualizar
-     * @param locale      objeto {@link Locale} con la información regional del
-     *                    cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param idnt          identificador numérico del {@link Profesional}
+     * @param profesional   objeto {@link Profesional} con los datos a editar
+     * @param bindingResult objeto {@link BindingResult} con los errores de
+     *                      validación
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{idnt}/editar")
-    public ModelAndView procesarEdicion(@PathVariable int idnt, @ModelAttribute Profesional profesional,
-            Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("profesionales/formulario");
-
-        // Inicializar repositorios
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-
-        // Obtener información del profesional
-        Profesional existente = profesionalesRepositorio.buscarPorId(profesional.getId());
-
-        // Verificar si el profesional existe
-        if (existente != null) {
-            // Recuperar contraseña
-            profesional.setPassword(existente.getPassword());
-
-            // Actualizar registro
-            if (profesionalesRepositorio.actualizarRegistro(profesional)) {
-                logger.info("{} editó la información de un Profesional: /detta/profesionales/{}",
-                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getId());
-
-                // Redireccionar
-                return new ModelAndView("redirect:/profesionales/" + profesional.getId());
-            } else {
-                // Agregar error
-                vista.addObject("error", messageSource.getMessage("error.unexpected_edit", null, locale));
-            }
-        } else {
-            logger.error("{} intentó editar la información de un profesional que no existe",
-                    SecurityContextHolder.getContext().getAuthentication().getName());
-            // Redireccionar
-            return new ModelAndView("redirect:/profesionales", "noid", idnt);
+    public String editarRegistro(@PathVariable int idnt, @Valid Profesional profesional, BindingResult bindingResult) {
+        // Verificar si hay errores
+        if (bindingResult.hasErrors()) {
+            // Mostrar errores
+            return "profesionales/formulario";
         }
 
-        // Agregar acción
-        vista.addObject("accion", "editar");
+        // Buscar información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(profesional.getUsuario().getEmail());
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Agregar datos faltantes
+            profesional.setUsuario(usuario.get());
 
-        // Agregar profesional
-        vista.addObject("profesional", profesional);
+            // Guardar cambios
+            profesionalesRepositorio.save(profesional);
 
-        // Devolver vista
-        return vista;
+            return "redirect:/profesionales/" + profesional.getId();
+        }
+
+        // Redireccionar
+        return "redirect:/profesionales?noid=" + idnt;
     }
 
     /**
      * Elimina un registro del repositorio
      * 
      * @param id     identificador numérico del {@link Profesional}
+     * @param auth   objeto {@link Authentication} con la información del
+     *               {@link Usuario} autenticado
      * @param locale objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @return objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{id}/eliminar")
-    public ModelAndView eliminarRegistro(@PathVariable int id, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("profesionales/detalles");
-
-        // Inicializar repositorio
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-
-        // Buscar profesional
-        Profesional profesional = profesionalesRepositorio.buscarPorId(id);
+    public String eliminarRegistro(@PathVariable int id, Authentication auth, Locale locale) {
+        // Obtener información del Profesional
+        Optional<Profesional> profesional = profesionalesRepositorio.findById(id);
 
         // Verificar si existe
-        if (profesional != null) {
-            // Eliminar registro
-            if (profesionalesRepositorio.eliminarRegistro(profesional)) {
-                logger.info("{} eliminó un Profesional: {}",
-                        SecurityContextHolder.getContext().getAuthentication().getName(), profesional.getEmail());
+        if (profesional.isPresent()) {
+            // Buscar usuario
+            Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
-                // Redireccionar
-                return new ModelAndView("redirect:/profesionales", "remid", id);
-            } else {
-                // Agregar error
-                vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
+            // Verificar si existe
+            if (usuario.isPresent()) {
+                // Crear registro
+                Accion accion = new Accion("Eliminó un profesional: " + profesional.get().getUsuario().getEmail(), 2,
+                        usuario.get());
+
+                // Guardar registro
+                accionesRepositorio.save(accion);
             }
-        } else {
-            logger.error("{} intentó eliminar un Profesional que no existe",
-                    SecurityContextHolder.getContext().getAuthentication().getName());
+
+            // Eliminar registro
+            profesionalesRepositorio.delete(profesional.get());
 
             // Redireccionar
-            return new ModelAndView("redirect:/profesionales", "noid", id);
+            return "redirect:/profesionales?remid=" + id;
         }
 
-        // Agregar profesional a la vista
-        vista.addObject("profesional", profesional);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.professionals", null, locale));
-
-        // Devolver vista
-        return vista;
+        // Redireccionar
+        return "redirect:/profesionales?noid=" + id;
     }
 
 }
