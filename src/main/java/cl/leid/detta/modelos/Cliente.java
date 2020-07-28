@@ -69,7 +69,7 @@ public class Cliente {
     private int tipo;
 
     /** Objeto {@link Usuario} con la información de acceso al sistema */
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE }, optional = false, orphanRemoval = true)
     @JoinColumn(name = "usuario_id")
     @Valid
     private Usuario usuario;
