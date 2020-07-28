@@ -3,6 +3,7 @@ package cl.leid.detta.repositorios;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +30,16 @@ public interface ClientesRepositorio extends JpaRepository<Cliente, Integer> {
      * @return un objeto {@link List} con los resultados
      */
     public List<Cliente> findByProfesional(Profesional profesional);
+
+    /**
+     * Busca todos los registros en el repositorio que coincidan con el
+     * {@link Profesional} proporcionado
+     * 
+     * @param profesional objeto {@link Profesional} a buscar
+     * @param sort        objeto {@link Sort} con el órden de los resultados
+     * @return objeto {@link List} con los resultados
+     */
+    public List<Cliente> findByProfesional(Profesional profesional, Sort sort);
 
     /**
      * Busca un registro en el repositorio
