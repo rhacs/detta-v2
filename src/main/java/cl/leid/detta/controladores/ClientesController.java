@@ -14,24 +14,21 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import cl.leid.detta.Constantes;
 import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
-import cl.leid.detta.modelos.Rol;
 import cl.leid.detta.modelos.Usuario;
+import cl.leid.detta.repositorios.AccionesRepositorio;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
 import cl.leid.detta.repositorios.UsuariosRepositorio;
@@ -64,6 +61,9 @@ public class ClientesController {
 
     @Autowired
     private ProfesionalesRepositorio profesionalesRepositorio;
+
+    @Autowired
+    private AccionesRepositorio accionesRepositorio;
 
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
@@ -234,121 +234,88 @@ public class ClientesController {
     }
 
     /**
-     * Procesa el formulario de edición de un {@link Cliente}
+     * Edita la información de un {@link Cliente}
      * 
-     * @param idnt    identificador numérico del {@link Cliente}
-     * @param cliente objeto {@link Cliente} con la información a actualizar
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param idnt          identificador numérico del {@link Cliente}
+     * @param cliente       objeto {@link Cliente} con la información a actualizar
+     * @param bindingResult objeto {@link BindingResult} con los errores de
+     *                      validación
+     * @param model         objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{idnt}/editar")
-    public ModelAndView formularioEditar(@PathVariable int idnt, @ModelAttribute Cliente cliente, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes/formulario");
-
-        // Inicializar repositorio
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-
-        // Buscar información del registro existente
-        Cliente existente = clientesRepositorio.buscarPorId(idnt);
-
-        // Obtener objeto de autenticación
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        // Verificar si existe
-        if (existente != null) {
-            // Recuperar contraseña
-            cliente.setPassword(existente.getPassword());
-
-            // Actualizar registro
-            if (clientesRepositorio.actualizarRegistro(cliente)) {
-                // Depuración
-                logger.info("{} editó la información de un cliente: /detta/clientes/{}", auth.getName(),
-                        cliente.getId());
-
-                // Redireccionar
-                return new ModelAndView("redirect:/clientes/" + cliente.getId());
-            } else {
-                // Agregar error
-                vista.addObject("error", messageSource.getMessage("error.unexpected_edit", null, locale));
-            }
-        } else {
-            // Depuración
-            logger.error("{} intentó modificar la información de un cliente que no existe: {}", auth.getName(),
-                    cliente.getId());
-
-            // Redireccionar
-            return new ModelAndView("redirect:/clientes", "noid", idnt);
-        }
+    public String editarRegistro(@PathVariable int idnt, @Valid Cliente cliente, BindingResult bindingResult,
+            Model model) {
+        model.addAttribute("accion", "editar");
 
         // Buscar profesionales
-        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+        List<Profesional> profesionales = profesionalesRepositorio.findAll();
+        model.addAttribute("profesionales", profesionales);
 
-        // Agregar profesionales a la vista
-        vista.addObject("profesionales", profesionales);
+        // Verificar si hay errores
+        if (bindingResult.hasErrors()) {
+            // Mostrar formulario
+            return "clientes/formulario";
+        }
 
-        // Agregar cliente a la vista
-        vista.addObject("cliente", cliente);
+        // Obtener información del Cliente
+        Optional<Cliente> existente = clientesRepositorio.findById(idnt);
 
-        // Agregar acción
-        vista.addObject("accion", "editar");
+        // Verificar si existe
+        if (existente.isPresent()) {
+            // Agregar datos faltantes
+            cliente.getUsuario().setRol(existente.get().getUsuario().getRol());
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+            // Guardar cambios
+            cliente = clientesRepositorio.save(cliente);
 
-        // Devolver vista
-        return vista;
+            return "redirect:/clientes/" + cliente.getId();
+        }
+
+        // Mostrar formulario
+        return "redirect:/clientes?noid=" + idnt;
     }
 
     /**
-     * Procesa la eliminación de un registro del repositorio
+     * Elimina un {@link Cliente} del sistema
      * 
-     * @param id     identificador numérico del {@link Cliente}
-     * @param locale objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param id   identificador numérico del {@link Cliente}
+     * @param auth objeto {@link Authentication} con la información del
+     *             {@link Usuario} autenticado
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{id}/eliminar")
-    public ModelAndView eliminarRegistro(@PathVariable int id, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes/detalles");
-
-        // Inicializar repositorio
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-
-        // Buscar información del cliente
-        Cliente cliente = clientesRepositorio.buscarPorId(id);
+    public String eliminarRegistro(@PathVariable int id, Authentication auth) {
+        // Buscar información del registro
+        Optional<Cliente> cliente = clientesRepositorio.findById(id);
 
         // Verificar si existe
-        if (cliente != null) {
+        if (cliente.isPresent()) {
             // Eliminar registro
-            if (clientesRepositorio.eliminarRegistro(cliente)) {
-                // Depuración
-                logger.info("{} eliminó un cliente: {}",
-                        SecurityContextHolder.getContext().getAuthentication().getName(), cliente.getEmail());
+            clientesRepositorio.delete(cliente.get());
 
-                // Redireccionar
-                return new ModelAndView("redirect:/clientes", "remid", cliente.getId());
-            } else {
-                // Agregar error
-                vista.addObject("error", messageSource.getMessage("error.unexpected_del", null, locale));
-            }
-        } else {
             // Depuración
-            logger.error("{} intentó eliminar un cliente que no existe: /detta/clientes/{}",
-                    SecurityContextHolder.getContext().getAuthentication().getName(), id);
+            logger.info("{} eliminó un Cliente: {} ", auth.getName(), cliente.get().getUsuario().getEmail());
+
+            // Obtener información del usuario
+            Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+            // Verificar si existe
+            if (usuario.isPresent()) {
+                // Crear nueva Accion
+                Accion accion = new Accion("Eliminó un cliente: " + cliente.get().getUsuario().getEmail(), 3,
+                        usuario.get());
+
+                // Agregar registro
+                accionesRepositorio.save(accion);
+            }
 
             // Redireccionar
-            return new ModelAndView("redirect:/clientes", "noid", id);
+            return "redirect:/clientes?remid=" + id;
         }
 
-        // Agregar cliente a la vista
-        vista.addObject("cliente", cliente);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
-
-        // Devolver vista
-        return vista;
+        // Redireccionar
+        return "redirect:/clientes?noid=" + id;
     }
 
 }
