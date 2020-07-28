@@ -38,6 +38,9 @@
         <!-- Hibernate -->
         <org.hibernate-version>5.4.18.Final</org.hibernate-version>
 
+        <!-- Hibernate Validator -->
+        <org.hibernate.validator-version>6.1.5.Final</org.hibernate.validator-version>
+
         <!-- Java Servlet API -->
         <javax.servlet-api-version>4.0.1</javax.servlet-api-version>
 
@@ -52,6 +55,9 @@
 
         <!-- Jackson -->
         <com.fasterxml.jackson.core-version>2.11.1</com.fasterxml.jackson.core-version>
+
+        <!-- GlassFish Jakarta EL -->
+        <org.glassfish-version>3.0.3</org.glassfish-version>
 
         <!-- Apache Log4j2 -->
         <org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
@@ -132,6 +138,13 @@
             <version>${org.hibernate-version}</version>
         </dependency>
 
+        <!-- Hibernate: Validator > https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${org.hibernate.validator-version}</version>
+        </dependency>
+
         <!-- Oracle JDBC -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
@@ -181,6 +194,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${com.fasterxml.jackson.core-version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${org.glassfish-version}</version>
         </dependency>
 
         <!-- Apache Log4j Core > https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
