@@ -6,7 +6,7 @@ CREATE TABLE detta_usuarios (
     usuario_id NUMBER NOT NULL,
     email NVARCHAR2(150) NOT NULL,
     password NVARCHAR2(250) NOT NULL,
-    enabled CHAR(1) NOT NULL,
+    enabled NUMBER(1,0) NOT NULL,
 
     -- Llave primaria
     CONSTRAINT detta_usuarios_pk PRIMARY KEY (usuario_id),
@@ -16,16 +16,7 @@ CREATE TABLE detta_usuarios (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_usuarios_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Disparador
-CREATE OR REPLACE TRIGGER detta_usuarios_tr
-    BEFORE INSERT ON detta_usuarios FOR EACH ROW
-BEGIN
-    :new.usuario_id := detta_usuarios_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_usuarios_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_usuarios_roles
@@ -33,31 +24,22 @@ END;
 
 CREATE TABLE detta_usuarios_roles (
     rol_id NUMBER NOT NULL,
-    email NVARCHAR2(150) NOT NULL,
     role NVARCHAR2(20) NOT NULL,
+    usuario_id NUMBER NOT NULL,
 
     -- Llave primaria
     CONSTRAINT detta_usuarios_roles_pk PRIMARY KEY (rol_id),
 
     -- Llave foránea
-    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (email)
-        REFERENCES detta_usuarios (email) ON DELETE CASCADE,
+    CONSTRAINT detta_usuarios_roles_fk FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
 
     -- Columnas únicas
-    CONSTRAINT detta_usuarios_roles_uq UNIQUE (email, role)
+    CONSTRAINT detta_usuarios_roles_uq UNIQUE (usuario_id, role)
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_usuarios_roles_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Disparador
-CREATE OR REPLACE TRIGGER detta_usuarios_roles_tr
-    BEFORE INSERT ON detta_usuarios_roles FOR EACH ROW
-BEGIN
-    :new.rol_id := detta_usuarios_roles_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_usuarios_roles_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_acciones
@@ -79,16 +61,7 @@ CREATE TABLE detta_acciones (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_acciones_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Disparador
-CREATE OR REPLACE TRIGGER detta_acciones_tr
-    BEFORE INSERT ON detta_acciones FOR EACH ROW
-BEGIN
-    :new.accion_id := detta_acciones_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_acciones_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_profesionales
@@ -112,16 +85,7 @@ CREATE TABLE detta_profesionales (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_profesionales_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Disparador
-CREATE OR REPLACE TRIGGER detta_profesionales_tr
-    BEFORE INSERT ON detta_profesionales FOR EACH ROW
-BEGIN
-	:new.profesional_id := detta_profesionales_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_profesionales_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_clientes
@@ -152,16 +116,7 @@ CREATE TABLE detta_clientes (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_clientes_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Disparador
-CREATE OR REPLACE TRIGGER detta_clientes_tr
-    BEFORE INSERT ON detta_clientes FOR EACH ROW
-BEGIN
-    :new.cliente_id := detta_clientes_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_clientes_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_accidentes
@@ -190,13 +145,4 @@ CREATE TABLE detta_accidentes (
 );
 
 -- Secuencia
-CREATE SEQUENCE detta_accidentes_sq
-    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
-
--- Dispara usted o disparo yo
-CREATE OR REPLACE TRIGGER detta_accidentes_tr
-    BEFORE INSERT ON detta_accidentes FOR EACH ROW
-BEGIN
-    :new.accidente_id := detta_accidentes_sq.nextval;
-END;
-/
+CREATE SEQUENCE detta_accidentes_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
