@@ -151,7 +151,7 @@
                             <spring:message code="form.button.cancel" />
                         </button>
 
-                        <form action="<core:url value="/profesionales/${cliente.getId()}/eliminar" />" method="post">
+                        <form action="<core:url value="/clientes/${cliente.getId()}/eliminar" />" method="post">
                             <sec:csrfInput />
                             <button type="submit" class="btn btn-danger">
                                 <spring:message code="form.button.delete" />
