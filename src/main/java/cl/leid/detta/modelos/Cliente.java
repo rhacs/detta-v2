@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -46,10 +48,12 @@ public class Cliente {
 
     /** Giro o Actividad Económica del {@link Cliente} */
     @Column(name = "giro", nullable = false)
+    @Size(min = 5, max = 250)
     private String giro;
 
     /** Cantidad de empleados que trabajan para el {@link Cliente} */
     @Column(name = "empleados", nullable = false)
+    @Min(value = 1)
     private int empleados;
 
     /**
@@ -67,10 +71,11 @@ public class Cliente {
     /** Objeto {@link Usuario} con la información de acceso al sistema */
     @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     @JoinColumn(name = "usuario_id")
+    @Valid
     private Usuario usuario;
 
     @OneToOne
-    @JoinColumn(name = "profesional_id")
+    @JoinColumn(name = "profesional_id", referencedColumnName = "profesional_id")
     private Profesional profesional;
 
     // Constructores
