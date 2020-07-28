@@ -20,7 +20,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_ACCIONES)
-@SequenceGenerator(name = Constantes.SECUENCIA_ACCIONES, sequenceName = Constantes.SECUENCIA_ACCIONES, allocationSize = 1, initialValue = 1)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_ACCIONES, sequenceName = Constantes.SECUENCIA_ACCIONES)
 public class Accion {
 
     // Atributos

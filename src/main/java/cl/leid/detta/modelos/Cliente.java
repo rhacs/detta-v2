@@ -17,7 +17,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_CLIENTES)
-@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_CLIENTES, sequenceName = Constantes.SECUENCIA_CLIENTES)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_CLIENTES, sequenceName = Constantes.SECUENCIA_CLIENTES)
 public class Cliente {
 
     // Atributos

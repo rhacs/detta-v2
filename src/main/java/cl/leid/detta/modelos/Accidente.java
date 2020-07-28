@@ -23,7 +23,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_ACCIDENTES)
-@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_ACCIDENTES, sequenceName = Constantes.SECUENCIA_ACCIDENTES)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_ACCIDENTES, sequenceName = Constantes.SECUENCIA_ACCIDENTES)
 public class Accidente {
 
     // Atributos

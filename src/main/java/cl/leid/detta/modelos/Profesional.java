@@ -18,7 +18,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_PROFESIONALES)
-@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_PROFESIONALES, sequenceName = Constantes.SECUENCIA_PROFESIONALES)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_PROFESIONALES, sequenceName = Constantes.SECUENCIA_PROFESIONALES)
 public class Profesional {
 
     // Atributos

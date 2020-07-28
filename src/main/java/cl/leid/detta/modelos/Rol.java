@@ -15,7 +15,7 @@ import cl.leid.detta.Constantes;
 
 @Entity
 @Table(name = Constantes.TABLA_ROLES)
-@SequenceGenerator(allocationSize = 1, initialValue = 1, name = Constantes.SECUENCIA_ROLES)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_ROLES, sequenceName = Constantes.SECUENCIA_ROLES)
 public class Rol {
 
     // Atributos
