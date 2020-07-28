@@ -107,7 +107,7 @@ public class Accidente {
 
     /** {@link Cliente} asociado al {@link Accidente} */
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
     // Constructores
