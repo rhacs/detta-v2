@@ -38,8 +38,8 @@ public class Rol {
     @Column(name = "role", nullable = false, updatable = false)
     private String role;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
-    @JoinColumn(name = "email", nullable = false, unique = true, updatable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
     // Constructores
