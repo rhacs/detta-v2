@@ -5,16 +5,20 @@ import java.util.Locale;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +26,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cl.leid.detta.Constantes;
+import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
+import cl.leid.detta.modelos.Rol;
+import cl.leid.detta.modelos.Usuario;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
 import cl.leid.detta.repositorios.UsuariosRepositorio;
@@ -48,246 +56,181 @@ public class ClientesController {
     @Autowired
     private MessageSource messageSource;
 
-    /**
-     * Objeto {@link JdbcTemplate} con los métodos para la manipulación de la base
-     * de datos
-     */
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ClientesRepositorio clientesRepositorio;
+
+    @Autowired
+    private UsuariosRepositorio usuariosRepositorio;
+
+    @Autowired
+    private ProfesionalesRepositorio profesionalesRepositorio;
 
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Muestra el listado de {@link Cliente}s según la autoridad del usuario
+     * Muestra el listado de {@link Cliente}s
      * 
-     * @param auth    objeto {@link Authentication} con la información del usuario
-     *                autenticado
+     * @param auth    objeto {@link Authentication} con la información del
+     *                {@link Usuario} autenticado
      * @param request objeto {@link HttpServletRequest} con la información de la
-     *                solicitud que le hizo el cliente al {@link HttpServlet}
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     *                solicitud que le envió el cliente al {@link HttpServlet}
+     * @param model   objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @GetMapping
-    public ModelAndView mostrarListado(Authentication auth, HttpServletRequest request, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes");
-
-        // Inicializar repositorio
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-
-        // Inicializar listado
+    public String verListado(Authentication auth, HttpServletRequest request, Model model) {
+        // Inicializar listado de clientes
         List<Cliente> clientes = null;
 
         // Verificar autoridad del usuario
-        if (request.isUserInRole("ROLE_ADMIN")) {
+        if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
             // Buscar todos los clientes
-            clientes = clientesRepositorio.buscarTodos();
-        } else if (request.isUserInRole("ROLE_STAFF")) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
-
-            // Buscar clientes del profesional
-            clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
-        }
-
-        // Agregar listado a la vista
-        vista.addObject("clientes", clientes);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
-
-        // Devolver vista
-        return vista;
-    }
-
-    /**
-     * Muestra el detalle de un {@link Profesional}
-     * 
-     * @param id      identificador numérico del {@link Profesional}
-     * @param request objeto {@link HttpServletRequest} con la información de la
-     *                solicitud que le envía el cliente al {@link HttpServlet}
-     * @param auth    objeto {@link Authentication} con la información del usuario
-     *                autenticado
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
-     */
-    @GetMapping(path = "/{id}")
-    public ModelAndView mostrarDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth,
-            Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes/detalles");
-
-        // Inicializar repositorios
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-
-        // Buscar información del cliente
-        Cliente cliente = clientesRepositorio.buscarPorId(id);
-
-        // Verificar si no existe
-        if (cliente == null) {
-            // Depuración
-            logger.info("{} solicitó la información de un cliente que no existe: {}", request.getRemoteUser(),
-                    request.getRequestURI());
-
-            // Redireccionar
-            return new ModelAndView("redirect:/clientes", "noid", id);
-        }
-
-        // Agregar cliente a la vista
-        vista.addObject("cliente", cliente);
-
-        // Verificar autoridad
-        if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_CLIENT")) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorId(cliente.getProfesionalId());
+            clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "nombre"));
+        } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+            // Buscar información del Usuario
+            Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
             // Verificar si existe
-            if (profesional != null) {
-                // Agregar a la vista
-                vista.addObject("profesional", profesional);
+            if (usuario.isPresent()) {
+                // Obtener info del Profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
+
+                // Verificar
+                if (profesional.isPresent()) {
+                    // Buscar clientes del profesional
+                    clientes = clientesRepositorio.findByProfesional(profesional.get(),
+                            Sort.by(Direction.ASC, "nombre"));
+                }
             }
         }
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+        // Agregar atributos a la vista
+        model.addAttribute("clientes", clientes);
 
-        // Devolver vista
-        return vista;
+        return "clientes";
     }
 
     /**
-     * Muestra el formulario para agregar/editar un {@link Cliente}
+     * Muestra el detalle de un {@link Cliente}
      * 
-     * @param request objeto {@link HttpServletRequest} con la información de la
-     *                solicitud que le hizo el cliente al {@link HttpServlet}
-     * @param id      identificador numérico del {@link Cliente}
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param id    identificador numérico del {@link Cliente}
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la consulta
      */
-    @GetMapping(path = { "/{id}/editar", "/agregar" })
-    public ModelAndView mostrarFormulario(HttpServletRequest request, @PathVariable Optional<Integer> id,
-            Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes/formulario");
+    @GetMapping(path = "/{id}")
+    public String verDetalles(@PathVariable int id, Model model) {
+        // Obtener información del cliente
+        Optional<Cliente> cliente = clientesRepositorio.findById(id);
 
-        // Inicializar acción
-        String accion = null;
+        // Verificar si existe
+        if (cliente.isPresent()) {
+            // Agregar cliente a la vista
+            model.addAttribute("cliente", cliente.get());
 
-        // Inicializar cliente
-        Cliente cliente = new Cliente();
-
-        // Verificar si el id está presente
-        if (id.isPresent()) {
-            // Buscar cliente
-            cliente = new ClientesRepositorio(jdbcTemplate).buscarPorId(id.get());
-
-            // Verificar si no existe
-            if (cliente == null) {
-                // Depuración
-                logger.info("{} intentó editar la información de un Cliente que no existe: {}", request.getRemoteUser(),
-                        request.getRequestURI());
-
-                // Redireccionar
-                return new ModelAndView("redirect:/clientes", "noid", id.get());
-            }
-
-            accion = "editar";
-        } else {
-            accion = "agregar";
+            // Mostrar vista
+            return "clientes/detalles";
         }
 
-        // Buscar profesionales
-        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+        // Redireccionar
+        return "redirect:/clientes?noid=" + id;
+    }
 
-        // Agregar profesionales a la vista
-        vista.addObject("profesionales", profesionales);
+    @GetMapping(path = { "/agregar", "/{id}/editar" })
+    public String verFormulario(@PathVariable Optional<Integer> id, Model model) {
+        // Verificar si el id está presente
+        if (id.isPresent()) {
+            // Buscar información del cliente
+            Optional<Cliente> cliente = clientesRepositorio.findById(id.get());
 
-        // Agregar cliente a la vista
-        vista.addObject("cliente", cliente);
+            // Verificar si existe
+            if (!cliente.isPresent()) {
+                // Redireccionar
+                return "redirect:/clientes?noid=" + id.get();
+            }
 
-        // Agregar acción
-        vista.addObject("accion", accion);
+            // Agregar cliente al modelo
+            model.addAttribute("cliente", cliente.get());
+            model.addAttribute("accion", "editar");
+        } else {
+            // Agregar nuevo cliente
+            model.addAttribute("cliente", new Cliente());
+            model.addAttribute("accion", "agregar");
+        }
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+        // Obtener todos los profesionales
+        List<Profesional> profesionales = profesionalesRepositorio.findAll();
 
-        // Devolver vista
-        return vista;
+        // Agregar listado al modelo
+        model.addAttribute("profesionales", profesionales);
+
+        return "clientes/formulario";
     }
 
     // Solicitudes POST
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Procesa el formulario al agregar un nuevo {@link Cliente}
+     * Agrega un nuevo {@link Cliente} al repositorio
      * 
-     * @param auth    objeto {@link Authentication} con la información del usuario
-     *                autenticado
-     * @param cliente objeto {@link Cliente} con la información a agregar
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param cliente       objeto {@link Cliente} enviado por el usuario
+     * @param bindingResult objeto {@link BindingResult} con la información de los
+     *                      errores de validación
+     * @param model         objeto {@link Model} con el modelo de la vista
+     * @param locale        objeto {@link Locale} con la información regional del
+     *                      cliente
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/agregar")
-    public ModelAndView formularioAgregar(Authentication auth, @ModelAttribute Cliente cliente, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("clientes/formulario");
-
-        // Inicializar repositorios
-        UsuariosRepositorio usuariosRepositorio = new UsuariosRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-
-        // Buscar correo electrónico en el repositorio de usuarios
-        if (usuariosRepositorio.buscarPorEmail(cliente.getEmail()) != null) {
-            // Agregar error
-            vista.addObject("error",
-                    messageSource.getMessage("form.error.used_email", new Object[] { cliente.getEmail() }, locale));
-        } else {
-            // Buscar rut en el repositorio de clientes
-            if (clientesRepositorio.buscarPorRut(cliente.getRut()) != null) {
-                // Agregar error
-                vista.addObject("error",
-                        messageSource.getMessage("form.error.used_rut", new Object[] { cliente.getRut() }, locale));
-            } else {
-                // Agregar contraseña
-                cliente.setPassword(new BCryptPasswordEncoder().encode(cliente.getEmail()));
-
-                // Agregar al repositorio
-                if (clientesRepositorio.agregarRegistro(cliente)) {
-                    // Buscar cliente
-                    cliente = clientesRepositorio.buscarPorEmail(cliente.getEmail());
-
-                    // Depuración
-                    logger.info("{} agregó un nuevo cliente: /detta/clientes/{}", auth.getName(), cliente.getId());
-
-                    // Redireccionar
-                    return new ModelAndView("redirect:/clientes/" + cliente.getId());
-                } else {
-                    // Agregar error
-                    vista.addObject("error", messageSource.getMessage("error.unexpected_add", null, locale));
-                }
-            }
-        }
-
-        // Agregar cliente a la vista
-        vista.addObject("cliente", cliente);
+    public String agregarRegistro(@Valid Cliente cliente, BindingResult bindingResult, Model model, Locale locale) {
+        model.addAttribute("accion", "agregar");
 
         // Buscar profesionales
-        List<Profesional> profesionales = new ProfesionalesRepositorio(jdbcTemplate).buscarTodos();
+        List<Profesional> profesionales = profesionalesRepositorio.findAll();
+        model.addAttribute("profesionales", profesionales);
 
-        // Agregar profesionales a la vista
-        vista.addObject("profesionales", profesionales);
+        // Verificar si hay errores
+        if (bindingResult.hasErrors()) {
+            // Mostrar formulario
+            return "clientes/formulario";
+        }
 
-        // Agregar acción
-        vista.addObject("accion", "agregar");
+        // Buscar usuario con el correo ingresado
+        Optional<Usuario> usuarioExiste = usuariosRepositorio.findByEmail(cliente.getUsuario().getEmail());
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.clients", null, locale));
+        // Verificar si existe
+        if (usuarioExiste.isPresent()) {
+            // Agregar error
+            model.addAttribute("error", messageSource.getMessage("form.error.used_email",
+                    new Object[] { cliente.getUsuario().getEmail() }, locale));
 
-        // Devolver vista
-        return vista;
+            // Mostrar formulario
+            return "clientes/formulario";
+        }
+
+        // Buscar cliente con el rut ingresado
+        Optional<Cliente> clienteExiste = clientesRepositorio.findByRut(cliente.getRut());
+
+        // Verificar si existe
+        if (clienteExiste.isPresent()) {
+            // Agregar error
+            model.addAttribute("error",
+                    messageSource.getMessage("form.error.used_rut", new Object[] { cliente.getRut() }, locale));
+
+            // Mostrar formulario
+            return "clientes/formulario";
+        }
+
+        // Agregar atributos faltantes
+        cliente.getUsuario().setPassword(new BCryptPasswordEncoder().encode(cliente.getUsuario().getEmail()));
+        cliente.getUsuario().getRol().setRole(Constantes.ROLE_CLIENT);
+        cliente.getUsuario().getRol().setUsuario(cliente.getUsuario());
+
+        // Guardar registro
+        cliente = clientesRepositorio.save(cliente);
+
+        // Redireccionar
+        return "redirect:/clientes/" + cliente.getId();
     }
 
     /**
