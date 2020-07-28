@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,27 +40,31 @@ public class Accidente {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    /* Hora en que ocurrió el {@link Accidente} */
-    /*
-     * @DateTimeFormat(pattern = "HH:mm")
-     * 
-     * @Column(name = "hora", nullable = false) private LocalTime hora;
-     */
+    /** Hora en que ocurrió el {@link Accidente} */
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column(name = "hora", nullable = false)
+    @Pattern(regexp = "(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")
+    @Size(min = 5, max = 5)
+    private String hora;
 
     /** Dirección donde ocurrió el {@link Accidente} */
     @Column(name = "direccion", nullable = false)
+    @Size(min = 5, max = 250)
     private String direccion;
 
     /** Lugar específico de la dirección donde ocurrió el {@link Accidente} */
     @Column(name = "lugar", nullable = false)
+    @Size(min = 5, max = 250)
     private String lugar;
 
     /** Qué estaba haciendo el trabajador al momento del {@link Accidente} */
     @Column(name = "circunstancia", nullable = false)
+    @Size(min = 5, max = 250)
     private String circunstancia;
 
     /** Qué pasó o cómo ocurrió el {@link Accidente} */
     @Column(name = "detalles", nullable = false)
+    @Size(min = 5, max = 2000)
     private String detalles;
 
     /**
@@ -111,7 +117,7 @@ public class Accidente {
      * Crea una nueva instancia vacía del objeto {@link Accidente}
      */
     public Accidente() {
-
+        // Implementación vacía
     }
 
     // Getters
@@ -131,12 +137,12 @@ public class Accidente {
         return fecha;
     }
 
-    /*
+    /**
      * @return la hora
      */
-    /*
-     * public LocalTime getHora() { return hora; }
-     */
+    public String getHora() {
+        return hora;
+    }
 
     /**
      * @return la dirección
@@ -218,12 +224,12 @@ public class Accidente {
         this.fecha = fecha;
     }
 
-    /*
+    /**
      * @param hora la hora a establecer
      */
-    /*
-     * public void setHora(LocalTime hora) { this.hora = hora; }
-     */
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
 
     /**
      * @param direccion la dirección a establecer
@@ -322,10 +328,10 @@ public class Accidente {
 
     @Override
     public String toString() {
-        return "Accidente [id=" + id + ", fecha=" + fecha + ", direccion=" + direccion + ", lugar=" + lugar
-                + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion=" + clasificacion
-                + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro + ", cliente="
-                + cliente + "]";
+        return "Accidente [id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", direccion=" + direccion + ", lugar="
+                + lugar + ", circunstancia=" + circunstancia + ", detalles=" + detalles + ", clasificacion="
+                + clasificacion + ", tipo=" + tipo + ", evidencia=" + evidencia + ", fechaRegistro=" + fechaRegistro
+                + ", cliente=" + cliente + "]";
     }
 
 }
