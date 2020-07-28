@@ -56,15 +56,15 @@
                                 <core:choose>
                                     <core:when test="${clientes != null && clientes.size() > 0}">
                                         <core:forEach items="${clientes}" var="cliente" >
-                                            <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.isEnabled() ? 'class="table-warning"' : ''}>
+                                            <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.getUsuario().isEnabled() ? 'class="table-warning"' : ''}>
                                                 <th scope="row" class="text-nowrap">${cliente.getId()}</th>
                                                 <td class="text-nowrap">${cliente.getNombre()}</td>
                                                 <td class="text-nowrap">${cliente.getRut()}</td>
-                                                <td class="text-nowrap">${cliente.getEmail()}</td>
+                                                <td class="text-nowrap">${cliente.getUsuario().getEmail()}</td>
                                                 <td class="text-nowrap">${cliente.getTelefono()}</td>
                                                 <td class="text-nowrap text-right">
                                                     <core:choose>
-                                                        <core:when test="${cliente.isEnabled()}"><spring:message code="form.label.yes" /></core:when>
+                                                        <core:when test="${cliente.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>
                                                         <core:otherwise><spring:message code="form.label.no" /></core:otherwise>
                                                     </core:choose>
                                                 </td>

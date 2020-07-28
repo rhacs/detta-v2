@@ -62,7 +62,7 @@
 
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.email" /></th>
-                                    <td class="text-nowrap">${cliente.getEmail()}</td>
+                                    <td class="text-nowrap">${cliente.getUsuario().getEmail()}</td>
                                 </tr>
 
                                 <tr>
@@ -98,11 +98,11 @@
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.professional" /></th>
                                     <td>
                                         <core:choose>
-                                            <core:when test="${profesional == null}">
+                                            <core:when test="${cliente.getProfesional() == null}">
                                                 <spring:message code="form.error.no_professional_assigned" />
                                             </core:when>
                                             <core:otherwise>
-                                                ${profesional.getNombre()}
+                                                ${cliente.getProfesional().getNombre()}
                                             </core:otherwise>
                                         </core:choose>
                                     </td>
@@ -113,7 +113,7 @@
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.enabled" /></th>
                                     <td class="text-nowrap">
                                         <core:choose>
-                                            <core:when test="${cliente.isEnabled()}"><spring:message code="form.label.yes" /></core:when>
+                                            <core:when test="${cliente.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>
                                             <core:otherwise><spring:message code="form.label.no" /></core:otherwise>
                                         </core:choose>
                                     </td>
