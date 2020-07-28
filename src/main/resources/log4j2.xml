@@ -85,6 +85,14 @@
             <AppenderRef ref="Console" />
         </Logger>
 
+        <Logger name="org.hibernate.SQL" level="debug">
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.hibernate.type" level="trace">
+            <AppenderRef ref="Console" />
+        </Logger>
+
         <Root level="warn">
             <AppenderRef ref="Console" />
         </Root>
