@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,7 +92,7 @@ public class HomeController {
                 accidentes = accidentesRepositorio.findAll();
 
                 // Buscar todas las acciones
-                List<Accion> acciones = accionesRepositorio.findAll();
+                List<Accion> acciones = accionesRepositorio.findAll(Sort.by(Direction.DESC, "timestamp"));
 
                 // Agregar a la vista
                 vista.addObject("acciones", acciones);
