@@ -32,6 +32,7 @@
                         <div class="card-body">
                             <form:form method="post" modelAttribute="profesional">
                                 <form:hidden path="id" />
+                                <form:hidden path="usuario.id" />
 
                                 <div class="form-group">
                                     <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
