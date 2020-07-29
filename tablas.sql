@@ -146,3 +146,37 @@ CREATE TABLE detta_accidentes (
 
 -- Secuencia
 CREATE SEQUENCE detta_accidentes_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_capacitaciones
+----------------------------------------------------------------------------------------------------
+
+CREATE TABLE detta_capacitaciones (
+    capacitacion_id NUMBER NOT NULL,
+    tipo NVARCHAR2(50) NOT NULL,
+    fecha DATE NOT NULL,
+    hora NVARCHAR2(5) NOT NULL,
+    objetivos NVARCHAR2(250) NOT NULL,
+    direccion NVARCHAR2(150) NOT NULL,
+    duracion NVARCHAR2(5) NOT NULL,
+    contenido NVARCHAR2(1000) NOT NULL,
+    estado NUMBER(1,0) NOT NULL,
+    usuario_id NUMBER NOT NULL,
+    profesional_id NUMBER NULL,
+
+-- Llave primaria
+    CONSTRAINT detta_capacitaciones_pk PRIMARY KEY ( capacitacion_id ),
+
+-- Llaves foráneas
+
+    CONSTRAINT detta_capacitaciones_fku FOREIGN KEY (usuario_id)
+        REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
+
+    CONSTRAINT detta_capacitaciones_fkp FOREIGN KEY (profesional_id)
+        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL,
+
+);
+
+-- Secuencia
+
+CREATE SEQUENCE detta_capacitaciones_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
