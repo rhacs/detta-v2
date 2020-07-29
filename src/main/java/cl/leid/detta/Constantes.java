@@ -23,6 +23,15 @@ public class Constantes {
     /** Tabla con la información de las {@link Accion}es */
     public static final String TABLA_ACCIONES = "detta_acciones";
 
+    /** Tabla con la información de las {@link Capacitacion}es */
+    public static final String TABLA_CAPACITACIONES = "detta_capacitaciones";
+
+    /** Tabla con la información de las {@link Asesoria}s */
+    public static final String TABLA_ASESORIAS = "detta_asesorias";
+
+    /** Tabla con la información de las {@link Visita}s */
+    public static final String TABLA_VISITAS = "detta_visitas";
+
     // Secuencias
     // -----------------------------------------------------------------------------------------
 
@@ -43,6 +52,15 @@ public class Constantes {
 
     /** Secuencia generadora de IDs para {@link Accion} */
     public static final String SECUENCIA_ACCIONES = "detta_acciones_sq";
+
+    /** Secuencia generadora de IDs para {@link Capacitacion} */
+    public static final String SECUENCIA_CAPACITACIONES = "detta_capacitaciones_sq";
+
+    /** Secuencia generadora de IDs para {@link Asesoria} */
+    public static final String SECUENCIA_ASESORIAS = "detta_asesorias_sq";
+
+    /** Secuencia generadora de IDs para {@link Visita} */
+    public static final String SECUENCIA_VISITAS = "detta_visitas_sq";
 
     // Roles
     // -----------------------------------------------------------------------------------------
