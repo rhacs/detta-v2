@@ -91,7 +91,7 @@ public class ProfesionalesController {
     /**
      * Muestra los detalles del {@link Profesional} seleccionado
      * 
-     * @param id     identificador numérico del {@link Profesional}
+     * @param id identificador numérico del {@link Profesional}
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping(path = "/{id}")
@@ -126,8 +126,8 @@ public class ProfesionalesController {
     /**
      * Muestra el formulario de edición/inserción de un {@link Profesional}
      * 
-     * @param id     identificador numérico del {@link Profesional} (opcional, puede
-     *               ser {@code null})
+     * @param id identificador numérico del {@link Profesional} (opcional, puede ser
+     *           {@code null})
      * @return un objeto {@link ModelAndView} con la respuesta
      */
     @GetMapping(path = { "/{id}/editar", "/agregar" })
@@ -245,7 +245,7 @@ public class ProfesionalesController {
             profesional.getUsuario().setRol(usuario.get().getRol());
 
             // Guardar cambios
-            profesionalesRepositorio.save(profesional);
+            profesional = profesionalesRepositorio.save(profesional);
 
             return "redirect:/profesionales/" + profesional.getId();
         }
@@ -257,9 +257,9 @@ public class ProfesionalesController {
     /**
      * Elimina un registro del repositorio
      * 
-     * @param id     identificador numérico del {@link Profesional}
-     * @param auth   objeto {@link Authentication} con la información del
-     *               {@link Usuario} autenticado
+     * @param id   identificador numérico del {@link Profesional}
+     * @param auth objeto {@link Authentication} con la información del
+     *             {@link Usuario} autenticado
      * @return objeto {@link String} con la respuesta a la solicitud
      */
     @PostMapping(path = "/{id}/eliminar")
