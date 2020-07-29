@@ -195,7 +195,7 @@ CREATE TABLE detta_asesorias (
     profesional_id NUMBER NULL,
 
 -- Llave primaria
-CONSTRAINT detta_asesorias_pk PRIMARY KEY ( asesoria_id);
+CONSTRAINT detta_asesorias_pk PRIMARY KEY (asesoria_id),
 
 -- Llaves foráneas
 CONSTRAINT detta_asesorias_fkc FOREIGN KEY (cliente_id)
