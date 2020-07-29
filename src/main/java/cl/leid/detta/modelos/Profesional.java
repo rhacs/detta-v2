@@ -54,7 +54,7 @@ public class Profesional {
      * Crea una nueva instancia vacía del objeto {@link Profesional}
      */
     public Profesional() {
-        // this.usuario = new Usuario();
+
     }
 
     /**
