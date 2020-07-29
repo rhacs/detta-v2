@@ -3,7 +3,6 @@ package cl.leid.detta.modelos;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -106,7 +105,7 @@ public class Accidente {
     private Timestamp fechaRegistro;
 
     /** {@link Cliente} asociado al {@link Accidente} */
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
