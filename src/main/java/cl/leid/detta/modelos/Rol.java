@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import cl.leid.detta.Constantes;
 
 @Entity
@@ -40,6 +42,7 @@ public class Rol {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id", nullable = false, unique = true)
+    @JsonIgnore
     private Usuario usuario;
 
     // Constructores
