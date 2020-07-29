@@ -33,43 +33,50 @@
                         <div class="card-body">
                             <form:form method="post" modelAttribute="accidente">
                                 <form:hidden path="id" />
+
                                 <sec:authorize access="hasAuthority('ROLE_CLIENT')">
-                                <input type="hidden" name="clienteId" id="clienteId" value="${cliente.getId()}">
+                                <form:hidden path="cliente.id" />
                                 </sec:authorize>
 
                                 <div class="form-group">
                                     <form:label path="fecha"><spring:message code="form.label.date" /></form:label>
-                                    <form:input path="fecha" class="form-control" placeholder="aaaa/mm/dd" pattern="[0-9]{4}\/[0-9]{2}\/[0-9]{2}" required="required" autofocus="autofocus" />
+                                    <form:input path="fecha" cssClass="form-control" cssErrorClass="form-control is-invalid" autofocus="autofocus" />
+                                    <form:errors path="fecha" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="hora"><spring:message code="form.label.time" /></form:label>
-                                    <form:input path="hora" class="form-control" type="time" pattern="[0-9]{2}[:][0-9]{2}" required="required"/>
+                                    <form:input path="hora" cssClass="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="hora" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="direccion"><spring:message code="form.label.address" /></form:label>
-                                    <form:input path="direccion" class="form-control" minlength="10" maxlength="250" required="required" />
+                                    <form:input path="direccion" cssClass="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="direccion" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="lugar"><spring:message code="form.label.place" /></form:label>
-                                    <form:input path="lugar" class="form-control" minlength="10" maxlength="250" required="required" />
+                                    <form:input path="lugar" cssClass="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="lugar" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="circunstancia"><spring:message code="form.label.circumstance" /></form:label>
-                                    <form:input path="circunstancia" class="form-control" minlength="10" maxlength="250" required="required" />
+                                    <form:input path="circunstancia" cssClass="form-control" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="circunstancia" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="detalles"><spring:message code="form.label.details" /></form:label>
-                                    <form:textarea path="detalles" class="form-control" rows="4" minlength="10" maxlength="2000" required="required" />
+                                    <form:textarea path="detalles" cssClass="form-control" rows="4" />
+                                    <form:errors path="detalles" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
                                     <form:label path="clasificacion"><spring:message code="form.label.accident_class" /></form:label>
-                                    <form:select path="clasificacion" class="form-control">
+                                    <form:select path="clasificacion" cssClass="form-control">
                                         <form:option value="1"><spring:message code="form.label.accident_class.mild" /></form:option>
                                         <form:option value="2"><spring:message code="form.label.accident_class.serious" /></form:option>
                                         <form:option value="3"><spring:message code="form.label.accident_class.fatal" /></form:option>
@@ -79,7 +86,7 @@
 
                                 <div class="form-group">
                                     <form:label path="tipo"><spring:message code="form.label.accident_type" /></form:label>
-                                    <form:select path="tipo" class="form-control">
+                                    <form:select path="tipo" cssClass="form-control">
                                         <form:option value="1"><spring:message code="form.label.accident_type.work" /></form:option>
                                         <form:option value="2"><spring:message code="form.label.accident_type.journey" /></form:option>
                                     </form:select>
@@ -87,7 +94,7 @@
 
                                 <div class="form-group">
                                     <form:label path="evidencia"><spring:message code="form.label.evidence" /></form:label>
-                                    <form:select path="evidencia" class="form-control">
+                                    <form:select path="evidencia" cssClass="form-control">
                                         <form:option value="1"><spring:message code="form.label.evidence.certificate" /></form:option>
                                         <form:option value="2"><spring:message code="form.label.evidence.statement" /></form:option>
                                         <form:option value="3"><spring:message code="form.label.evidence.witnesses" /></form:option>
@@ -97,11 +104,9 @@
 
                                 <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
                                 <div class="form-group">
-                                    <form:label path="clienteId"><spring:message code="form.label.client" /></form:label>
-                                    <form:select path="clienteId" class="form-control">
-                                        <core:forEach items="${clientes}" var="cliente">
-                                            <form:option value="${cliente.getId()}">${cliente.getNombre()}</form:option>
-                                        </core:forEach>
+                                    <form:label path="cliente.id"><spring:message code="form.label.client" /></form:label>
+                                    <form:select path="cliente.id" cssClass="form-control">
+                                        <form:options items="${clientes}" itemLabel="nombre" itemValue="id" />
                                     </form:select>
                                 </div>
                                 </sec:authorize>
