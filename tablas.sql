@@ -164,10 +164,10 @@ CREATE TABLE detta_capacitaciones (
     usuario_id NUMBER NOT NULL,
     profesional_id NUMBER NULL,
 
--- Llave primaria
+    -- Llave primaria
     CONSTRAINT detta_capacitaciones_pk PRIMARY KEY ( capacitacion_id ),
 
--- Llaves foráneas
+    -- Llaves foráneas
     CONSTRAINT detta_capacitaciones_fku FOREIGN KEY (usuario_id)
         REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
     CONSTRAINT detta_capacitaciones_fkp FOREIGN KEY (profesional_id)
@@ -194,15 +194,14 @@ CREATE TABLE detta_asesorias (
     cliente_id NUMBER NOT NULL,
     profesional_id NUMBER NULL,
 
--- Llave primaria
-CONSTRAINT detta_asesorias_pk PRIMARY KEY (asesoria_id),
+    -- Llave primaria
+    CONSTRAINT detta_asesorias_pk PRIMARY KEY (asesoria_id),
 
--- Llaves foráneas
-CONSTRAINT detta_asesorias_fkc FOREIGN KEY (cliente_id)
+    -- Llaves foráneas
+    CONSTRAINT detta_asesorias_fkc FOREIGN KEY (cliente_id)
         REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE,
-CONSTRAINT detta_asesorias_fkp FOREIGN KEY (profesional_id)
+    CONSTRAINT detta_asesorias_fkp FOREIGN KEY (profesional_id)
         REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL
-
 );
 
 -- Secuencia
