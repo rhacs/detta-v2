@@ -240,7 +240,7 @@ public class ProfesionalesController {
         // Verificar si existe
         if (usuario.isPresent()) {
             // Agregar datos faltantes
-            profesional.getUsuario().setId(idnt);
+            profesional.getUsuario().setId(usuario.get().getId());
             profesional.getUsuario().setPassword(usuario.get().getPassword());
             profesional.getUsuario().setRol(usuario.get().getRol());
 
