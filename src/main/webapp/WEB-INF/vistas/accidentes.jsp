@@ -33,8 +33,8 @@
                         <div class="alert alert-warning mt-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
                     </core:if>
 
-                    <core:if test="${not empty param.perm}">
-                        <div class="alert alert-danger mt-4"><spring:message code="form.error.noperm" /></div>
+                    <core:if test="${not empty param.remid}">
+                        <div class="alert alert-danger mt-4"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
                     </core:if>
 
                     <div class="table-responsive mt-4">
@@ -44,7 +44,7 @@
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.date" /></th>
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.time" /></th>
                                     <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
-                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.client_name" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.client" /></th>
                                     </sec:authorize>
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.accident_type" /></th>
                                     <th scope="col" class="text-nowrap"><spring:message code="form.label.accident_class" /></th>
@@ -67,7 +67,7 @@
                                                 <td class="text-nowrap">${accidente.getFecha()}</td>
                                                 <td class="text-nowrap">${accidente.getHora()}</td>
                                                 <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
-                                                <td>${accidente.getClienteNombre()}</td>
+                                                <td>${accidente.getCliente().getNombre()}</td>
                                                 </sec:authorize>
                                                 <td class="text-nowrap">
                                                     <core:choose>
