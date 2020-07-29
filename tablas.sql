@@ -180,3 +180,37 @@ CREATE TABLE detta_capacitaciones (
 -- Secuencia
 
 CREATE SEQUENCE detta_capacitaciones_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+-----------------------------------------------------------------------------
+-- Creación de tabla de asesorías
+-----------------------------------------------------------------------------
+CREATE TABLE detta_asesorias (
+    asesoria_id NUMBER NOT NULL,
+    tema NVARCHAR2(250) NOT NULL,
+    descripcion NVARCHAR2(1000) NOT NULL,
+    fiscalizador NVARCHAR2(250),
+    departamento NVARCHAR2(250) NOT NULL,
+    estado NUMBER(1,0) NOT NULL,    
+    fecha DATE NOT NULL,
+    hora NVARCHAR2(5) NOT NULL,
+    direccion NVARCHAR2(250) NOT NULL,
+    cliente_id NUMBER NOT NULL,
+    profesional_id NUMBER NULL,
+
+-- Llave primaria
+CONSTRAINT detta_asesorias_pk PRIMARY KEY ( asesoria_id);
+
+-- Llaves foráneas
+CONSTRAINT detta_asesorias_fkc FOREIGN KEY (cliente_id)
+        REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE,
+
+CONSTRAINT detta_asesorias_fkp FOREIGN KEY (profesional_id)
+        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL,
+
+);
+
+-- Secuencia
+CREATE SEQUENCE detta_asesorias_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
+
+------------------------------------------------------------------------------------
+
