@@ -1,32 +1,38 @@
 package cl.leid.detta.controladores;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
+import cl.leid.detta.Constantes;
 import cl.leid.detta.modelos.Accidente;
+import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
+import cl.leid.detta.modelos.Usuario;
 import cl.leid.detta.repositorios.AccidentesRepositorio;
+import cl.leid.detta.repositorios.AccionesRepositorio;
 import cl.leid.detta.repositorios.ClientesRepositorio;
 import cl.leid.detta.repositorios.ProfesionalesRepositorio;
+import cl.leid.detta.repositorios.UsuariosRepositorio;
 
 @Controller
 @RequestMapping(path = "/accidentes")
@@ -38,384 +44,338 @@ public class AccidentesController {
     /** Objeto {@link Logger} con los métodos de depuración */
     private static final Logger logger = LogManager.getLogger(AccidentesController.class);
 
-    /** Rol del Administrador en el sistema */
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    /** Rol del {@link Profesional} en el sistema */
-    private static final String ROLE_STAFF = "ROLE_STAFF";
-
-    /** Rol del {@link Cliente} en el sistema */
-    private static final String ROLE_CLIENT = "ROLE_CLIENT";
-
     // Atributos
     // -----------------------------------------------------------------------------------------
 
-    /**
-     * Objeto {@link MessageSource} con lo métodos de parametrización e
-     * internacionalización de los mensajes
-     */
     @Autowired
-    private MessageSource messageSource;
+    private UsuariosRepositorio usuariosRepositorio;
 
-    /**
-     * Objeto {@link JdbcTemplate} con los métodos para la manipulación de la base
-     * de datos
-     */
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ProfesionalesRepositorio profesionalesRepositorio;
+
+    @Autowired
+    private ClientesRepositorio clientesRepositorio;
+
+    @Autowired
+    private AccidentesRepositorio accidentesRepositorio;
+
+    @Autowired
+    private AccionesRepositorio accionesRepositorio;
 
     // Solicitudes GET
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Muestra el listado de {@link Accidente}s según el rol del {@link Usuario}
+     * Muestra el listado de accidentes según los permisos del {@link Usuario}
+     * autenticado
      * 
-     * @param request objeto {@link HttpServletRequest} con la información de la
-     *                solicitud que le envía el cliente al {@link HttpServlet}
-     * @param auth    objeto {@link Authentication} con la información del usuario
-     *                autenticado
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
-     */
-    @GetMapping
-    public ModelAndView mostrarListado(HttpServletRequest request, Authentication auth, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("accidentes");
-
-        // Inicializar repositorios
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
-
-        // Inicializar listado de accidentes
-        List<Accidente> accidentes = null;
-
-        // Verificar rol del usuario
-        if (request.isUserInRole(ROLE_ADMIN)) {
-            // Buscar todos los accidentes
-            accidentes = accidentesRepositorio.buscarTodos();
-        } else if (request.isUserInRole(ROLE_STAFF)) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
-
-            // Buscar listado de accidentes
-            accidentes = accidentesRepositorio.buscarPorProfesionalId(profesional.getId());
-        } else if (request.isUserInRole(ROLE_CLIENT)) {
-            // Buscar información del cliente
-            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
-
-            // Buscar los accidentes relacionados con el cliente
-            accidentes = accidentesRepositorio.buscarPorClienteId(cliente.getId());
-        }
-
-        // Agregar listado a la vista
-        vista.addObject("accidentes", accidentes);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
-
-        // Devolver vista
-        return vista;
-    }
-
-    /**
-     * Muestra los detalles de un {@link Accidente}
-     * 
-     * @param id      identificador numérico del {@link Accidente}
      * @param request objeto {@link HttpServletRequest} con la información de la
      *                solicitud que le envía el cliente al {@link HttpServlet}
      * @param auth    objeto {@link Authentication} con la información del
      *                {@link Usuario} autenticado
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param model   objeto {@link Modelo} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
-    @GetMapping(path = "/{id}")
-    public ModelAndView verDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth,
-            Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("accidentes/detalles");
+    @GetMapping
+    public String verListado(HttpServletRequest request, Authentication auth, Model model) {
+        // Inicializar listado de accidentes
+        List<Accidente> accidentes = null;
 
-        // Inicializar repositorios
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
+        // Buscar información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
-        // Buscar información del accidente
-        Accidente accidente = accidentesRepositorio.buscarPorId(id);
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Verificar autoridad del usuario
+            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
+                // Buscar todos los accidentes
+                accidentes = accidentesRepositorio.findAll(Sort.by(Direction.DESC, "fecha", "hora"));
+            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                // Buscar información del Profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
-        // Verificar si no existe
-        if (accidente == null) {
-            // Depuración
-            logger.log(Level.INFO, "{} solicitó los detalles de un accidente que no existe: {}", auth.getName(),
-                    request.getRequestURI());
+                // Verificar si existe
+                if (profesional.isPresent()) {
+                    // Buscar el listado de clientes
+                    List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get());
 
-            // Redireccionar
-            return new ModelAndView("redirect:/accidentes", "noid", id);
-        }
+                    // Inicializar listado
+                    accidentes = new ArrayList<>();
 
-        // Verificar rol del usuario
-        if (request.isUserInRole(ROLE_STAFF)) {
-            // Obtener información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
+                    // Por cada cliente
+                    for (Cliente c : clientes) {
+                        // Buscar accidentes
+                        List<Accidente> aux = accidentesRepositorio.findByCliente(c);
 
-            // Verificar que el accidente le pertenezca al profesional
-            if (!accidente.getProfesionalId().equals(profesional.getId())) {
-                // Depuración
-                logger.log(Level.ERROR, "[SEC] {} intentó ver los detalles de un accidente que no le corresponde: {}",
-                        auth.getName(), request.getRequestURI());
+                        // Verificar si hay resultados
+                        if (aux != null && !aux.isEmpty()) {
+                            // Agregar accidentes al listado
+                            accidentes.addAll(aux);
+                        }
+                    }
+                }
+            } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                // Buscar información del cliente
+                Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
 
-                // Redireccionar
-                return new ModelAndView("redirect:/accidentes", "perm", true);
-            }
-        } else if (request.isUserInRole(ROLE_CLIENT)) {
-            // Obtener información del cliente
-            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
-
-            // Verificar que el accidente le pertenezca al cliente
-            if (accidente.getClienteId() != cliente.getId()) {
-                // Depuración
-                logger.log(Level.ERROR, "[SEC] {} intentó ver los detalles de un accidente que no le corresponde: {}",
-                        auth.getName(), request.getRequestURI());
-
-                // Redireccionar
-                return new ModelAndView("redirect:/accidentes", "perm", true);
+                // Verificar si hay resultados
+                if (cliente.isPresent()) {
+                    // Buscar accidentes del cliente
+                    accidentes = accidentesRepositorio.findByCliente(cliente.get());
+                }
             }
         }
 
-        // Agregar accidente a la vista
-        vista.addObject("accidente", accidente);
+        // Verificar si hay resultados
+        if (accidentes != null && !accidentes.isEmpty()) {
+            accidentes.sort(Comparator.comparing(Accidente::getFecha, Comparator.reverseOrder()));
+        }
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
+        // Agregar listado al modelo
+        model.addAttribute("accidentes", accidentes);
 
-        // Devolver vista
-        return vista;
+        // Mostrar lista
+        return "accidentes";
     }
 
     /**
-     * Muestra el fomulario para agregar/editar un {@link Accidente}
+     * Muestra la información de un {@link Accidente}
      * 
-     * @param id      identificador numérico del {@link Accidente}
+     * @param id    identificador numérico del {@link Accidente}
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = "/{id}")
+    public String verDetalles(@PathVariable int id, Model model) {
+        // Buscar información del Accidente
+        Optional<Accidente> accidente = accidentesRepositorio.findById(id);
+
+        // Verificar si existe
+        if (accidente.isPresent()) {
+            // Agregar accidente al modelo
+            model.addAttribute("accidente", accidente.get());
+
+            // Mostrar detalle
+            return "accidentes/detalles";
+        }
+
+        // Redireccionar
+        return "redirect:/accidentes?noid=" + id;
+    }
+
+    /**
+     * Muestra el formulario para agregar un nuevo registro
+     * 
      * @param request objeto {@link HttpServletRequest} con la información de la
      *                solicitud que le hace el cliente al {@link HttpServlet}
      * @param auth    objeto {@link Authentication} con la información del
      *                {@link Usuario} autenticado
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta a la solicitud
+     * @param model   objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
-    @GetMapping(path = { "/{id}/editar", "/agregar" })
-    public ModelAndView mostrarFormulario(@PathVariable Optional<Integer> id, HttpServletRequest request,
-            Authentication auth, Locale locale) {
-        // Crear vista
-        ModelAndView vista = new ModelAndView("accidentes/formulario");
+    @GetMapping(path = "/agregar")
+    public String formularioAgregar(HttpServletRequest request, Authentication auth, Model model) {
+        // Buscar información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
-        // Inicializar repositorios
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+        // Crear objeto accidente
+        Accidente accidente = new Accidente();
 
-        // Inicializar accidente
-        Accidente accidente = null;
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Verificar rol del usuario
+            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
+                // Buscar todos los clientes
+                List<Cliente> clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "nombre"));
 
-        // Inicializar acción
-        String accion = "agregar";
+                // Agregar clientes al modelo
+                model.addAttribute("clientes", clientes);
+            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                // Buscar información del profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
-        // Verificar si el id está presente
-        if (id.isPresent()) {
-            // Obtener información del accidente
-            accidente = accidentesRepositorio.buscarPorId(id.get());
+                // Verificar si existe
+                if (profesional.isPresent()) {
+                    // Buscar clientes del profesional
+                    List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get(),
+                            Sort.by(Direction.ASC, "nombre"));
 
-            // Verificar si no existe
-            if (accidente == null) {
-                // Depuración
-                logger.info("{} intentó editar un registro que no existe: {}", auth.getName(), request.getRequestURI());
+                    // Agregar listado al modelo
+                    model.addAttribute("clientes", clientes);
+                }
+            } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                // Buscar información del cliente
+                Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
 
-                // Redireccionar
-                return new ModelAndView("redirect:/accidentes", "noid", id.get());
+                // Verificar si existe
+                if (cliente.isPresent()) {
+                    // Agregar cliente al accidente
+                    accidente.setCliente(cliente.get());
+                }
             }
-
-            accion = "editar";
         }
 
-        // Verificar rol del usuario
-        if (request.isUserInRole(ROLE_ADMIN)) {
+        // Agregar accidente al modelo
+        model.addAttribute("accidente", accidente);
+        model.addAttribute("accion", "agregar");
+
+        // Mostrar formulario
+        return "accidentes/formulario";
+    }
+
+    /**
+     * Muestra el formulario de edición de un {@link Accidente}
+     * 
+     * @param id    identificador numérico del {@link Accidente}
+     * @param auth  objeto {@link Authentication} con la información del
+     *              {@link Usuario} autenticado
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = "/{id}/editar")
+    public String formularioEditar(@PathVariable int id, Authentication auth, Model model) {
+        // Buscar información del accidente
+        Optional<Accidente> accidente = accidentesRepositorio.findById(id);
+
+        // Verificar si existe
+        if (accidente.isPresent()) {
             // Buscar todos los clientes
-            List<Cliente> clientes = clientesRepositorio.buscarTodos();
+            List<Cliente> clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "nombre"));
 
-            // Agregar listado a la vista
-            vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole(ROLE_STAFF)) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
+            // Agregar listado al modelo
+            model.addAttribute("clientes", clientes);
 
-            // Buscar clientes del profesional
-            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
+            // Agregar accidente
+            model.addAttribute("accidente", accidente);
 
-            // Agregar listado a la vista
-            vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole(ROLE_CLIENT)) {
-            // Buscar información del cliente
-            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
-
-            // Agregar cliente a la vista
-            vista.addObject("cliente", cliente);
+            // Mostrar vista
+            return "accidentes/formulario";
         }
 
-        // Agregar acción a la vista
-        vista.addObject("accion", accion);
-
-        // Agregar accidente a la vista
-        vista.addObject("accidente", accidente == null ? new Accidente() : accidente);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
-
-        // Devolver vista
-        return vista;
+        // Redireccionar
+        return "redirect:/accidentes?noid=" + id;
     }
 
     // Solicitudes POST
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Procesa el formulario cuando el {@link Usuario} agrega un nuevo
-     * {@link Accidente}
+     * Procesa el formulario para editar/agregar un registro
      * 
-     * @param request   objeto {@link HttpServletRequest} con la información de la
-     *                  solicitud que le hace el cliente al {@link HttpServlet}
-     * @param auth      objeto {@link Authentication} con la información del
-     *                  {@link Usuario} autenticado
-     * @param accidente objeto {@link Accidente} con la información a agregar
-     * @param locale    objeto {@link Locale} con la información regional del
-     *                  cliente
-     * @return un objeto {@link ModelAndView} con la respuesta de la solicitud
+     * @param idnt          identificador numérico del {@link Accidente}
+     * @param accidente     objeto {@link Accidente} con la información a
+     *                      agregar/editar
+     * @param bindingResult objeto {@link BindingResult} con los errores de
+     *                      validación
+     * @param model         objeto {@link Model} con el modelo de la vista
+     * @param request       objeto {@link HttpServletRequest} con la información de
+     *                      la solicitud que le hace el cliente al
+     *                      {@link HttpServlet}
+     * @param auth          objeto {@link Authentication} con la información del
+     *                      {@link Usuario} autenticado
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
-    @PostMapping(path = "/agregar")
-    public ModelAndView procesarAgregar(HttpServletRequest request, Authentication auth,
-            @ModelAttribute Accidente accidente, Locale locale) {
-        // Inicializar repositorios
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
-        ClientesRepositorio clientesRepositorio = new ClientesRepositorio(jdbcTemplate);
-        ProfesionalesRepositorio profesionalesRepositorio = new ProfesionalesRepositorio(jdbcTemplate);
+    @PostMapping(path = { "/{idnt}/editar", "/agregar" })
+    public String procesarFormulario(@PathVariable Optional<Integer> idnt, @Valid Accidente accidente,
+            BindingResult bindingResult, Model model, HttpServletRequest request, Authentication auth) {
+        // Obtener información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
 
-        // Agregar registro
-        if (accidentesRepositorio.agregarRegistro(accidente)) {
-            // Buscar registro
-            accidente = accidentesRepositorio.buscarUltimo();
+        // Verificar si hay errores
+        if (bindingResult.hasErrors()) {
+            // Verificar autoridad del usuario
+            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
+                // Buscar clientes
+                List<Cliente> clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "nombre"));
+                model.addAttribute("clientes", clientes);
+            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                // Buscar información del Profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
-            // Depuración
-            logger.info("{} agregó un nuevo accidente: /detta/accidentes/{}", auth.getName(), accidente.getId());
+                // Verificar si existe
+                if (profesional.isPresent()) {
+                    // Buscar clientes del profesional
+                    List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get(),
+                            Sort.by(Direction.ASC, "name"));
 
-            // Redireccionar
-            return new ModelAndView("redirect:/accidentes/" + accidente.getId());
+                    // Agregar al modelo
+                    model.addAttribute("clientes", clientes);
+                }
+            } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                // Buscar información del cliente
+                Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
+
+                // Verificar si existe
+                if (cliente.isPresent()) {
+                    // Agregar al modelo
+                    model.addAttribute("cliente", cliente);
+                }
+            }
+
+            // Verificar acción
+            if (idnt.isPresent()) {
+                model.addAttribute("accion", "editar");
+            } else {
+                model.addAttribute("accion", "agregar");
+            }
+
+            // Mostrar formulario
+            return "accidentes/formulario";
         }
 
-        // Crear vista
-        ModelAndView vista = new ModelAndView("accidentes/formulario");
-
-        // Agregar accidente a la vista
-        vista.addObject("accidente", accidente);
-
-        // Verificar rol del usuario
-        if (request.isUserInRole(ROLE_ADMIN)) {
-            // Buscar todos los clientes
-            List<Cliente> clientes = clientesRepositorio.buscarTodos();
-
-            // Agregar listado a la vista
-            vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole(ROLE_STAFF)) {
-            // Buscar información del profesional
-            Profesional profesional = profesionalesRepositorio.buscarPorEmail(auth.getName());
-
-            // Buscar clientes del profesional
-            List<Cliente> clientes = clientesRepositorio.buscarPorProfesionalId(profesional.getId());
-
-            // Agregar listado a la vista
-            vista.addObject("clientes", clientes);
-        } else if (request.isUserInRole(ROLE_CLIENT)) {
-            // Buscar información del cliente
-            Cliente cliente = clientesRepositorio.buscarPorEmail(auth.getName());
-
-            // Agregar cliente a la vista
-            vista.addObject("cliente", cliente);
-        }
-
-        // Agregar acción a la vista
-        vista.addObject("accion", "agregar");
-
-        // Agregar accidente a la vista
-        vista.addObject("accidente", accidente == null ? new Accidente() : accidente);
-
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.accidents", null, locale));
-
-        // Devolver vista
-        return vista;
-    }
-
-    /**
-     * Procesa el formulario cuando el usuario edita un {@link Accidente}
-     * 
-     * @param request   objeto {@link HttpServletRequest} con la información de la
-     *                  solicitud que le hizo el cliente al {@link HttpServlet}
-     * @param idnt      identificador numérico del {@link Accidente}
-     * @param accidente objeto {@link Accidente} con la información a actualizar
-     * @param locale    objeto {@link Locale} con la información regional del
-     *                  cliente
-     * @return un objeto {@link ModelAndView} con la respuesta a la solicitud
-     */
-    @PostMapping(path = "/{idnt}/editar")
-    public ModelAndView procesarEdicion(HttpServletRequest request, @PathVariable int idnt,
-            @ModelAttribute Accidente accidente, Locale locale) {
-        // Inicializar repositorios
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
-
-        // Actualizar registro
-        accidentesRepositorio.actualizarRegistro(accidente);
-
-        // Depuración
-        logger.info("{} editó la información de un accidente: /detta/accidentes/{}", request.getRemoteUser(),
-                accidente.getId());
-
-        // Devolver vista
-        return new ModelAndView("redirect:/accidentes/" + idnt);
-    }
-
-    /**
-     * Elimina un registro del repositorio de {@link Accidente}s
-     * 
-     * @param request objeto {@link HttpServletRequest} con la información de la
-     *                solicitud que le hace el cliente al {@link HttpServlet}
-     * @param id      identificador numérico del {@link Accidente}
-     * @param locale  objeto {@link Locale} con la información regional del cliente
-     * @return un objeto {@link ModelAndView} con la respuesta
-     */
-    @PostMapping(path = "/{id}/eliminar")
-    public ModelAndView eliminarRegistro(HttpServletRequest request, @PathVariable int id, Locale locale) {
-        // Inicializar repositorios
-        AccidentesRepositorio accidentesRepositorio = new AccidentesRepositorio(jdbcTemplate);
-
-        // Obtener información del registro
-        Accidente accidente = accidentesRepositorio.buscarPorId(id);
+        // Agregar registro al repositorio
+        accidente = accidentesRepositorio.save(accidente);
 
         // Verificar si existe
-        if (accidente != null) {
-            // Eliminar registro
-            accidentesRepositorio.eliminarRegistro(id);
+        if (usuario.isPresent()) {
+            // Crear nueva acción
+            Accion accion = new Accion("Agregó un nuevo accidente: " + accidente.getId(), 4, usuario.get());
+
+            // Agregar al repositorio
+            accionesRepositorio.save(accion);
 
             // Depuración
-            logger.info("{} eliminó un registro de Accidente: {}", request.getRemoteUser(), request.getRequestURI());
-
-            // Dedireccionar
-            return new ModelAndView("redirect:/accidentes", "rem", id);
+            logger.info("{} agregó un nuevo accidente: {} ", usuario.get(), accidente.getId());
         }
 
-        // Depuración
-        logger.error("{} intentó eliminar un registro de Accidente que no existe: {}", request.getRemoteUser(),
-                request.getRequestURI());
+        // Redireccionar
+        return "redirect:/accidentes/" + accidente.getId();
+    }
+
+    @PostMapping(path = "/{id}/eliminar")
+    public String eliminarRegistro(@PathVariable int id, Authentication auth) {
+        // Obtener información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Obtener información del accidente
+            Optional<Accidente> accidente = accidentesRepositorio.findById(id);
+
+            // Verificar si existe
+            if (accidente.isPresent()) {
+                // Eliminar registro
+                accidentesRepositorio.delete(accidente.get());
+
+                // Crear acción
+                Accion accion = new Accion("Eliminó un accidente: " + accidente.get().getId(), 4, usuario.get());
+
+                // Guardar registro
+                accionesRepositorio.save(accion);
+
+                // Depuración
+                logger.info("{} eliminó un registro de Accidente: {}", auth.getName(), accidente.get().getId());
+
+                // Redireccionar
+                return "redirect:/accidentes?remid=" + id;
+            }
+
+            // Redireccionar
+            return "redirect:/accidentes?noid=" + id;
+        }
 
         // Redireccionar
-        return new ModelAndView("redirect:/accidentes", "noid", id);
+        return "redirect:/login";
     }
 
 }
