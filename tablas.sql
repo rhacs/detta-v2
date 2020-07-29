@@ -168,22 +168,19 @@ CREATE TABLE detta_capacitaciones (
     CONSTRAINT detta_capacitaciones_pk PRIMARY KEY ( capacitacion_id ),
 
 -- Llaves foráneas
-
     CONSTRAINT detta_capacitaciones_fku FOREIGN KEY (usuario_id)
         REFERENCES detta_usuarios (usuario_id) ON DELETE CASCADE,
-
     CONSTRAINT detta_capacitaciones_fkp FOREIGN KEY (profesional_id)
-        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL,
-
+        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL
 );
 
 -- Secuencia
-
 CREATE SEQUENCE detta_capacitaciones_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
------------------------------------------------------------------------------
--- Creación de tabla de asesorías
------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_asesorias
+----------------------------------------------------------------------------------------------------
+
 CREATE TABLE detta_asesorias (
     asesoria_id NUMBER NOT NULL,
     tema NVARCHAR2(250) NOT NULL,
@@ -203,14 +200,34 @@ CONSTRAINT detta_asesorias_pk PRIMARY KEY ( asesoria_id);
 -- Llaves foráneas
 CONSTRAINT detta_asesorias_fkc FOREIGN KEY (cliente_id)
         REFERENCES detta_clientes (cliente_id) ON DELETE CASCADE,
-
 CONSTRAINT detta_asesorias_fkp FOREIGN KEY (profesional_id)
-        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL,
+        REFERENCES detta_profesionales (profesional_id) ON DELETE SET NULL
 
 );
 
 -- Secuencia
 CREATE SEQUENCE detta_asesorias_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
 
-------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Tabla: detta_visitas
+----------------------------------------------------------------------------------------------------
 
+CREATE TABLE detta_visitas (
+    visita_id NUMBER NOT NULL,
+    fecha DATE NOT NULL,
+    hora NVARCHAR2(5) NOT NULL,
+    direccion NVARCHAR2(150) NOT NULL,
+    motivo NUMBER(1,0) NOT NULL,
+    estado NUMBER(1,0) NOT NULL,
+    asesoria_id NUMBER NOT NULL,
+
+    -- Llave Primaria
+    CONSTRAINT detta_visitas_pk PRIMARY KEY (visita_id),
+
+    -- Llave Foránea
+    CONSTRAINT detta_visitas_fk FOREIGN KEY (asesoria_id)
+        REFERENCES detta_asesorias (asesoria_id) ON DELETE CASCADE
+);
+
+-- Secuencia
+CREATE SEQUENCE detta_visitas_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE ORDER;
