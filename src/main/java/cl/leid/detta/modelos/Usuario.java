@@ -42,7 +42,7 @@ public class Usuario {
     private String password;
 
     /** Indica si el {@link Usuario} está o no habilitado para acceder al sistema */
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = false, updatable = true)
     private boolean enabled;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
