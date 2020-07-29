@@ -3,11 +3,9 @@ package cl.leid.detta.repositorios;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import cl.leid.detta.modelos.Usuario;
 
-@Repository
 public interface UsuariosRepositorio extends JpaRepository<Usuario, Integer> {
 
     /**

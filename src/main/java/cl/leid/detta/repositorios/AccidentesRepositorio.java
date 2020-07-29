@@ -3,12 +3,10 @@ package cl.leid.detta.repositorios;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import cl.leid.detta.modelos.Accidente;
 import cl.leid.detta.modelos.Cliente;
 
-@Repository
 public interface AccidentesRepositorio extends JpaRepository<Accidente, Integer> {
 
     /**

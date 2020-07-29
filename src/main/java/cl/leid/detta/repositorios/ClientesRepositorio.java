@@ -5,13 +5,11 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import cl.leid.detta.modelos.Cliente;
 import cl.leid.detta.modelos.Profesional;
 import cl.leid.detta.modelos.Usuario;
 
-@Repository
 public interface ClientesRepositorio extends JpaRepository<Cliente, Integer> {
 
     /**

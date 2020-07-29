@@ -3,12 +3,10 @@ package cl.leid.detta.repositorios;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.modelos.Usuario;
 
-@Repository
 public interface AccionesRepositorio extends JpaRepository<Accion, Integer> {
 
     /**
