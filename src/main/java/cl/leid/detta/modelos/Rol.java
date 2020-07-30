@@ -40,7 +40,7 @@ public class Rol {
     @Column(name = "role", nullable = false, updatable = false)
     private String role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE })
     @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id", nullable = false, unique = true)
     @JsonIgnore
     private Usuario usuario;
