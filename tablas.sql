@@ -4,6 +4,8 @@
 
 CREATE TABLE detta_usuarios (
     usuario_id NUMBER NOT NULL,
+    nombre NVARCHAR2(250) NOT NULL,
+    telefono NVARCHAR2(50) NOT NULL,
     email NVARCHAR2(150) NOT NULL,
     password NVARCHAR2(250) NOT NULL,
     enabled NUMBER(1,0) NOT NULL,
@@ -69,8 +71,6 @@ CREATE SEQUENCE detta_acciones_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE OR
 
 CREATE TABLE detta_profesionales (
     profesional_id NUMBER NOT NULL,
-    nombre NVARCHAR2(100) NOT NULL,
-    telefono NVARCHAR2(20) NOT NULL,
     usuario_id NUMBER NOT NULL,
 
     -- Llave primaria
@@ -93,9 +93,7 @@ CREATE SEQUENCE detta_profesionales_sq START WITH 1 INCREMENT BY 1 NOCACHE NOCYC
 
 CREATE TABLE detta_clientes (
     cliente_id NUMBER NOT NULL,
-    nombre NVARCHAR2(250) NOT NULL,
     rut NVARCHAR2(50) NOT NULL,
-    telefono NVARCHAR2(20) NOT NULL,
     giro NVARCHAR2(100) NOT NULL,
     empleados NUMBER NOT NULL,
     tipo NUMBER(1,0) NOT NULL,
