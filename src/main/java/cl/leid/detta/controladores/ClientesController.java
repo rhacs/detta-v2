@@ -246,24 +246,25 @@ public class ClientesController {
     @PostMapping(path = "/{idnt}/editar")
     public String editarRegistro(@PathVariable int idnt, @Valid Cliente cliente, BindingResult bindingResult,
             Model model) {
-        model.addAttribute("accion", "editar");
-
-        // Buscar profesionales
-        List<Profesional> profesionales = profesionalesRepositorio.findAll();
-        model.addAttribute("profesionales", profesionales);
-
         // Verificar si hay errores
         if (bindingResult.hasErrors()) {
+            model.addAttribute("accion", "editar");
+
+            // Buscar profesionales
+            List<Profesional> profesionales = profesionalesRepositorio.findAll();
+            model.addAttribute("profesionales", profesionales);
+
             // Mostrar formulario
             return "clientes/formulario";
         }
 
         // Obtener información del Cliente
-        Optional<Cliente> existente = clientesRepositorio.findById(idnt);
+        Optional<Cliente> existente = clientesRepositorio.findById(cliente.getId());
 
         // Verificar si existe
         if (existente.isPresent()) {
             // Agregar datos faltantes
+            cliente.getUsuario().setPassword(existente.get().getUsuario().getPassword());
             cliente.getUsuario().setRol(existente.get().getUsuario().getRol());
 
             // Guardar cambios
