@@ -67,7 +67,7 @@
                                                 <td class="text-nowrap">${accidente.getFecha()}</td>
                                                 <td class="text-nowrap">${accidente.getHora()}</td>
                                                 <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
-                                                <td>${accidente.getCliente().getNombre()}</td>
+                                                <td>${accidente.getCliente().getUsuario().getNombre()}</td>
                                                 </sec:authorize>
                                                 <td class="text-nowrap">
                                                     <core:choose>

@@ -86,7 +86,7 @@ public class ClientesController {
         // Verificar autoridad del usuario
         if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
             // Buscar todos los clientes
-            clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "nombre"));
+            clientes = clientesRepositorio.findAll(Sort.by(Direction.ASC, "usuario.nombre"));
         } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
             // Buscar información del Usuario
             Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());

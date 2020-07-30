@@ -30,6 +30,20 @@ public class Usuario {
     @Column(name = "usuario_id", nullable = false, unique = true, updatable = false)
     private int id;
 
+    /**
+     * Nombre completo del {@link Usuario}
+     */
+    @Size(min = 5, max = 250)
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    /**
+     * Teléfono de contacto del {@link Usuario}
+     */
+    @Size(min = 7, max = 50)
+    @Column(name = "telefono", nullable = false)
+    private String telefono;
+
     /** Dirección de correo electrónico del {@link Usuario} */
     @Column(name = "email", nullable = false, unique = true, updatable = false)
     @Email
@@ -62,13 +76,15 @@ public class Usuario {
      * Crea una nueva instancia del objeto {@link Usuario}
      * 
      * @param id       identificador numérico
+     * @param nombre   nombre completo
+     * @param telefono teléfono de contacto
      * @param email    dirección de correo electrónico
      * @param password contraseña
      * @param enabled  si se le permitirá ({@code true}) o no ({@code false}) el
      *                 acceso al sistema
      * @param rol      {@link Rol}
      */
-    public Usuario(int id, String email, String password, boolean enabled, Rol rol) {
+    public Usuario(int id, String nombre, String telefono, String email, String password, boolean enabled, Rol rol) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -84,6 +100,20 @@ public class Usuario {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * @return el nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @return el teléfono de contacto
+     */
+    public String getTelefono() {
+        return telefono;
     }
 
     /**
@@ -122,6 +152,20 @@ public class Usuario {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * @param nombre el nombre a establecer
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @param telefono el teléfono de contacto a establecer
+     */
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     /**
@@ -194,7 +238,8 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario [id=" + id + ", email=" + email + ", enabled=" + enabled + ", rol=" + rol + "]";
+        return "Usuario [id=" + id + ", nombre=" + nombre + ", telefono=" + telefono + ", email=" + email + ", enabled="
+                + enabled + ", rol=" + rol + "]";
     }
 
 }

@@ -36,9 +36,9 @@
                                 <form:hidden path="usuario.rol.id" />
 
                                 <div class="form-group">
-                                    <form:label path="nombre"><spring:message code="form.label.name" /></form:label>
-                                    <form:input path="nombre" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="name" autofocus="autofocus" />
-                                    <form:errors path="nombre" cssClass="invalid-feedback" />
+                                    <form:label path="usuario.nombre"><spring:message code="form.label.name" /></form:label>
+                                    <form:input path="usuario.nombre" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="name" autofocus="autofocus" />
+                                    <form:errors path="usuario.nombre" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
@@ -55,9 +55,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="tel" aria-labelledby="phoneHelp" />
-                                    <form:errors path="telefono" cssClass="invalid-feedback" />
+                                    <form:label path="usuario.telefono"><spring:message code="form.label.phone" /></form:label>
+                                    <form:input path="usuario.telefono" cssClass="form-control" cssErrorClass="form-control is-invalid" autocomplete="tel" aria-labelledby="phoneHelp" />
+                                    <form:errors path="usuario.telefono" cssClass="invalid-feedback" />
                                     <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 

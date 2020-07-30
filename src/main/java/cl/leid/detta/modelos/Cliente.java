@@ -30,21 +30,11 @@ public class Cliente {
     @Column(name = "cliente_id", nullable = false, unique = true, updatable = false)
     private int id;
 
-    /** Nombre o Razón Social del {@link Cliente} */
-    @Column(name = "nombre", nullable = false)
-    @Size(min = 5, max = 250)
-    private String nombre;
-
     /** Rol Único Tributario del {@link Cliente} */
     @Column(name = "rut", nullable = false, unique = true, updatable = false)
     @Size(min = 9, max = 10)
     @Pattern(regexp = "[1-9][0-9]{8,9}")
     private String rut;
-
-    /** Teléfono de contacto del {@link Cliente} */
-    @Column(name = "telefono", nullable = false)
-    @Size(min = 7, max = 20)
-    private String telefono;
 
     /** Giro o Actividad Económica del {@link Cliente} */
     @Column(name = "giro", nullable = false)
@@ -89,6 +79,29 @@ public class Cliente {
 
     }
 
+    /**
+     * Crea una nueva instancia del objeto {@link Cliente}
+     * 
+     * @param id          identificador numérico
+     * @param rut         rol único tributario
+     * @param giro        giro o actividad económica
+     * @param empleados   cantidad de empleados
+     * @param tipo        {@link #tipo} de empresa
+     * @param usuario     {@link Usuario} relacionado
+     * @param profesional {@link Profesional} relacionado
+     */
+    public Cliente(int id, @Size(min = 9, max = 10) @Pattern(regexp = "[1-9][0-9]{8,9}") String rut,
+            @Size(min = 5, max = 250) String giro, @Min(1) int empleados, int tipo, @Valid Usuario usuario,
+            Profesional profesional) {
+        this.id = id;
+        this.rut = rut;
+        this.giro = giro;
+        this.empleados = empleados;
+        this.tipo = tipo;
+        this.usuario = usuario;
+        this.profesional = profesional;
+    }
+
     // Getters
     // -----------------------------------------------------------------------------------------
 
@@ -100,24 +113,10 @@ public class Cliente {
     }
 
     /**
-     * @return el nombre o razón social
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
      * @return el rol único tributario
      */
     public String getRut() {
         return rut;
-    }
-
-    /**
-     * @return el teléfono de contacto
-     */
-    public String getTelefono() {
-        return telefono;
     }
 
     /**
@@ -166,24 +165,10 @@ public class Cliente {
     }
 
     /**
-     * @param nombre el nombre o razón social a establecer
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
      * @param rut el rol único tributario a establecer
      */
     public void setRut(String rut) {
         this.rut = rut;
-    }
-
-    /**
-     * @param telefono el teléfono de contacto a establecer
-     */
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
     }
 
     /**
@@ -269,9 +254,8 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente [id=" + id + ", nombre=" + nombre + ", rut=" + rut + ", telefono=" + telefono + ", giro=" + giro
-                + ", empleados=" + empleados + ", tipo=" + tipo + ", usuario=" + usuario + ", profesional="
-                + profesional + "]";
+        return "Cliente [id=" + id + ", rut=" + rut + ", giro=" + giro + ", empleados=" + empleados + ", tipo=" + tipo
+                + ", usuario=" + usuario + ", profesional=" + profesional + "]";
     }
 
 }

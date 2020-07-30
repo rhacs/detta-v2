@@ -54,9 +54,9 @@
                                         <core:forEach items="${profesionales}" var="profesional" >
                                             <tr role="button" data-member="profesionales" data-id="${profesional.getId()}" ${!profesional.getUsuario().isEnabled() ? 'class="table-warning"' : ''}>
                                                 <th scope="row" class="text-nowrap">${profesional.getId()}</th>
-                                                <td class="text-nowrap">${profesional.getNombre()}</td>
+                                                <td class="text-nowrap">${profesional.getUsuario().getNombre()}</td>
                                                 <td class="text-nowrap">${profesional.getUsuario().getEmail()}</td>
-                                                <td class="text-nowrap">${profesional.getTelefono()}</td>
+                                                <td class="text-nowrap">${profesional.getUsuario().getTelefono()}</td>
                                                 <td class="text-nowrap text-right">
                                                     <core:choose>
                                                         <core:when test="${profesional.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>

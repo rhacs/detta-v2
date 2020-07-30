@@ -46,7 +46,7 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.name" /></th>
-                                    <td class="text-nowrap">${profesional.getNombre()}</td>
+                                    <td class="text-nowrap">${profesional.getUsuario().getNombre()}</td>
                                 </tr>
 
                                 <tr>
@@ -56,7 +56,7 @@
 
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.phone" /></th>
-                                    <td class="text-nowrap">${profesional.getTelefono()}</td>
+                                    <td class="text-nowrap">${profesional.getUsuario().getTelefono()}</td>
                                 </tr>
 
                                 <tr>
@@ -93,8 +93,8 @@
                                             <tr role="button" data-member="clientes" data-id="${cliente.getId()}" ${!cliente.getUsuario().isEnabled() ? 'class="table-warning"' : '' }>
                                                 <th scope="row" class="text-nowrap">${cliente.getId()}</th>
                                                 <td class="text-nowrap">${cliente.getRut()}</td>
-                                                <td>${cliente.getNombre()}</td>
-                                                <td class="text-nowrap">${cliente.getTelefono()}</td>
+                                                <td>${cliente.getUsuario().getNombre()}</td>
+                                                <td class="text-nowrap">${cliente.getUsuario().getTelefono()}</td>
                                                 <td>
                                                     <core:choose>
                                                         <core:when test="${cliente.getUsuario().isEnabled()}"><spring:message code="form.label.yes" /></core:when>
@@ -134,7 +134,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <spring:message code="confirmation.delete.content" arguments="${profesional.getNombre()}" />
+                        <spring:message code="confirmation.delete.content" arguments="${profesional.getUsuario().getNombre()}" />
                     </div>
 
                     <div class="modal-footer">

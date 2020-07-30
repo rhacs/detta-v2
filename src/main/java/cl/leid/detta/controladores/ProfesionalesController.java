@@ -80,7 +80,7 @@ public class ProfesionalesController {
         ModelAndView vista = new ModelAndView("profesionales");
 
         // Buscar listado de profesionales
-        List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by(Sort.Direction.ASC, "nombre"));
+        List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by(Sort.Direction.ASC, "usuario.nombre"));
 
         // Agregar listado a la vista
         vista.addObject("profesionales", profesionales);

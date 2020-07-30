@@ -36,9 +36,9 @@
                                 <form:hidden path="usuario.rol.id" />
 
                                 <div class="form-group">
-                                    <form:label path="nombre"><spring:message code="form.label.client_name" /></form:label>
-                                    <form:input path="nombre" class="form-control" cssErrorClass="form-control is-invalid" autofocus="autofocus" />
-                                    <form:errors path="nombre" cssClass="invalid-feedback" />
+                                    <form:label path="usuario.nombre"><spring:message code="form.label.client_name" /></form:label>
+                                    <form:input path="usuario.nombre" class="form-control" cssErrorClass="form-control is-invalid" autofocus="autofocus" />
+                                    <form:errors path="usuario.nombre" cssClass="invalid-feedback" />
                                 </div>
 
                                 <div class="form-group">
@@ -69,9 +69,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <form:label path="telefono"><spring:message code="form.label.phone" /></form:label>
-                                    <form:input path="telefono" class="form-control" aria-labelledby="phoneHelp" cssErrorClass="form-control is-invalid" />
-                                    <form:errors path="telefono" cssClass="invalid-feedback" />
+                                    <form:label path="usuario.telefono"><spring:message code="form.label.phone" /></form:label>
+                                    <form:input path="usuario.telefono" class="form-control" aria-labelledby="phoneHelp" cssErrorClass="form-control is-invalid" />
+                                    <form:errors path="usuario.telefono" cssClass="invalid-feedback" />
                                     <small id="phoneHelp" class="form-text text-muted"><spring:message code="form.label.phone.help" /></small>
                                 </div>
 
@@ -111,7 +111,7 @@
                                 <div class="form-group">
                                     <form:label path="profesional.id"><spring:message code="form.label.professional" /></form:label>
                                     <form:select path="profesional.id" class="form-control">
-                                        <form:options items="${profesionales}" itemLabel="nombre" itemValue="id" />
+                                        <form:options items="${profesionales}" itemLabel="usuario.nombre" itemValue="id" />
                                     </form:select>
                                     <form:errors path="profesional.id" cssClass="invalid-feedback" />
                                 </div>

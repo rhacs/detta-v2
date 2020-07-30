@@ -106,7 +106,7 @@
                                 <div class="form-group">
                                     <form:label path="cliente.id"><spring:message code="form.label.client" /></form:label>
                                     <form:select path="cliente.id" cssClass="form-control">
-                                        <form:options items="${clientes}" itemLabel="nombre" itemValue="id" />
+                                        <form:options items="${clientes}" itemLabel="usuario.nombre" itemValue="id" />
                                     </form:select>
                                 </div>
                                 </sec:authorize>

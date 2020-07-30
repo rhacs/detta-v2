@@ -11,8 +11,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import cl.leid.detta.Constantes;
 
@@ -29,17 +27,6 @@ public class Profesional {
     @GeneratedValue(generator = Constantes.SECUENCIA_PROFESIONALES, strategy = GenerationType.SEQUENCE)
     @Column(name = "profesional_id", nullable = false, unique = true, updatable = false)
     private int id;
-
-    /** Nombre completo del {@link Profesional} */
-    @Column(name = "nombre", nullable = false)
-    @Size(min = 5, max = 100)
-    private String nombre;
-
-    /** Teléfono de contacto del {@link Profesional} */
-    @Column(name = "telefono", nullable = false)
-    @Size(min = 7, max = 20)
-    @Pattern(regexp = "[0-9]+")
-    private String telefono;
 
     /** Objeto {@link Usuario} con la información de acceso al sistema */
     @OneToOne(cascade = CascadeType.ALL)
@@ -60,15 +47,11 @@ public class Profesional {
     /**
      * Crea una nueva instancia del objeto {@link Profesional}
      * 
-     * @param id       identificador numérico
-     * @param nombre   nombre completo
-     * @param telefono teléfono de contacto
-     * @param usuario  objeto {@link Usuario} relacionado
+     * @param id      identificador numérico
+     * @param usuario objeto {@link Usuario} relacionado
      */
-    public Profesional(int id, String nombre, String telefono, Usuario usuario) {
+    public Profesional(int id, Usuario usuario) {
         this.id = id;
-        this.nombre = nombre;
-        this.telefono = telefono;
         this.usuario = usuario;
     }
 
@@ -80,20 +63,6 @@ public class Profesional {
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * @return el nombre completo
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
-     * @return el teléfono de contacto
-     */
-    public String getTelefono() {
-        return telefono;
     }
 
     /**
@@ -111,20 +80,6 @@ public class Profesional {
      */
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * @param nombre el nombre completo a establecer
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
-     * @param telefono el teléfono de contacto a establecer
-     */
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
     }
 
     /**
@@ -175,7 +130,7 @@ public class Profesional {
 
     @Override
     public String toString() {
-        return "Profesional [id=" + id + ", nombre=" + nombre + ", telefono=" + telefono + ", usuario=" + usuario + "]";
+        return "Profesional [id=" + id + ", usuario=" + usuario + "]";
     }
 
 }

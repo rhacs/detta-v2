@@ -52,7 +52,7 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.client_name" /></th>
-                                    <td>${cliente.getNombre()}</td>
+                                    <td>${cliente.getUsuario().getNombre()}</td>
                                 </tr>
 
                                 <tr>
@@ -67,7 +67,7 @@
 
                                 <tr>
                                     <th scope="row" class="text-nowrap"><spring:message code="form.label.phone" /></th>
-                                    <td class="text-nowrap">${cliente.getTelefono()}</td>
+                                    <td class="text-nowrap">${cliente.getUsuario().getTelefono()}</td>
                                 </tr>
 
                                 <tr>
@@ -102,7 +102,7 @@
                                                 <spring:message code="form.error.no_professional_assigned" />
                                             </core:when>
                                             <core:otherwise>
-                                                ${cliente.getProfesional().getNombre()}
+                                                ${cliente.getProfesional().getUsuario().getNombre()}
                                             </core:otherwise>
                                         </core:choose>
                                     </td>
@@ -143,7 +143,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <spring:message code="confirmation.delete.content" arguments="${cliente.getNombre()}" />
+                        <spring:message code="confirmation.delete.content" arguments="${cliente.getUsuario().getNombre()}" />
                     </div>
 
                     <div class="modal-footer">
