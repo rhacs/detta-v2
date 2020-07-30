@@ -2,9 +2,30 @@ package cl.leid.detta.modelos;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import cl.leid.detta.Constantes;
+
 /**
  * @author Segundo Medina González
  */
+@Entity
+@Table(name = Constantes.TABLA_CAPACITACIONES)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_CAPACITACIONES, sequenceName = Constantes.SECUENCIA_CAPACITACIONES)
 public class Capacitacion {
 
     // Atributos
@@ -13,51 +34,86 @@ public class Capacitacion {
     /**
      * Identificador numerico de la {@link Capacitacion}}
      */
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_CAPACITACIONES, strategy = GenerationType.SEQUENCE)
+    @Column(name = "capacitacion_id", nullable = false, unique = true, updatable = false)
     private int id;
 
     /**
      * Define el tipo de capacitacion {@link Capacitacion}
      */
+    @Size(min = 5, max = 50)
+    @Column(name = "tipo", nullable = false)
     private String tipo;
 
     /**
      * Define la fecha en la que va a realizarse {@link Capacitacion}
      */
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
     /**
      * Define la hora en la que va a realizarse {@link Capacitacion}
      */
+    @Pattern(regexp = "(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")
+    @Size(min = 5, max = 5)
+    @Column(name = "hora", nullable = false)
     private String hora;
 
     /**
      * Define los objetivos a tratar en la reunion {@link Capacitacion}
      */
+    @Size(min = 5, max = 250)
+    @Column(name = "objetivos", nullable = false)
     private String objetivos;
 
     /**
      * Define el lugar en donde se va a realizar {@link Capacitacion}
      */
+    @Size(min = 5, max = 150)
+    @Column(name = "direccion", nullable = false)
     private String direccion;
+
+    /**
+     * Duracion de la capacitacion
+     */
+    @Size(min = 5, max = 5)
+    @Column(name = "duracion", nullable = false)
+    private String duracion;
 
     /**
      * Define el contenido a tratar en la reunion {@link Capacitacion}
      */
+    @Size(min = 5, max = 1000)
+    @Column(name = "contenido", nullable = false)
     private String contenido;
 
     /**
-     * Define el estado en el cual se encuentra la capacitacion {@link Capacitacion}
+     * Estado de la {@link Capacitacion}
+     * <ul>
+     * <li>1: Pendiente</li>
+     * <li>2: En Proceso</li>
+     * <li>3: Realizado</li>
+     * </ul>
      */
+    @Min(1)
+    @Max(3)
+    @Column(name = "estado", nullable = false)
     private int estado;
 
     /**
-     * Objeto {@link Usuario} que esta relacionado con la {@link Capacitacion}
+     * Objeto {@link Cliente} que esta relacionado con la {@link Capacitacion}
      */
-    private Usuario usuario;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
+    private Cliente cliente;
 
     /**
      * Objeto {@link Profecional} que esta relacionado con la {@link Capacitacion}
      */
+    @OneToOne(optional = true)
+    @JoinColumn(name = "profesional_id", referencedColumnName = "profesional_id")
     private Profesional profesional;
 
     // Constructores
@@ -116,6 +172,13 @@ public class Capacitacion {
     }
 
     /**
+     * @return la duracion
+     */
+    public String getDuracion() {
+        return duracion;
+    }
+
+    /**
      * @return el contenido
      */
     public String getContenido() {
@@ -130,10 +193,10 @@ public class Capacitacion {
     }
 
     /**
-     * @return el objeto {@link Usuario} al cual hace referencia
+     * @return el objeto {@link Cliente} al cual hace referencia
      */
-    public Usuario getUsuario() {
-        return usuario;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     /**
@@ -189,6 +252,13 @@ public class Capacitacion {
     }
 
     /**
+     * @param duracion duracion que va a tener la capacitacion
+     */
+    public void setDuracion(String duracion) {
+        this.duracion = duracion;
+    }
+
+    /**
      * @param contenido tratado en la capacitacion
      */
     public void setContenido(String contenido) {
@@ -203,10 +273,10 @@ public class Capacitacion {
     }
 
     /**
-     * @param usuario el objeto {@link Usuario} el cual hace referencia
+     * @param usuario el objeto {@link Cliente} el cual hace referencia
      */
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     /**
@@ -243,9 +313,9 @@ public class Capacitacion {
 
     @Override
     public String toString() {
-        return "Capacitacion [id=" + id + ", tipo=" + tipo + ", hora=" + hora + ", objetivos=" + objetivos
-                + ", direccion=" + direccion + ", contenido=" + contenido + ", estado=" + estado + ", usuario="
-                + usuario + ", profesional=" + profesional + "]";
+        return "Capacitacion [id=" + id + ", tipo=" + tipo + ", fecha=" + fecha + ", hora=" + hora + ", objetivos="
+                + objetivos + ", direccion=" + direccion + ", duracion=" + duracion + ", contenido=" + contenido
+                + ", estado=" + estado + ", cliente=" + cliente + ", profesional=" + profesional + "]";
     }
 
 }
