@@ -2,9 +2,30 @@ package cl.leid.detta.modelos;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import cl.leid.detta.Constantes;
+
 /**
  * @author Ana Luisa Medina
  */
+@Entity
+@Table(name = Constantes.TABLA_ASESORIAS)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_ASESORIAS, sequenceName = Constantes.SECUENCIA_ASESORIAS)
 public class Asesoria {
 
     // Atributos
@@ -13,56 +34,86 @@ public class Asesoria {
     /**
      * Identificador numérico de la {@link Asesoria}
      */
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_ASESORIAS, strategy = GenerationType.SEQUENCE)
+    @Column(name = "asesoria_id", nullable = false, unique = true, updatable = false)
     private int id;
 
     /**
      * Tema principal de la {@link Asesoria}
      */
+    @Column(name = "tema", nullable = false)
+    @Size(min = 5, max = 250)
     private String tema;
 
     /**
      * Detalle a tratar en la asesoría de la {@link Asesoria}
      */
+    @Column(name = "descripcion", nullable = false)
+    @Size(min = 5, max = 1000)
     private String descripcion;
 
     /**
      * Entidad que realiza fiscalización para la cual se requiere {@link Asesoria}
      */
+    @Column(name = "fiscalizador", nullable = true)
+    @Size(min = 5, max = 250)
     private String fiscalizador;
 
     /**
      * Departamento o área en el que se va a generar la {@link Asesoria}
      */
+    @Column(name = "departamento", nullable = false)
+    @Size(min = 5, max = 250)
     private String departamento;
 
     /**
      * Estado del proceso en el que se encuentra la {@link Asesoria}
+     * <ul>
+     * <li>1: Pendiente</li>
+     * <li>2: En proceso</li>
+     * <li>3: Realizado</li>
+     * </ul>
      */
-    private String estado;
+    @Min(1)
+    @Max(3)
+    @Column(name = "estado", nullable = false)
+    private int estado;
 
     /**
      * Fecha para cuando está programada la {@link Asesoria}
      */
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
     /**
      * Hora en la que está programada la {@link Asesoria}
      */
+    @Pattern(regexp = "(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")
+    @Size(min = 5, max = 5)
+    @Column(name = "hora", nullable = false)
     private String hora;
 
     /**
      * Dirección en dónde se realizará la {@link Asesoria}
      */
+    @Size(min = 5, max = 250)
+    @Column(name = "direccion", nullable = false)
     private String direccion;
 
     /**
      * Objeto {@link Cliente} que está relacionado con la {@link Asesoria}
      */
+    @OneToOne(optional = false)
+    @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
     /**
      * Objeto {@link Profesional} que está relacionado con la {@link Asesoria}
      */
+    @OneToOne(optional = true)
+    @JoinColumn(name = "profesional_id", referencedColumnName = "profesional_id")
     private Profesional profesional;
 
     // Constructores
@@ -116,7 +167,7 @@ public class Asesoria {
     /**
      * @return estado en que se encuentra la asesoría
      */
-    public String getEstado() {
+    public int getEstado() {
         return estado;
     }
 
@@ -199,7 +250,7 @@ public class Asesoria {
     /**
      * @param estado etapa del proceso en el que se encuentra la asesoría
      */
-    public void setEstado(String estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
