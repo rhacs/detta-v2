@@ -1,11 +1,33 @@
 package cl.leid.detta.modelos;
 
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import cl.leid.detta.Constantes;
+
 /**
  * 
  * @author Alexis Ruiz.
  *
  */
+@Entity
+@Table(name = Constantes.TABLA_VISITAS)
+@SequenceGenerator(allocationSize = 1, name = Constantes.SECUENCIA_VISITAS, sequenceName = Constantes.SECUENCIA_VISITAS)
 public class Visita {
 
     // Atributos
@@ -14,30 +36,57 @@ public class Visita {
     /**
      * Identificador numerico de la {@link Visita}
      */
+    @Id
+    @GeneratedValue(generator = Constantes.SECUENCIA_VISITAS, strategy = GenerationType.SEQUENCE)
+    @Column(name = "visita_id", nullable = false, unique = true, updatable = false)
     private int id;
     /**
      * Fecha en la que se realizara la {@link Visita}
      */
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
     /**
      * Hora en la que se realizara la {@link Visita}
      */
+    @Pattern(regexp = "(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")
+    @Size(min = 5, max = 5)
+    @Column(name = "hora", nullable = false)
     private String hora;
     /**
      * Direccion donde se realizara la {@link Visita}
      */
+    @Size(min = 5, max = 150)
+    @Column(name = "direccion", nullable = false)
     private String direccion;
     /**
      * Motivo por el cual se genera la {@link Visita}
+     * <ul>
+     * <li>1: Accidente</li>
+     * <li>2: Fiscalización</li>
+     * </ul>
      */
+    @Min(1)
+    @Max(2)
+    @Column(name = "motivo", nullable = false)
     private int motivo;
     /**
-     * Estado de la {@link Visita} 
+     * Estado de la {@link Visita}
+     * <ul>
+     * <li>1: Pendiente</li>
+     * <li>2: En Proceso</li>
+     * <li>3: Realizado</li>
+     * </ul>
      */
+    @Min(1)
+    @Max(3)
+    @Column(name = "estado", nullable = false)
     private int estado;
     /**
      * Objeto {@link Asesoria} que esta relazionada la {@link Visita}
      */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "asesoria_id", referencedColumnName = "asesoria_id")
     private Asesoria asesoria;
 
     // Constructores
@@ -122,18 +171,21 @@ public class Visita {
     public void setHora(String hora) {
         this.hora = hora;
     }
+
     /**
      * @param direccion direccion donde se raliza la visita
      */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+
     /**
      * @param motivo motivo de la visita
      */
     public void setMotivo(int motivo) {
         this.motivo = motivo;
     }
+
     /**
      * @param estado estado de la visita
      */
