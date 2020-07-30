@@ -2,23 +2,23 @@
 -- Tabla: detta_usuarios
 ----------------------------------------------------------------------------------------------------
 
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (1, 'admin@detta.cl', '$2a$10$YW.QNtpYrJouwMMrmlT28OPxbXzxL2gUGFmbg8THUXaYXRKmcqrjW', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (1, 'Administrador Uno', '111111111', 'admin@detta.cl', '$2a$10$YW.QNtpYrJouwMMrmlT28OPxbXzxL2gUGFmbg8THUXaYXRKmcqrjW', '1');
 
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (2, 'profesional.uno@detta.cl', '$2a$10$JZvFcnU.ku4sDHCtBjGIOetcK506a0kq5KzvfTkTe7DNYlDKfwbsq', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (3, 'profesional.dos@detta.cl', '$2a$10$WfDYhKcRY/QxPAldeES6Q.ih5zSO9GwyNrCjkBWSU6QzLnzXAWjT2', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (4, 'profesional.tres@detta.cl', '$2a$10$bEjiVk9QTYyYrgW16ejyKeYwCeEB5jJuwKkzBqiGKzulvHrCppgua', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (5, 'profesional.cuatro@detta.cl', '$2a$10$5Nivt0GKMRId.174ZI77fudTFfCoiti/hL1xhpiH/QFhvfSXlOgW2', '0');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (2, 'Profesional Uno', '222222222', 'profesional.uno@detta.cl', '$2a$10$JZvFcnU.ku4sDHCtBjGIOetcK506a0kq5KzvfTkTe7DNYlDKfwbsq', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (3, 'Profesional Dos', '333333333', 'profesional.dos@detta.cl', '$2a$10$WfDYhKcRY/QxPAldeES6Q.ih5zSO9GwyNrCjkBWSU6QzLnzXAWjT2', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (4, 'Profesional Tres', '444444444', 'profesional.tres@detta.cl', '$2a$10$bEjiVk9QTYyYrgW16ejyKeYwCeEB5jJuwKkzBqiGKzulvHrCppgua', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (5, 'Profesional Cuatro', '555555555', 'profesional.cuatro@detta.cl', '$2a$10$5Nivt0GKMRId.174ZI77fudTFfCoiti/hL1xhpiH/QFhvfSXlOgW2', '0');
 
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (6, 'cliente@empresa.uno', '$2a$10$5WPTogd6NaSQEW8JH5yxw.O77Ch/VHPxNHZJDKtAsU5SNZc6ITaQu', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (7, 'cliente@empresa.dos', '$2a$10$CfhUiOs8xbm1i3wuRtHXw.iVs4phuWS4cjmd.ZFlRj4.GgwbHCm6m', '0');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (8, 'cliente@empresa.tres', '$2a$10$Ow9uR9YBQU9zqgW/.OsTle1sNJKYGh1ICf3I2t6.5hs4dXPFdlwNa', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (9, 'cliente@empresa.cuatro', '$2a$10$aB5/P.K4fFuTUpMSr80xa.017e.z4HC/7YTXkLvyBmDNg8QQPSQle', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (10, 'cliente@empresa.cinco', '$2a$10$DEAeT9FSZZlLfECxJJKQkusTGSMi596d19NlufHUgB.Tj4j3lHziO', '0');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (11, 'cliente@empresa.seis', '$2a$10$47aFWWvfILdM81uAsp5Ne.2FR0GgOpjWDWf5NwlIjFeHNBjBBw1de', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (12, 'cliente@empresa.siete', '$2a$10$xfuMSDnMtLY.2GysKecq9eGQ1pzGwl.bJpNO8./75GnDbg2ccWI2a', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (13, 'cliente@empresa.ocho', '$2a$10$kNM8kzF/E629XnDro1/3xO8VZLFf/4CBeGR6lBtmAbKN9TL/LqmbO', '0');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (14, 'cliente@empresa.nueve', '$2a$10$mQ4ZrUiMU/U8SXxeahhsEeu9.lusq.cD0l82j8etowFlnE5oQY5tG', '1');
-INSERT INTO detta_usuarios (usuario_id, email, password, enabled) VALUES (15, 'cliente@empresa.diez', '$2a$10$B3YdPQNBNwcvHvTcybWp0uGidLWx0JihCzghS05JU7khz4jnrKVrO', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (6, 'Cliente Uno', '666666666', 'cliente@empresa.uno', '$2a$10$5WPTogd6NaSQEW8JH5yxw.O77Ch/VHPxNHZJDKtAsU5SNZc6ITaQu', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (7, 'Cliente Dos', '777777777', 'cliente@empresa.dos', '$2a$10$CfhUiOs8xbm1i3wuRtHXw.iVs4phuWS4cjmd.ZFlRj4.GgwbHCm6m', '0');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (8, 'Cliente Tres', '888888888', 'cliente@empresa.tres', '$2a$10$Ow9uR9YBQU9zqgW/.OsTle1sNJKYGh1ICf3I2t6.5hs4dXPFdlwNa', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (9, 'Cliente Cuatro', '999999999', 'cliente@empresa.cuatro', '$2a$10$aB5/P.K4fFuTUpMSr80xa.017e.z4HC/7YTXkLvyBmDNg8QQPSQle', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (10, 'Cliente Cinco', '010101010', 'cliente@empresa.cinco', '$2a$10$DEAeT9FSZZlLfECxJJKQkusTGSMi596d19NlufHUgB.Tj4j3lHziO', '0');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (11, 'Cliente Seis', '020202020', 'cliente@empresa.seis', '$2a$10$47aFWWvfILdM81uAsp5Ne.2FR0GgOpjWDWf5NwlIjFeHNBjBBw1de', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (12, 'Cliente Siete', '030303030', 'cliente@empresa.siete', '$2a$10$xfuMSDnMtLY.2GysKecq9eGQ1pzGwl.bJpNO8./75GnDbg2ccWI2a', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (13, 'Cliente Ocho', '040404040', 'cliente@empresa.ocho', '$2a$10$kNM8kzF/E629XnDro1/3xO8VZLFf/4CBeGR6lBtmAbKN9TL/LqmbO', '0');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (14, 'Cliente Nueve', '050505050', 'cliente@empresa.nueve', '$2a$10$mQ4ZrUiMU/U8SXxeahhsEeu9.lusq.cD0l82j8etowFlnE5oQY5tG', '1');
+INSERT INTO detta_usuarios (usuario_id, nombre, telefono, email, password, enabled) VALUES (15, 'Cliente Diez', '060606060', 'cliente@empresa.diez', '$2a$10$B3YdPQNBNwcvHvTcybWp0uGidLWx0JihCzghS05JU7khz4jnrKVrO', '1');
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_usuarios_roles
@@ -46,25 +46,25 @@ INSERT INTO detta_usuarios_roles (rol_id, usuario_id, role) VALUES (15, 15, 'ROL
 -- Tabla: detta_profesionales
 ----------------------------------------------------------------------------------------------------
 
-INSERT INTO detta_profesionales (profesional_id, nombre, telefono, usuario_id) VALUES (1, 'Profesional Uno', '123456789', 2);
-INSERT INTO detta_profesionales (profesional_id, nombre, telefono, usuario_id) VALUES (2, 'Profesional Dos', '234567891', 3);
-INSERT INTO detta_profesionales (profesional_id, nombre, telefono, usuario_id) VALUES (3, 'Profesional Tres', '345678912', 4);
-INSERT INTO detta_profesionales (profesional_id, nombre, telefono, usuario_id) VALUES (4, 'Profesional Cuatro', '456789123', 5);
+INSERT INTO detta_profesionales (profesional_id, usuario_id) VALUES (1, 2);
+INSERT INTO detta_profesionales (profesional_id, usuario_id) VALUES (2, 3);
+INSERT INTO detta_profesionales (profesional_id, usuario_id) VALUES (3, 4);
+INSERT INTO detta_profesionales (profesional_id, usuario_id) VALUES (4, 5);
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_clientes
 ----------------------------------------------------------------------------------------------------
 
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (1, 'Cliente Uno', '111111111', '123456789', 'Construcción', 125, 1, 6, 2);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (2, 'Cliente Dos', '222222222', '234567891', 'Construcción', 85, 2, 7, NULL);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (3, 'Cliente Tres', '333333333', '345678912', 'Aseo', 20, 4, 8, 2);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (4, 'Cliente Cuatro', '444444444', '456789123', 'Minería', 44, 1, 9, 3);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (5, 'Cliente Cinco', '555555555', '567891234', 'Minería', 68, 1, 10, NULL);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (6, 'Cliente Seis', '666666666', '678912345', 'Construcción', 25, 3, 11, 4);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (7, 'Cliente Siete', '777777777', '789123456', 'Aseo', 14, 4, 12, 3);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (8, 'Cliente Ocho', '888888888', '891234567', 'Construcción', 33, 2, 13, NULL);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (9, 'Cliente Nueve', '999999999', '912345678', 'Explosivos', 29, 1, 14, 4);
-INSERT INTO detta_clientes (cliente_id, nombre, rut, telefono, giro, empleados, tipo, usuario_id, profesional_id) VALUES (10, 'Cliente Diez', '000000000', '012345678', 'Catástrofes', 2, 1, 15, 2);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (1, '111111111', 'Construcción', 125, 1, 6, 2);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (2, '222222222', 'Construcción', 85, 2, 7, NULL);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (3, '333333333', 'Aseo', 20, 4, 8, 2);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (4, '444444444', 'Minería', 44, 1, 9, 3);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (5, '555555555', 'Minería', 68, 1, 10, NULL);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (6, '666666666', 'Construcción', 25, 3, 11, 4);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (7, '777777777', 'Aseo', 14, 4, 12, 3);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (8, '888888888', 'Construcción', 33, 2, 13, NULL);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (9, '999999999', 'Explosivos', 29, 1, 14, 4);
+INSERT INTO detta_clientes (cliente_id, rut, giro, empleados, tipo, usuario_id, profesional_id) VALUES (10, '000000000', 'Catástrofes', 2, 1, 15, 2);
 
 ----------------------------------------------------------------------------------------------------
 -- Tabla: detta_accidentes
