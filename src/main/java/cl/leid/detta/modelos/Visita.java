@@ -31,7 +31,7 @@ import cl.leid.detta.Constantes;
 public class Visita {
 
     // Atributos
-    // -------------------------------------
+    // -----------------------------------------------------------------------------------------
 
     /**
      * Identificador numerico de la {@link Visita}
@@ -40,12 +40,14 @@ public class Visita {
     @GeneratedValue(generator = Constantes.SECUENCIA_VISITAS, strategy = GenerationType.SEQUENCE)
     @Column(name = "visita_id", nullable = false, unique = true, updatable = false)
     private int id;
+
     /**
      * Fecha en la que se realizara la {@link Visita}
      */
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
+
     /**
      * Hora en la que se realizara la {@link Visita}
      */
@@ -53,12 +55,14 @@ public class Visita {
     @Size(min = 5, max = 5)
     @Column(name = "hora", nullable = false)
     private String hora;
+
     /**
      * Direccion donde se realizara la {@link Visita}
      */
     @Size(min = 5, max = 150)
     @Column(name = "direccion", nullable = false)
     private String direccion;
+
     /**
      * Motivo por el cual se genera la {@link Visita}
      * <ul>
@@ -70,6 +74,7 @@ public class Visita {
     @Max(2)
     @Column(name = "motivo", nullable = false)
     private int motivo;
+
     /**
      * Estado de la {@link Visita}
      * <ul>
@@ -82,6 +87,7 @@ public class Visita {
     @Max(3)
     @Column(name = "estado", nullable = false)
     private int estado;
+
     /**
      * Objeto {@link Asesoria} que esta relazionada la {@link Visita}
      */
@@ -90,7 +96,8 @@ public class Visita {
     private Asesoria asesoria;
 
     // Constructores
-    // ------------------------------------
+    // -----------------------------------------------------------------------------------------
+
     /**
      * Crea una instancia vacia del objeto {@link Visita}
      */
@@ -98,8 +105,9 @@ public class Visita {
 
     }
 
-    // gettetrs
-    // ------------------------------------
+    // Getters
+    // -----------------------------------------------------------------------------------------
+
     /**
      * @return el id
      */
@@ -150,7 +158,8 @@ public class Visita {
     }
 
     // Setters
-    // ------------------------------------
+    // -----------------------------------------------------------------------------------------
+
     /**
      * @param id id que recibe la visita
      */
@@ -199,8 +208,9 @@ public class Visita {
     public void setAsesoria(Asesoria asesoria) {
         this.asesoria = asesoria;
     }
-    // Herencias (Objects)
-    // ----------------------------
+
+    // Herencias (Object)
+    // -----------------------------------------------------------------------------------------
 
     @Override
     public int hashCode() {
