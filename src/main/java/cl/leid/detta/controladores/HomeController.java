@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -179,11 +180,60 @@ public class HomeController {
             }
         }
 
-        // Agregar título
-        vista.addObject("titulo", messageSource.getMessage("titles.dashboard", null, locale));
-
         // Devolver vista
         return vista;
+    }
+
+    /**
+     * Muestra el perfil del {@link Usuario} para su edición
+     * 
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le envía el cliente al {@link HttpServlet}
+     * @param auth    objeto {@link Authentication} con la información del
+     *                {@link Usuario} autenticado
+     * @param model   objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = "/perfil")
+    public String verPerfil(HttpServletRequest request, Authentication auth, Model model) {
+        // Obtener información del usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Verificar autoridad del usuario
+            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
+
+                return "perfil/administrador";
+            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                // Buscar información del profesional
+                Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
+
+                // Verificar si existe
+                if (profesional.isPresent()) {
+                    // Agregar al modelo
+                    model.addAttribute("profesional", profesional);
+
+                    // Mostrar formulario
+                    return "perfil/profesional";
+                }
+            } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                // Buscar información del cliente
+                Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
+
+                // Verificar si existe
+                if (cliente.isPresent()) {
+                    // Agregar al modelo
+                    model.addAttribute("cliente", cliente);
+
+                    // Mostrar formulario
+                    return "perfil/cliente";
+                }
+            }
+        }
+
+        // Redireccionar
+        return "redirect:/login";
     }
 
 }
