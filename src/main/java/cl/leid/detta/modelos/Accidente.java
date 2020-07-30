@@ -40,7 +40,6 @@ public class Accidente {
     private LocalDate fecha;
 
     /** Hora en que ocurrió el {@link Accidente} */
-    @DateTimeFormat(pattern = "HH:mm")
     @Column(name = "hora", nullable = false)
     @Pattern(regexp = "(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")
     @Size(min = 5, max = 5)
