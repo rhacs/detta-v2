@@ -77,8 +77,8 @@
                                     <form:label path="estado"><spring:message code="form.label.status" /></form:label>
                                     <form:select path="estado" cssClass="form-control">
                                         <form:option value="1"><spring:message code="form.label.status.pendiente" /></form:option>
-                                        <form:option value="2"><spring:message code="form.label.en_proceso" /></form:option>
-                                        <form:option value="3"><spring:message code="form.label.ralizado" /></form:option>
+                                        <form:option value="2"><spring:message code="form.label.status.en_proceso" /></form:option>
+                                        <form:option value="3"><spring:message code="form.label.status.realizado" /></form:option>
                                     </form:select>
                                 </div>
 
