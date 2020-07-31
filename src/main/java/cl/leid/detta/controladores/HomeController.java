@@ -201,11 +201,7 @@ public class HomeController {
 
         // Verificar si existe
         if (usuario.isPresent()) {
-            // Verificar autoridad del usuario
-            if (request.isUserInRole(Constantes.ROLE_ADMIN)) {
-
-                return "perfil/administrador";
-            } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+            if (request.isUserInRole(Constantes.ROLE_STAFF)) {
                 // Buscar información del profesional
                 Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
@@ -213,9 +209,6 @@ public class HomeController {
                 if (profesional.isPresent()) {
                     // Agregar al modelo
                     model.addAttribute("profesional", profesional);
-
-                    // Mostrar formulario
-                    return "perfil/profesional";
                 }
             } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
                 // Buscar información del cliente
@@ -225,11 +218,11 @@ public class HomeController {
                 if (cliente.isPresent()) {
                     // Agregar al modelo
                     model.addAttribute("cliente", cliente);
-
-                    // Mostrar formulario
-                    return "perfil/cliente";
                 }
             }
+
+            // Mostrar formulario perfil
+            return "perfil";
         }
 
         // Redireccionar
