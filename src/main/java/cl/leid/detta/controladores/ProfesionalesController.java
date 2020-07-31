@@ -80,7 +80,10 @@ public class ProfesionalesController {
         ModelAndView vista = new ModelAndView("profesionales");
 
         // Buscar listado de profesionales
-        List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by(Sort.Direction.ASC, "usuario.nombre"));
+        List<Profesional> profesionales = profesionalesRepositorio
+                .findAll(Sort.by(Sort.Direction.ASC, "usuario.nombre"));
+
+        logger.info("Listando profesionales");
 
         // Agregar listado a la vista
         vista.addObject("profesionales", profesionales);
@@ -91,36 +94,37 @@ public class ProfesionalesController {
     /**
      * Muestra los detalles del {@link Profesional} seleccionado
      * 
-     * @param id identificador numérico del {@link Profesional}
-     * @return un objeto {@link ModelAndView} con la respuesta
+     * @param id    identificador numérico del {@link Profesional}
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @GetMapping(path = "/{id}")
-    public ModelAndView mostrarDetalles(@PathVariable int id) {
+    public String mostrarDetalles(@PathVariable int id, Model model) {
         // Buscar el profesional
         Optional<Profesional> profesional = profesionalesRepositorio.findById(id);
 
         // Verificar si existe
         if (profesional.isPresent()) {
-            // Crear vista
-            ModelAndView vista = new ModelAndView("profesionales/detalles");
+            // Agregar profesional al modelo
+            model.addAttribute("profesional", profesional.get());
 
-            // Agregar profesional a la vista
-            vista.addObject("profesional", profesional.get());
+            logger.info("Detalles del Profesional: {}", profesional.get());
 
             // Buscar listado de clientes
             List<Cliente> clientes = clientesRepositorio.findByProfesional(profesional.get());
 
-            // Agregar listado a la vista
-            vista.addObject("clientes", clientes);
+            // Agregar listado al modelo
+            model.addAttribute("clientes", clientes);
 
-            return vista;
+            // Mostrar detalles
+            return "profesionales/detalles";
         }
 
-        // Depuración
         logger.info("{} solicitó la información de un profesional que no existe: {}",
                 SecurityContextHolder.getContext().getAuthentication().getName(), id);
 
-        return new ModelAndView("redirect:/profesionales", "noid", id);
+        // Redireccionar
+        return "redirect:/profesionales?noid=" + id;
     }
 
     /**
