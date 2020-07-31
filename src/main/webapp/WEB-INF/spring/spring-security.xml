@@ -24,6 +24,8 @@
         <!-- Interceptores: Permitir acceso sólo a administradores y profesionales -->
         <intercept-url pattern="/clientes/**" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
         <intercept-url pattern="/accidentes/{spring:[0-9]+}/editar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/capacitaciones/agregar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/capacitaciones/{spring:[0-9]+}/editar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
 
         <!-- Interceptores: Permitir acceso a todos los registrados -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
