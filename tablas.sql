@@ -158,7 +158,7 @@ CREATE TABLE detta_capacitaciones (
     direccion NVARCHAR2(150) NOT NULL,
     duracion NVARCHAR2(5) NOT NULL,
     contenido NVARCHAR2(1000) NOT NULL,
-    estado NUMBER(1,0) NOT NULL,
+    estado NUMBER(1,0) DEFAULT 1 NOT NULL,
     cliente_id NUMBER NOT NULL,
     profesional_id NUMBER NULL,
 
