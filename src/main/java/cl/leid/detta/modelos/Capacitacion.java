@@ -11,8 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -49,6 +48,7 @@ public class Capacitacion {
     /**
      * Define la fecha en la que va a realizarse {@link Capacitacion}
      */
+    @NotNull
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
@@ -97,8 +97,6 @@ public class Capacitacion {
      * <li>3: Realizado</li>
      * </ul>
      */
-    @Min(1)
-    @Max(3)
     @Column(name = "estado", nullable = false)
     private int estado;
 
