@@ -10,6 +10,8 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -35,6 +37,12 @@ import cl.leid.detta.repositorios.UsuariosRepositorio;
 
 @Controller
 public class HomeController {
+
+    // Constantes
+    // -----------------------------------------------------------------------------------------
+
+    /** Objeto {@link Logger} con los métodos de depuración */
+    private static final Logger logger = LogManager.getLogger(HomeController.class);
 
     // Atributos
     // -----------------------------------------------------------------------------------------
@@ -207,8 +215,9 @@ public class HomeController {
 
                 // Verificar si existe
                 if (profesional.isPresent()) {
+                    logger.info("Perfil del Profesional: {}", profesional.get());
                     // Agregar al modelo
-                    model.addAttribute("profesional", profesional);
+                    model.addAttribute("profesional", profesional.get());
                 }
             } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
                 // Buscar información del cliente
@@ -216,14 +225,18 @@ public class HomeController {
 
                 // Verificar si existe
                 if (cliente.isPresent()) {
+                    logger.info("Perfil del Cliente: {}", cliente.get());
+
                     // Agregar al modelo
-                    model.addAttribute("cliente", cliente);
+                    model.addAttribute("cliente", cliente.get());
                 }
             }
 
             // Mostrar formulario perfil
             return "perfil";
         }
+
+        logger.error("Perfil no encontrado: {}", auth.getName());
 
         // Redireccionar
         return "redirect:/login";
