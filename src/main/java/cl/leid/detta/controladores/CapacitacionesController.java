@@ -126,6 +126,61 @@ public class CapacitacionesController {
     }
 
     /**
+     * Muestra los detalles de una {@link Capacitacion}
+     * 
+     * @param id      identificador numérico de la {@link Capacitacion}
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le hace el cliente al {@link HttpServlet}
+     * @param auth    objeto {@link Authentication} con la información del
+     *                {@link Usuario} autenticado
+     * @param model   objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = "/{id}")
+    public String verDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth, Model model) {
+        // Buscar información del Usuario
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Buscar información de la capacitación
+            Optional<Capacitacion> capacitacion = capacitacionesRepositorio.findById(id);
+
+            // Verificar si existe
+            if (capacitacion.isPresent()) {
+                // Verificar autoridad del usuario
+                if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                    // Verificar si la capacitación no le pertenece al cliente
+                    if (!capacitacion.get().getCliente().getUsuario().equals(usuario.get())) {
+                        // Redireccionar
+                        return "redirect:/capacitaciones?perm=false";
+                    }
+                } else if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                    // Verificar si la capacitación le pertenece al Profesional
+                    if (!capacitacion.get().getProfesional().getUsuario().equals(usuario.get())) {
+                        // Redireccionar
+                        return "redirect:/capacitaciones?perm=false";
+                    }
+                }
+
+                // Agregar capacitación al modelo
+                model.addAttribute("capacitacion", capacitacion.get());
+
+                logger.info("Detalles de Capacitación: {}", capacitacion.get());
+
+                // Mostrar detalles
+                return "capacitaciones/detalles";
+            }
+
+            // Redireccionar
+            return "redirect:/capacitaciones?noid=" + id;
+        }
+
+        // Redireccionar
+        return "redirect:/login";
+    }
+
+    /**
      * Muestra el formulario para agregar una nueva {@link Capacitacion}
      * 
      * @param request objeto {@link HttpServletRequest} con la información de la
