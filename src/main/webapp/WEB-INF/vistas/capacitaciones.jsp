@@ -31,6 +31,14 @@
                         </sec:authorize>
                     </div>
 
+                    <core:if test="${not empty param.noid}">
+                    <div class="alert alert-warning mb-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                    </core:if>
+
+                    <core:if test="${not empty param.perm}">
+                    <div class="alert alert-danger mb-4"><spring:message code="form.error.noperm" /></div>
+                    </core:if>
+
                     <div class="table-responsive">
                         <table class="table table-hover table-striped">
                             <thead>
@@ -50,6 +58,7 @@
                                 <core:choose>
                                     <core:when test="${capacitaciones != null && capacitaciones.size() > 0}">
                                         <core:forEach items="${capacitaciones}" var="capacitacion">
+                                        <tr role="button" data-member="capacitaciones" data-id="${capacitacion.getId()}">
                                             <td>${capacitacion.getFecha()}</td>
                                             <td>${capacitacion.getHora()}</td>
 
@@ -68,6 +77,7 @@
                                                     <core:otherwise><spring:message code="form.label.status.realizado" /></core:otherwise>
                                                 </core:choose>
                                             </td>
+                                        </tr>
                                         </core:forEach>
                                     </core:when>
                                     <core:otherwise>
