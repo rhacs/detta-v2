@@ -10,8 +10,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,12 +34,6 @@ import cl.leid.detta.repositorios.UsuariosRepositorio;
 
 @Controller
 public class HomeController {
-
-    // Constantes
-    // -----------------------------------------------------------------------------------------
-
-    /** Objeto {@link Logger} con los métodos de depuración */
-    private static final Logger logger = LogManager.getLogger(HomeController.class);
 
     // Atributos
     // -----------------------------------------------------------------------------------------
