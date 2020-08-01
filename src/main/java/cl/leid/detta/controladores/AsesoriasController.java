@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cl.leid.detta.Constantes;
@@ -124,6 +125,86 @@ public class AsesoriasController {
 
         // Redireccionar
         return "redirect:/login";
+    }
+
+    @GetMapping(path = "/{id}")
+    public String verDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth, Model model) {
+        // Buscar información de la Asesoría
+        Optional<Asesoria> asesoria = asesoriasRepositorio.findById(id);
+
+        // Verificar si existe
+        if (asesoria.isPresent()) {
+            // Obtener información del Usuario
+            Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+            // Verificar si existe
+            if (usuario.isPresent()) {
+                // Verificar autoridad del usuario
+                if (request.isUserInRole(Constantes.ROLE_STAFF)) {
+                    // Buscar información del Profesional
+                    Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
+
+                    // Verificar si no existe
+                    if (profesional.isEmpty()) {
+                        // Depuración
+                        logger.error("Información del Profesional no encontrada para: {}", usuario.get());
+
+                        // Redireccionar
+                        return "redirect:/login";
+                    }
+
+                    // Verificar si la asesoria no le pertenece al Profesional
+                    if (!asesoria.get().getProfesional().equals(profesional.get())) {
+                        // Depuración
+                        logger.info("[SEC] {} intentó ver el detalle de una Asesoría que no le corresponde: {}",
+                                profesional.get(), asesoria.get());
+
+                        // Redireccionar
+                        return "redirect:/asesorias?perm=false";
+                    }
+                } else if (request.isUserInRole(Constantes.ROLE_CLIENT)) {
+                    // Buscar información del cliente
+                    Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
+
+                    // Verificar si no existe
+                    if (cliente.isEmpty()) {
+                        // Depuración
+                        logger.error("Información del Cliente no encontrada para: {}", usuario.get());
+
+                        // Redireccionar
+                        return "redirect:/login";
+                    }
+
+                    // Verificar si la asesoría no le pertenece al Cliente
+                    if (!asesoria.get().getCliente().equals(cliente.get())) {
+                        // Depuración
+                        logger.info("[SEC] {} intentó ver el detalle de una Asesoría que no le corresponde: {}",
+                                cliente.get(), asesoria.get());
+
+                        // Redireccionar
+                        return "redirect:/asesorias?perm=false";
+                    }
+                }
+
+                // Agregar la asesoría al modelo
+                model.addAttribute("asesoria", asesoria.get());
+
+                // Mostrar detalles
+                return "asesorias/detalles";
+            }
+
+            // Depuración
+            logger.error("Información para el Usuario {} no encontrada", auth.getName());
+
+            // Redireccionar
+            return "redirect:/login";
+        }
+
+        // Depuración
+        logger.error("Información para la Asesoría {} no encontrada", id);
+
+        // Redireccionar
+        return "redirect:/asesorias?noid=" + id;
     }
 
 }
