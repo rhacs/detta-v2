@@ -72,13 +72,6 @@
 
                     <ul class="nav nav-custom nav-pills flex-column">
                         <li class="nav-item">
-                            <a class="nav-link ${fn:contains(uri, 'perfil') ? 'active' : ''}" href="<core:url value="/perfil" />">
-                                <i class="fas fa-id-card fa-fw mr-1"></i>
-                                <spring:message code="titles.profile" />
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
                             <form id="logout" action="<core:url value="/logout" />" method="post">
                                 <a data-logout="true" class="nav-link" role="button">
                                     <i class="fas fa-sign-out-alt fa-fw mr-1"></i>
