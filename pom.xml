@@ -19,13 +19,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Java Servlet -->
-        <jakarta.servlet-version>4.0.4</jakarta.servlet-version>
+        <javax.servlet-version>4.0.1</javax.servlet-version>
 
-        <!-- Jakarta Server Pages -->
-        <jakarta.servlet.jsp-version>2.3.6</jakarta.servlet.jsp-version>
+        <!-- Java Server Pages -->
+        <javax.servlet.jsp-version>2.3.3</javax.servlet.jsp-version>
 
         <!-- JavaServer Pages Standard Tag Library -->
-        <jakarta.servlet.jsp.jstl-version>1.2.7</jakarta.servlet.jsp.jstl-version>
+        <javax.servlet.jsp.jstl-version>1.2.2</javax.servlet.jsp.jstl-version>
 
         <!-- Spring Framework -->
         <org.springframework-version>5.2.8.RELEASE</org.springframework-version>
@@ -61,27 +61,27 @@
 
     <!-- Dependencias -->
     <dependencies>
-        <!-- Jakarta Servlet API > https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+        <!-- Java Servlet API > https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>${jakarta.servlet-version}</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jakarta Server Pages API > https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
+        <!-- JavaServer Pages API > https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
         <dependency>
-            <groupId>jakarta.servlet.jsp</groupId>
-            <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>${jakarta.servlet.jsp-version}</version>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>${javax.servlet.jsp-version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- JavaServer Pages Standard Tag Library API > https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
+        <!-- Standard Tag Library API > https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/javax.servlet.jsp.jstl-api -->
         <dependency>
-            <groupId>jakarta.servlet.jsp.jstl</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-            <version>${jakarta.servlet.jsp.jstl-version}</version>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <version>${javax.servlet.jsp.jstl-version}</version>
         </dependency>
 
         <!-- Spring Web MVC > https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
