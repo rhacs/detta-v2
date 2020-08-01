@@ -10,8 +10,7 @@
     <artifactId>detta</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-
-    <name>detta</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Sistema de Control de Accidentabilidad Laboral</description>
 
     <!-- Propiedades -->
@@ -19,160 +18,126 @@
         <!-- Codificación del Código Fuente -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Versión Java en la cual fue creado el proyecto -->
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <!-- Java Servlet -->
+        <jakarta.servlet-version>4.0.4</jakarta.servlet-version>
 
-        <!-- A qué versión de Java está apuntado el proyecto -->
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- Jakarta Server Pages -->
+        <jakarta.servlet.jsp-version>2.3.6</jakarta.servlet.jsp-version>
 
-        <!-- Versiones de las Dependencias -->
+        <!-- JavaServer Pages Standard Tag Library -->
+        <jakarta.servlet.jsp.jstl-version>1.2.7</jakarta.servlet.jsp.jstl-version>
+
         <!-- Spring Framework -->
         <org.springframework-version>5.2.8.RELEASE</org.springframework-version>
 
-        <!-- Spring Framework Security -->
+        <!-- Spring Security -->
         <org.springframework.security-version>5.3.3.RELEASE</org.springframework.security-version>
 
-        <!-- Spring Framework Data -->
+        <!-- Spring Data JPA -->
         <org.springframework.data-version>2.3.2.RELEASE</org.springframework.data-version>
 
         <!-- Hibernate -->
         <org.hibernate-version>5.4.19.Final</org.hibernate-version>
 
-        <!-- Hibernate Validator -->
+        <!-- Hibernate Validator Engine -->
         <org.hibernate.validator-version>6.1.5.Final</org.hibernate.validator-version>
-
-        <!-- Java Servlet API -->
-        <javax.servlet-api-version>4.0.1</javax.servlet-api-version>
-
-        <!-- JavaServer Pages API -->
-        <javax.servlet.jsp-api-version>2.3.3</javax.servlet.jsp-api-version>
-
-        <!-- JavaServer Pages Standard Tag Library API -->
-        <javax.servlet.jstl-version>1.2</javax.servlet.jstl-version>
-
-        <!-- Json in Java -->
-        <org.json-version>20200518</org.json-version>
 
         <!-- Jackson -->
         <com.fasterxml.jackson.core-version>2.11.1</com.fasterxml.jackson.core-version>
 
-        <!-- GlassFish Jakarta EL -->
-        <org.glassfish-version>3.0.3</org.glassfish-version>
+        <!-- Json in Java -->
+        <org.json-version>20200518</org.json-version>
 
-        <!-- Apache Log4j2 -->
+        <!-- Apache Log4j -->
         <org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
 
-        <!-- JUnit -->
+        <!-- JUnit Jupiter -->
         <org.junit.jupiter-version>5.6.2</org.junit.jupiter-version>
+
+        <!-- Versiones Java (código fuente y compilación) -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <!-- Dependencias -->
     <dependencies>
-        <!-- Spring Framework: Context > https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <!-- Jakarta Servlet API > https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${org.springframework-version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet-version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Spring Framework: Context Support > https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+        <!-- Jakarta Server Pages API > https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${org.springframework-version}</version>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>${jakarta.servlet.jsp-version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Spring Framework: WebMVC > https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+        <!-- JavaServer Pages Standard Tag Library API > https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>${jakarta.servlet.jsp.jstl-version}</version>
+        </dependency>
+
+        <!-- Spring Web MVC > https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework-version}</version>
         </dependency>
 
-        <!-- Spring Framework: JDBC > https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-
-        <!-- Spring Framework: Object/Relational Mapping (ORM) > https://mvnrepository.com/artifact/org.springframework/spring-orm -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-
-        <!-- Spring Security: Web > https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${org.springframework.security-version}</version>
-        </dependency>
-
-        <!-- Spring Security: Config > https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+        <!-- Spring Security Config > https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${org.springframework.security-version}</version>
         </dependency>
 
-        <!-- Spring Security: Taglibs > https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+        <!-- Spring Security Web > https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${org.springframework.security-version}</version>
+        </dependency>
+
+        <!-- Spring Security Taglibs > https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
             <version>${org.springframework.security-version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+        <!-- Spring Data JPA > https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${org.springframework.data-version}</version>
         </dependency>
 
-        <!-- Hibernate: Core > https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <!-- Hibernate Core > https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${org.hibernate-version}</version>
         </dependency>
 
-        <!-- Hibernate: Validator > https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <!-- Hibernate Validator Engine > https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${org.hibernate.validator-version}</version>
         </dependency>
 
-        <!-- Oracle JDBC -->
+        <!-- Jackson Databind > https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.4</version>
-        </dependency>
-
-        <!-- Java Servlet API > https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet-api-version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JavaServer Pages API > https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>${javax.servlet.jsp-api-version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Java Standard Tag Library > https://mvnrepository.com/artifact/javax.servlet/jstl -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${javax.servlet.jstl-version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${com.fasterxml.jackson.core-version}</version>
         </dependency>
 
         <!-- JSON in Java > https://mvnrepository.com/artifact/org.json/json -->
@@ -182,25 +147,11 @@
             <version>${org.json-version}</version>
         </dependency>
 
-        <!-- FasterXML Jackson: Core > https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <!-- Oracle JDBC -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${com.fasterxml.jackson.core-version}</version>
-        </dependency>
-
-        <!-- FasterXML Jackson: Databind > https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${com.fasterxml.jackson.core-version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>${org.glassfish-version}</version>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.4</version>
         </dependency>
 
         <!-- Apache Log4j Core > https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
@@ -210,11 +161,20 @@
             <version>${org.apache.logging.log4j-version}</version>
         </dependency>
 
-        <!-- Apache Log4j API > https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <!-- Spring TestContext Framework > https://mvnrepository.com/artifact/org.springframework/spring-test -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${org.apache.logging.log4j-version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Security Test > https://mvnrepository.com/artifact/org.springframework.security/spring-security-test -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>${org.springframework.security-version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- JUnit Jupiter API > https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
