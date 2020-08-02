@@ -140,6 +140,13 @@
             <version>${com.fasterxml.jackson.core-version}</version>
         </dependency>
 
+        <!-- Jackson Datatype: JSR310 > https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${com.fasterxml.jackson.core-version}</version>
+        </dependency>
+
         <!-- JSON in Java > https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
