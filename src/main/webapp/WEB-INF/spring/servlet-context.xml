@@ -30,11 +30,15 @@
                 <beans:value>classpath:mensajes/general</beans:value>
                 <beans:value>classpath:mensajes/form</beans:value>
                 <beans:value>classpath:mensajes/error</beans:value>
+                <beans:value>classpath:mensajes/api</beans:value>
             </beans:list>
         </beans:property>
 
         <!-- Codificación por defecto de los mensajes -->
         <beans:property name="defaultEncoding" value="UTF-8" />
+
+        <!-- En caso de no encontrar la traducción, mostrar mensaje del lenguaje por defecto -->
+        <beans:property name="fallbackToSystemLocale" value="true" />
     </beans:bean>
 
     <!-- Resolvedor de Idioma -->
