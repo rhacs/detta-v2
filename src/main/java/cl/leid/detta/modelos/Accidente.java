@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import cl.leid.detta.Constantes;
 
 @Entity
@@ -104,6 +106,7 @@ public class Accidente {
     private Timestamp fechaRegistro;
 
     /** {@link Cliente} asociado al {@link Accidente} */
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
