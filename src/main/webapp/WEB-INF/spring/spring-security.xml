@@ -19,14 +19,20 @@
         <!-- Interceptores: Permitir acceso sólo a administradores -->
         <intercept-url pattern="/profesionales/**" access="hasAuthority('ROLE_ADMIN')" />
         <intercept-url pattern="/clientes/agregar" access="hasAuthority('ROLE_ADMIN')" />
-        <intercept-url pattern="/clientes/{spring:[0-9]+}/editar" access="hasAuthority('ROLE_ADMIN')" />
-        <intercept-url pattern="/accidentes/{spring:[0-9]+}/eliminar" access="hasAuthority('ROLE_ADMIN')" />
+        <intercept-url pattern="/clientes/{spring:[0-9]+}/editar"
+            access="hasAuthority('ROLE_ADMIN')" />
+        <intercept-url pattern="/accidentes/{spring:[0-9]+}/eliminar"
+            access="hasAuthority('ROLE_ADMIN')" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores y profesionales -->
-        <intercept-url pattern="/clientes/**" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
-        <intercept-url pattern="/accidentes/{spring:[0-9]+}/editar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
-        <intercept-url pattern="/capacitaciones/agregar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
-        <intercept-url pattern="/capacitaciones/{spring:[0-9]+}/editar" access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/clientes/**"
+            access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/accidentes/{spring:[0-9]+}/editar"
+            access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/capacitaciones/agregar"
+            access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
+        <intercept-url pattern="/capacitaciones/{spring:[0-9]+}/editar"
+            access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')" />
 
         <!-- Interceptores: Permitir acceso a todos los registrados -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
@@ -35,9 +41,10 @@
         <access-denied-handler ref="customAccessDeniedHandler" />
 
         <!-- Formulario de Inicio de Sesión -->
-        <form-login always-use-default-target="false" 
-            authentication-failure-url="/login?error=true" default-target-url="/" login-page="/login"
-            login-processing-url="/login" password-parameter="password" username-parameter="email" />
+        <form-login always-use-default-target="false"
+            authentication-failure-url="/login?error=true" default-target-url="/"
+            login-page="/login" login-processing-url="/login" password-parameter="password"
+            username-parameter="email" />
 
         <!-- Cierre de sesión -->
         <logout delete-cookies="JSESSIONID" invalidate-session="true"
@@ -62,6 +69,7 @@
     </authentication-manager>
 
     <!-- Definición del Manipulador de Acceso Denegado -->
-    <beans:bean id="customAccessDeniedHandler" class="cl.leid.detta.handlers.CustomAccessDeniedHandler" />
+    <beans:bean id="customAccessDeniedHandler"
+        class="cl.leid.detta.handlers.CustomAccessDeniedHandler" />
 
 </beans:beans>
