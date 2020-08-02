@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import cl.leid.detta.Constantes;
@@ -38,6 +39,7 @@ public class Accidente {
 
     /** Fecha en que ocurrió el {@link Accidente} */
     @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
@@ -102,6 +104,7 @@ public class Accidente {
 
     /** Fecha en que se registró el {@link Accidente} en el repositorio */
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss (z)", shape = JsonFormat.Shape.STRING)
     @Column(name = "fecha_registro", nullable = false, updatable = false)
     private Timestamp fechaRegistro;
 
