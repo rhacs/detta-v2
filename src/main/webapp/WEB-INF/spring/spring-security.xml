@@ -14,6 +14,7 @@
         <intercept-url pattern="/login" access="permitAll" />
         <intercept-url pattern="/logout" access="permitAll" />
         <intercept-url pattern="/res/**" access="permitAll" />
+        <intercept-url pattern="/api/**" access="permitAll" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores -->
         <intercept-url pattern="/profesionales/**" access="hasAuthority('ROLE_ADMIN')" />
