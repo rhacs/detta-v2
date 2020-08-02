@@ -48,7 +48,7 @@
                 <prop key="hibernate.show_sql">true</prop>
 
                 <!-- Usar comentarios SQL -->
-<!--                 <prop key="use_sql_comments">true</prop> -->
+                <prop key="use_sql_comments">true</prop>
             </props>
         </property>
     </bean>
