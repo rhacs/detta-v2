@@ -23,6 +23,10 @@
                             <div class="alert alert-success"><spring:message code="form.success.logout" /></div>
                         </core:if>
 
+                        <core:if test="${param.timeout}">
+                            <div class="alert alert-warning"><spring:message code="form.error.timeout" /></div>
+                        </core:if>
+
                         <div class="card">
                             <div class="card-header text-right">
                                 <button type="button" data-toggle="modal" data-target="#lenguaje" class="btn btn-sm"><i class="fas fa-language fa-fw"></i></button>

@@ -19,6 +19,11 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!-- Vigilar los ciclos de vida de las sesiones -->
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+
     <!-- Configuración del Spring MVC Dispatcher Servlet -->
     <servlet>
         <servlet-name>appServlet</servlet-name>
