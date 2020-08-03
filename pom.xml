@@ -43,7 +43,7 @@
         <org.hibernate.validator-version>6.1.5.Final</org.hibernate.validator-version>
 
         <!-- Jackson -->
-        <com.fasterxml.jackson.core-version>2.11.1</com.fasterxml.jackson.core-version>
+        <com.fasterxml.jackson.core-version>2.11.2</com.fasterxml.jackson.core-version>
 
         <!-- Json in Java -->
         <org.json-version>20200518</org.json-version>
