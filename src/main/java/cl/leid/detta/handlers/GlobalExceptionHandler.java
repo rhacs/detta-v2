@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import cl.leid.detta.api.exceptions.ConflictException;
 import cl.leid.detta.api.exceptions.EmptyRepositoryException;
 import cl.leid.detta.api.exceptions.InformationNotFoundException;
 import cl.leid.detta.modelos.ErrorResponse;
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse(notFound, e);
 
         // Generar y mostrar respuesta
-        return new ResponseEntity<>(response, notFound);
+        return ResponseEntity.status(notFound).body(response);
     }
 
     /**
@@ -53,7 +54,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse response = new ErrorResponse(noContent, e);
 
         // Generar y mostrar respuesta
-        return new ResponseEntity<>(response, noContent);
+        return ResponseEntity.status(noContent).body(response);
+    }
+
+    @ExceptionHandler(value = ConflictException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponse> handleConflictException(ConflictException e) {
+        // Estado HTTP
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+
+        // Error
+        ErrorResponse response = new ErrorResponse(badRequest, e);
+        response.agregarError(e.getCampo(), e.getMensaje(), e.getValorRechazado());
+
+        // Generar respuesta
+        return ResponseEntity.status(badRequest).body(response);
     }
 
 }
