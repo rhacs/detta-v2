@@ -174,4 +174,41 @@ public class VisitasController {
         return "redirect:/asesorias?noid=" + as;
     }
 
+    /**
+     * Elimina el registro de una {@link Visita} del repositorio
+     * 
+     * @param as identificador numérico de la {@link Asesoria}
+     * @param id identificador numérico de la {@link Visita}
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @PostMapping(path = "/{id:\\d+}/eliminar")
+    public String eliminarVisita(@PathVariable int as, @PathVariable int id) {
+        // Obtener información de la Asesoría
+        Optional<Asesoria> asesoria = asesoriasRepositorio.findById(as);
+
+        // Verificar si existe
+        if (asesoria.isPresent()) {
+            // Obtener información de la Visita
+            Optional<Visita> visita = visitasRepositorio.findById(id);
+
+            // Verificar si existe
+            if (visita.isPresent()) {
+                // Depuración
+                logger.info("[WEB] Se ha eliminado una Visita: {}", visita.get());
+
+                // Eliminar registro
+                visitasRepositorio.delete(visita.get());
+
+                // Redireccionar
+                return "redirect:/asesorias/" + as + "?remid=" + id;
+            }
+
+            // Redireccionar
+            return "redirect:/asesorias/" + as + "?noid=" + id;
+        }
+
+        // Redireccionar
+        return "redirect:/asesoria?noid=" + as;
+    }
+
 }
