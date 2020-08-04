@@ -3,6 +3,8 @@ package cl.leid.detta.api;
 import java.util.List;
 import java.util.Locale;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,6 +76,24 @@ public class CapacitacionesRestController {
 
         // Crear respuesta
         return ResponseEntity.status(HttpStatus.OK).body(capacitacion);
+    }
+
+    // Solicitudes POST
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Agrega un nuevo registro al repositorio
+     * 
+     * @param capacitacion objeto {@link Capacitacion} con la información a agregar
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @PostMapping
+    public ResponseEntity<Capacitacion> agregarRegistro(@RequestBody @Valid Capacitacion capacitacion) {
+        // Agregar registro al repositorio
+        capacitacion = capacitacionesRepositorio.save(capacitacion);
+
+        // Crear respuesta
+        return ResponseEntity.status(HttpStatus.CREATED).body(capacitacion);
     }
 
 }
