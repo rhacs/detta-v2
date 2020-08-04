@@ -88,7 +88,7 @@ public class AsesoriasController {
                 Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
                 // Verificar si no existe
-                if (profesional.isEmpty()) {
+                if (!profesional.isPresent()){
                     // Depuración
                     logger.error("Profesional no encontrado para: {}", usuario.get());
 
@@ -104,7 +104,7 @@ public class AsesoriasController {
                 Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
 
                 // Verificar si no existe
-                if (cliente.isEmpty()) {
+                if (!cliente.isPresent()) {
                     // Depuración
                     logger.error("Cliente no encontrado para: {}", usuario.get());
 
@@ -159,7 +159,7 @@ public class AsesoriasController {
                     Optional<Profesional> profesional = profesionalesRepositorio.findByUsuario(usuario.get());
 
                     // Verificar si no existe
-                    if (profesional.isEmpty()) {
+                    if (!profesional.isPresent()) {
                         // Depuración
                         logger.error("Información del Profesional no encontrada para: {}", usuario.get());
 
@@ -181,7 +181,7 @@ public class AsesoriasController {
                     Optional<Cliente> cliente = clientesRepositorio.findByUsuario(usuario.get());
 
                     // Verificar si no existe
-                    if (cliente.isEmpty()) {
+                    if (!cliente.isPresent()) {
                         // Depuración
                         logger.error("Información del Cliente no encontrada para: {}", usuario.get());
 

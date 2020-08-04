@@ -108,7 +108,7 @@ public class VisitasController {
                 Optional<Visita> aux = visitasRepositorio.findById(id.get());
 
                 // Verificar si no existe
-                if (aux.isEmpty()) {
+                if (!aux.isPresent()) {
                     // Redireccionar
                     return "redirect:/asesoria/" + as + "?noid=" + id;
                 }
