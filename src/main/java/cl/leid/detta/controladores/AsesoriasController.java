@@ -306,4 +306,31 @@ public class AsesoriasController {
         return "redirect:/asesorias/" + asesoria.getId();
     }
 
+    /**
+     * Elimina una {@link Asesoria} del repositorio
+     * 
+     * @param id identificador numérico de la {@link Asesoria}
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @PostMapping(path = "/{id:\\d+}")
+    public String eliminarAsesoria(@PathVariable int id) {
+        // Obtener información de la asesoría
+        Optional<Asesoria> asesoria = asesoriasRepositorio.findById(id);
+
+        // Verificar si existe
+        if (asesoria.isPresent()) {
+            // Depuración
+            logger.info("[WEB] Se ha eliminado una asesoría: {}", asesoria.get());
+
+            // Eliminar la asesoría
+            asesoriasRepositorio.delete(asesoria.get());
+
+            // Redireccionar
+            return "redirect:/asesorias?remid=" + id;
+        }
+
+        // Redireccionar
+        return "redirect:/asesorias?noid=" + id;
+    }
+
 }
