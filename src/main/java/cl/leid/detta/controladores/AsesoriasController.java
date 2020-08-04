@@ -127,6 +127,17 @@ public class AsesoriasController {
         return "redirect:/login";
     }
 
+    /**
+     * Muestra los detalles de la {@link Asesoria} seleccionada
+     * 
+     * @param id      identificador numérico de la {@link Asesoria}
+     * @param request objeto {@link HttpServletRequest} con la información de la
+     *                solicitud que le hace el cliente al {@link HttpServlet}
+     * @param auth    objeto {@link Authentication} con la información del
+     *                {@link Usuario} autenticado
+     * @param model   objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
     @GetMapping(path = "/{id}")
     public String verDetalles(@PathVariable int id, HttpServletRequest request, Authentication auth, Model model) {
         // Buscar información de la Asesoría
