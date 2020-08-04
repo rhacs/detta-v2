@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cl.leid.detta.Constantes;
@@ -222,41 +225,67 @@ public class AsesoriasController {
      * Muestra el formulario para agregar/editar una {@link Asesoria}
      * 
      * @param id    identificador numérico de la {@link Asesoria}
-     * @param auth  objeto {@link Authentication} con la información del
-     *              {@link Usuario} autenticado
      * @param model objeto {@link Model} con el modelo de la vista
      * @return un objeto {@link String} con la respuesta a la solicitud
      */
     @GetMapping(path = { "/{id}/editar", "/agregar" })
-    public String formulario(@PathVariable Optional<Integer> id, Authentication auth, Model model) {
-        // Buscar información del usuario autenticado
-        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+    public String formulario(@PathVariable Optional<Integer> id, Model model) {
+        // Inicializar objeto asesoría
+        Asesoria asesoria = new Asesoria();
 
-        // Verificar si existe
-        if (usuario.isPresent()) {
-            // Inicializar objeto asesoría
-            Asesoria asesoria = new Asesoria();
+        // Verificar si el id está presente en la URL
+        if (id.isPresent()) {
+            // Buscar información de la asesoria
+            Optional<Asesoria> aux = asesoriasRepositorio.findById(id.get());
 
-            // Verificar si el id está presente en la URL
-            if (id.isPresent()) {
-                // Buscar información de la asesoria
-                Optional<Asesoria> aux = asesoriasRepositorio.findById(id.get());
-
-                // Verificar si existe
-                if (aux.isPresent()) {
-                    // Reemplazar asesoria
-                    asesoria = aux.get();
-                }
+            // Verificar si existe
+            if (aux.isPresent()) {
+                // Reemplazar asesoria
+                asesoria = aux.get();
             }
+        }
 
+        // Buscar todos los profesionales
+        List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by("usuario.nombre"));
+
+        // Buscar todos los clientes
+        List<Cliente> clientes = clientesRepositorio.findAll(Sort.by("usuario.nombre", "rut"));
+
+        // Agregar objetos al modelo
+        model.addAttribute("asesoria", asesoria);
+        model.addAttribute("profesionales", profesionales);
+        model.addAttribute("clientes", clientes);
+
+        // Mostrar formulario
+        return "asesorias/formulario";
+    }
+
+    // Solicitudes POST
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Procesa el formulario cuando se edita/agrega una {@link Asesoria}
+     * 
+     * @param id            identificador numérico de la {@link Asesoria}
+     * @param asesoria      objeto {@link Asesoria} con la información a
+     *                      agregar/editar
+     * @param bindingResult objeto {@link BindingResult} con los errores de
+     *                      validación
+     * @param model         objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @PostMapping(path = { "/{id:\\d+}/editar", "/agregar" })
+    public String procesarFormulario(@PathVariable Optional<Integer> id, @Valid Asesoria asesoria,
+            BindingResult bindingResult, Model model) {
+        // Verificar si hay errores
+        if (bindingResult.hasErrors()) {
             // Buscar todos los profesionales
-            List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by("nombre"));
+            List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by("usuario.nombre"));
 
             // Buscar todos los clientes
-            List<Cliente> clientes = clientesRepositorio.findAll(Sort.by("nombre", "rut"));
+            List<Cliente> clientes = clientesRepositorio.findAll(Sort.by("usuario.nombre", "rut"));
 
             // Agregar objetos al modelo
-            model.addAttribute("asesoria", asesoria);
             model.addAttribute("profesionales", profesionales);
             model.addAttribute("clientes", clientes);
 
@@ -264,8 +293,17 @@ public class AsesoriasController {
             return "asesorias/formulario";
         }
 
+        // Guardar asesoría
+        asesoria = asesoriasRepositorio.save(asesoria);
+
+        // Depuración
+        if (id.isPresent())
+            logger.info("[WEB] Se editó una Asesoría: /asesorias/" + asesoria.getId());
+        else
+            logger.info("[WEB] Se agregó una nueva Asesoría: /asesorias/" + asesoria.getId());
+
         // Redireccionar
-        return "redirect:/login";
+        return "redirect:/asesorias/" + asesoria.getId();
     }
 
 }
