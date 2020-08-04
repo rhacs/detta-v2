@@ -81,6 +81,17 @@ public class ErrorResponse {
         errorDetails.add(new ErrorDetail(campo, mensaje));
     }
 
+    /**
+     * Agrega un nuevo error al listado
+     * 
+     * @param campo          nombre del campo donde se produjo el error
+     * @param mensaje        mensaje con los detalles del error
+     * @param valorRechazado valor rechazado
+     */
+    public void agregarError(String campo, String mensaje, Object valorRechazado) {
+        errorDetails.add(new ErrorDetail(campo, mensaje, valorRechazado));
+    }
+
     // Getters
     // -----------------------------------------------------------------------------------------
 
