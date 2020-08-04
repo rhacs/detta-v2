@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -129,6 +130,29 @@ public class CapacitacionesRestController {
         // Lanzar excepción
         throw new ConflictException(
                 messageSource.getMessage("api.conflict", new Object[] { id, capacitacion.getId() }, locale), "id", id);
+    }
+
+    // Solicitudes DELETE
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Elimina un registro del repositorio
+     * 
+     * @param id     identificador numérico de la {@link Capacitacion}
+     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @DeleteMapping(path = "/{id:\\d+}")
+    public ResponseEntity<Capacitacion> eliminarRegistro(@PathVariable int id, Locale locale) {
+        // Buscar información de la capacitación
+        Capacitacion aux = capacitacionesRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
+                messageSource.getMessage("api.notfound", new Object[] { id }, locale)));
+
+        // Eliminar registro
+        capacitacionesRepositorio.deleteById(id);
+
+        // Crear respuesta
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(aux);
     }
 
 }
