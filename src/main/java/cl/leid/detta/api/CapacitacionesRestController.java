@@ -14,10 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.leid.detta.api.exceptions.ConflictException;
 import cl.leid.detta.api.exceptions.EmptyRepositoryException;
 import cl.leid.detta.api.exceptions.InformationNotFoundException;
 import cl.leid.detta.modelos.Capacitacion;
@@ -94,6 +96,39 @@ public class CapacitacionesRestController {
 
         // Crear respuesta
         return ResponseEntity.status(HttpStatus.CREATED).body(capacitacion);
+    }
+
+    // Solicitudes PUT
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Edita la información de un registro
+     * 
+     * @param id           identificador numérico de la {@link Capacitacion}
+     * @param capacitacion objeto {@link Capacitacion} con la información a editar
+     * @param locale       objeto {@link Locale} con la información regional del
+     *                     cliente
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @PutMapping(path = "/{id:\\d+}")
+    public ResponseEntity<Capacitacion> editarRegistro(@PathVariable int id,
+            @RequestBody @Valid Capacitacion capacitacion, Locale locale) {
+        // Buscar información de la capacitación
+        Capacitacion aux = capacitacionesRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
+                messageSource.getMessage("api.notfound", new Object[] { id }, locale)));
+
+        // Verificar si corresponse
+        if (aux.getId() == capacitacion.getId()) {
+            // Guardar cambios
+            capacitacion = capacitacionesRepositorio.save(capacitacion);
+
+            // Crear respuesta
+            return ResponseEntity.ok(capacitacion);
+        }
+
+        // Lanzar excepción
+        throw new ConflictException(
+                messageSource.getMessage("api.conflict", new Object[] { id, capacitacion.getId() }, locale), "id", id);
     }
 
 }
