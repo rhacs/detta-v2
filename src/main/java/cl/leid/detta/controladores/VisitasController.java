@@ -80,4 +80,48 @@ public class VisitasController {
         return "redirect:/asesorias?noid=" + as;
     }
 
+    /**
+     * Muestra el formulario para agregar/editar una {@link Visita}
+     * 
+     * @param as    identificador numérico de la {@link Asesoria}
+     * @param id    identificador numérico de la {@link Visita}
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = { "/agregar", "/{id:\\d+}/editar" })
+    public String mostrarFormulario(@PathVariable int as, @PathVariable Optional<Integer> id, Model model) {
+        // Buscar información de la asesoría
+        Optional<Asesoria> asesoria = asesoriasRepositorio.findById(as);
+
+        // Verificar si existe
+        if (asesoria.isPresent()) {
+            // Inicializar visita
+            Visita visita = new Visita();
+
+            // Verificiar si el id está presente en la url
+            if (id.isPresent()) {
+                // Buscar información de la visita
+                Optional<Visita> aux = visitasRepositorio.findById(id.get());
+
+                // Verificar si no existe
+                if (aux.isEmpty()) {
+                    // Redireccionar
+                    return "redirect:/asesoria/" + as + "?noid=" + id;
+                }
+
+                // Reemplazar visita
+                visita = aux.get();
+            }
+
+            // Agregar visita al modelo
+            model.addAttribute("visita", visita);
+
+            // Mostrar formulario
+            return "asesorias/visitas.formulario";
+        }
+
+        // Redireccionar
+        return "redirect:/asesorias?noid=" + as;
+    }
+
 }
