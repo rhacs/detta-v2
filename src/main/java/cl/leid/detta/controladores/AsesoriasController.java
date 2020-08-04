@@ -298,9 +298,9 @@ public class AsesoriasController {
 
         // Depuración
         if (id.isPresent())
-            logger.info("[WEB] Se editó una Asesoría: /asesorias/" + asesoria.getId());
+            logger.info("[WEB] Se editó una Asesoría: /asesorias/{}", asesoria.getId());
         else
-            logger.info("[WEB] Se agregó una nueva Asesoría: /asesorias/" + asesoria.getId());
+            logger.info("[WEB] Se agregó una nueva Asesoría: /asesorias/{}", asesoria.getId());
 
         // Redireccionar
         return "redirect:/asesorias/" + asesoria.getId();
