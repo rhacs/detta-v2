@@ -312,7 +312,7 @@ public class AsesoriasController {
      * @param id identificador numérico de la {@link Asesoria}
      * @return un objeto {@link String} con la respuesta a la solicitud
      */
-    @PostMapping(path = "/{id:\\d+}")
+    @PostMapping(path = "/{id:\\d+}/eliminar")
     public String eliminarAsesoria(@PathVariable int id) {
         // Obtener información de la asesoría
         Optional<Asesoria> asesoria = asesoriasRepositorio.findById(id);
