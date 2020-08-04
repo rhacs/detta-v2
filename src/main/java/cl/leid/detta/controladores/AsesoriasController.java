@@ -218,4 +218,54 @@ public class AsesoriasController {
         return "redirect:/asesorias?noid=" + id;
     }
 
+    /**
+     * Muestra el formulario para agregar/editar una {@link Asesoria}
+     * 
+     * @param id    identificador numérico de la {@link Asesoria}
+     * @param auth  objeto {@link Authentication} con la información del
+     *              {@link Usuario} autenticado
+     * @param model objeto {@link Model} con el modelo de la vista
+     * @return un objeto {@link String} con la respuesta a la solicitud
+     */
+    @GetMapping(path = { "/{id}/editar", "/agregar" })
+    public String formulario(@PathVariable Optional<Integer> id, Authentication auth, Model model) {
+        // Buscar información del usuario autenticado
+        Optional<Usuario> usuario = usuariosRepositorio.findByEmail(auth.getName());
+
+        // Verificar si existe
+        if (usuario.isPresent()) {
+            // Inicializar objeto asesoría
+            Asesoria asesoria = new Asesoria();
+
+            // Verificar si el id está presente en la URL
+            if (id.isPresent()) {
+                // Buscar información de la asesoria
+                Optional<Asesoria> aux = asesoriasRepositorio.findById(id.get());
+
+                // Verificar si existe
+                if (aux.isPresent()) {
+                    // Reemplazar asesoria
+                    asesoria = aux.get();
+                }
+            }
+
+            // Buscar todos los profesionales
+            List<Profesional> profesionales = profesionalesRepositorio.findAll(Sort.by("nombre"));
+
+            // Buscar todos los clientes
+            List<Cliente> clientes = clientesRepositorio.findAll(Sort.by("nombre", "rut"));
+
+            // Agregar objetos al modelo
+            model.addAttribute("asesoria", asesoria);
+            model.addAttribute("profesionales", profesionales);
+            model.addAttribute("clientes", clientes);
+
+            // Mostrar formulario
+            return "asesorias/formulario";
+        }
+
+        // Redireccionar
+        return "redirect:/login";
+    }
+
 }
