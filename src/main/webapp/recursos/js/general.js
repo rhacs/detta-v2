@@ -33,9 +33,27 @@ $(function() {
 
             // Redireccionar
             $(location).attr('href', '/detta/' + tipo + '/agregar');
-        } else if(accion === 'cancelar') {
+        } else if (accion === 'cancelar') {
             // Volver atrás
             history.back(1);
+        } else if (accion === 'visita') {
+            // Obtener id de la asesoria
+            let asesoriaId = $(this).data('asesoria');
+
+            // Obtener método
+            let method = $(this).data('method');
+
+            // Filtrar método
+            if (method === 'add') {
+                // Redireccionar
+                $(location).attr('href', '/detta/asesorias/' + asesoriaId + '/visitas/agregar');
+            } else if (method === 'show') {
+                // Obtener id de la visita
+                let visitaId = $(this).data('visita');
+
+                // Redireccionar
+                $(location).attr('href', '/detta/asesorias/' + asesoriaId + '/visitas/' + visitaId);
+            }
         }
     });
 });
