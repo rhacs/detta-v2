@@ -14,10 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.leid.detta.api.exceptions.ConflictException;
 import cl.leid.detta.api.exceptions.EmptyRepositoryException;
 import cl.leid.detta.api.exceptions.InformationNotFoundException;
 import cl.leid.detta.modelos.Asesoria;
@@ -93,6 +95,38 @@ public class AsesoriasRestController {
 
         // Crear respuesta
         return ResponseEntity.status(HttpStatus.CREATED).body(asesoria);
+    }
+
+    // Solicitudes PUT
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Edita la información de un registro en el repositorio
+     * 
+     * @param id       identificador numérico de la {@link Asesoria}
+     * @param asesoria objeto {@link Asesoria} con la información a actualizar
+     * @param locale   objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @PutMapping(path = "/{id:\\d+}")
+    public ResponseEntity<Asesoria> editarRegistro(@PathVariable int id, @RequestBody @Valid Asesoria asesoria,
+            Locale locale) {
+        // Buscar información de la asesoría
+        Asesoria aux = asesoriasRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
+                messageSource.getMessage("api.notfound", new Object[] { id }, locale)));
+
+        // Verificar si corresponde
+        if (aux.getId() == asesoria.getId()) {
+            // Guardar cambios
+            asesoria = asesoriasRepositorio.save(asesoria);
+
+            // Crear respuesta
+            return ResponseEntity.status(HttpStatus.OK).body(asesoria);
+        }
+
+        // Lanzar excepción
+        throw new ConflictException(
+                messageSource.getMessage("api.conflict", new Object[] { id, asesoria.getId() }, locale), "id", id);
     }
 
 }
