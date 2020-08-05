@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"cl.leid.detta.api"},{"l":"cl.leid.detta.api.exceptions"},{"l":"cl.leid.detta.controladores"},{"l":"cl.leid.detta.handlers"},{"l":"cl.leid.detta.repositorios"}]
