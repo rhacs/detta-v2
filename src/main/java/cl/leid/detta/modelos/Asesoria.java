@@ -1,6 +1,8 @@
 package cl.leid.detta.modelos;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -103,6 +106,12 @@ public class Asesoria {
     private String direccion;
 
     /**
+     * {@link Visita}s de la {@link Asesoria}
+     */
+    @OneToMany(mappedBy = "asesoria")
+    private Set<Visita> visitas;
+
+    /**
      * Objeto {@link Cliente} que está relacionado con la {@link Asesoria}
      */
     @OneToOne(optional = false)
@@ -123,7 +132,17 @@ public class Asesoria {
      * Crea una nueva instancia vacía del objeto {@link Asesoria}
      */
     public Asesoria() {
+        visitas = new HashSet<>();
+    }
 
+    // Métodos
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * @return la cantidad de {@link Visita}s de la {@link Asesoria}
+     */
+    public int cantidadVisitas() {
+        return visitas.size();
     }
 
     // Getters
@@ -186,10 +205,17 @@ public class Asesoria {
     }
 
     /**
-     * @return dirección donde se llevará a cabo la sesoría
+     * @return dirección donde se llevará a cabo la asesoría
      */
     public String getDireccion() {
         return direccion;
+    }
+
+    /**
+     * @return las {@link Visita}s de la {@link Asesoria}
+     */
+    public Set<Visita> getVisitas() {
+        return visitas;
     }
 
     /**
@@ -276,6 +302,13 @@ public class Asesoria {
     }
 
     /**
+     * @param visitas las {@link Visita}s a establecer
+     */
+    public void setVisitas(Set<Visita> visitas) {
+        this.visitas = visitas;
+    }
+
+    /**
      * @param cliente El objeto {@link Cliente} al cual hace referencia
      */
     public void setCliente(Cliente cliente) {
@@ -296,7 +329,9 @@ public class Asesoria {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+
         result = prime * result + id;
+
         return result;
     }
 
@@ -304,13 +339,18 @@ public class Asesoria {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
+
         if (obj == null)
             return false;
+
         if (getClass() != obj.getClass())
             return false;
+
         Asesoria other = (Asesoria) obj;
+
         if (id != other.id)
             return false;
+
         return true;
     }
 
@@ -318,8 +358,8 @@ public class Asesoria {
     public String toString() {
         return "Asesoria [id=" + id + ", tema=" + tema + ", descripcion=" + descripcion + ", fiscalizador="
                 + fiscalizador + ", departamento=" + departamento + ", estado=" + estado + ", fecha=" + fecha
-                + ", hora=" + hora + ", direccion=" + direccion + ", cliente=" + cliente + ", profesional="
-                + profesional + "]";
+                + ", hora=" + hora + ", direccion=" + direccion + ", visitas=" + visitas + ", cliente=" + cliente
+                + ", profesional=" + profesional + "]";
     }
 
 }
