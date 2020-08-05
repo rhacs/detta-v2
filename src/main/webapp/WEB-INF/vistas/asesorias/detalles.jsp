@@ -47,6 +47,14 @@
                         <div class="alert alert-warning mt-4">${error}</div>
                     </core:if>
 
+                    <core:if test="${not empty param.noid}">
+                        <div class="alert alert-warning mt-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                    </core:if>
+
+                    <core:if test="${not empty param.remid}">
+                        <div class="alert alert-success mt-4"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
+                    </core:if>
+
                     <div class="table-responsive mt-4">
                         <table class="table table-striped">
                             <tbody>
@@ -116,7 +124,7 @@
 
                         <sec:authorize access="hasAnyAuthority('ROLE_ADMIN', 'ROLE_STAFF')">
                             <div class="col-2 text-right">
-                                <button type="button" class="btn btn-sm btn-primary" data-action="visita" data-asesoria="${asesoria.getId()}">
+                                <button type="button" class="btn btn-sm btn-primary" data-action="visita" data-method="add" data-asesoria="${asesoria.getId()}">
                                     <i class="fas fa-plus-square fa-fw"></i>
                                 </button>
                             </div>
@@ -135,12 +143,18 @@
 
                             <tbody>
                                 <core:choose>
-                                    <core:when test="${visitas != null && visitas.size() > 0}">
-                                        <core:forEach items="${visitas}" var="visita">
-                                            <tr role="button">
+                                    <core:when test="${asesoria.getVisitas() != null && asesoria.getVisitas().size() > 0}">
+                                        <core:forEach items="${asesoria.getVisitas()}" var="visita">
+                                            <tr role="button" data-action="visita" data-method="show" data-asesoria="${visita.getAsesoria().getId()}" data-visita="${visita.getId()}">
                                                 <td class="text-nowrap">${visita.getFecha()}</td>
                                                 <td class="text-nowrap">${visita.getHora()}</td>
-                                                <td>${visita.getMotivo()}</td>
+                                                <td>
+                                                <core:choose>
+                                                    <core:when test="${visita.getMotivo() == 1}"><spring:message code="form.label.reason.accident" /></core:when>
+                                                    <core:when test="${visita.getMotivo() == 2}"><spring:message code="form.label.reason.inspection" /></core:when>
+                                                    <core:otherwise><spring:message code="form.label.reason.prevention" /></core:otherwise>
+                                                </core:choose>
+                                                </td>
                                             </tr>
                                         </core:forEach>
                                     </core:when>
