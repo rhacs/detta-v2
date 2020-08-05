@@ -57,13 +57,6 @@
                                 <spring:message code="titles.consulting" />
                             </a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link ${fn:contains(uri, 'visitas') ? 'active' : ''}" href="<core:url value="/visitas" />">
-                                <i class="fas fa-calendar-check fa-fw mr-1"></i>
-                                <spring:message code="titles.visits" />
-                            </a>
-                        </li>
                     </ul>
 
                     <h6 class="text-black-50 font-weight-bold mt-5 mb-2 text-uppercase">
