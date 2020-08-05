@@ -35,14 +35,22 @@ class UsuariosRestControllerTest {
 
     @Test
     void verListadoTest() throws Exception {
+        // Simular petición a la API
         MvcResult resultado = mvc
                 .perform(
-                        get("/api/usuarios").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn();
+                        get("/api/usuarios")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(
+                        status()
+                        .isOk()
+                ).andReturn();
 
+        // Convertir el resultado a String
         String content = resultado.getResponse().getContentAsString();
 
-        assertTrue(content.contains("admin"));
+        // Validar resultado
+        assertTrue(content.contains("admin@detta.cl"));
     }
 
 }
