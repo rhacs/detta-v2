@@ -54,12 +54,6 @@
 
         <!-- Protección CSRF -->
         <csrf token-repository-ref="tokenRepository" disabled="false" />
-
-        <!-- Prevenir al usuario acceder al sitio con multiples cuentas/sesiones -->
-        <session-management invalid-session-url="/login?timeout=true">
-            <concurrency-control error-if-maximum-exceeded="true"
-                max-sessions="1" />
-        </session-management>
     </http>
 
     <beans:bean id="tokenRepository"
