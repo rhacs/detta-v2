@@ -27,7 +27,7 @@ import cl.leid.detta.modelos.Asesoria;
 import cl.leid.detta.repositorios.AsesoriasRepositorio;
 
 @RestController
-@RequestMapping(path = "/asesorias")
+@RequestMapping(path = "/api/asesorias")
 public class AsesoriasRestController {
 
     // Atributos

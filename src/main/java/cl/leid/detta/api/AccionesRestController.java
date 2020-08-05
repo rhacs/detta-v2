@@ -25,7 +25,7 @@ import cl.leid.detta.modelos.Accion;
 import cl.leid.detta.repositorios.AccionesRepositorio;
 
 @RestController
-@RequestMapping(path = "/acciones")
+@RequestMapping(path = "/api/acciones")
 public class AccionesRestController {
 
     // Atributos

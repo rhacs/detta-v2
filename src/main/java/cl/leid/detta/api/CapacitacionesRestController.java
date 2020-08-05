@@ -27,7 +27,7 @@ import cl.leid.detta.modelos.Capacitacion;
 import cl.leid.detta.repositorios.CapacitacionesRepositorio;
 
 @RestController
-@RequestMapping(path = "/capacitaciones")
+@RequestMapping(path = "/api/capacitaciones")
 public class CapacitacionesRestController {
 
     // Atributos
