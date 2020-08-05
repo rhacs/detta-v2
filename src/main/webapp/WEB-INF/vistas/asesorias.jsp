@@ -32,13 +32,54 @@
                     </div>
 
                     <core:if test="${not empty param.noid}">
-                        <div class="alert alert-warning"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
+                        <div class="alert alert-warning mb-4"><spring:message code="form.error.noid" arguments="${param.noid}" /></div>
                     </core:if>
 
                     <core:if test="${not empty param.remid}">
-                        <div class="alert alert-success"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
+                        <div class="alert alert-success mb-4"><spring:message code="form.success.delete" arguments="${param.remid}" /></div>
                     </core:if>
 
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.date" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.time" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.topic" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.visits" /></th>
+                                    <th scope="col" class="text-nowrap"><spring:message code="form.label.status" /></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <core:choose>
+                                    <core:when test="${asesorias != null && asesorias.size() > 0}">
+                                        <core:forEach items="${asesorias}" var="asesoria">
+                                        <tr role="button" data-member="asesorias" data-id="${asesoria.getId()}">
+                                            <td class="text-nowrap">${asesoria.getFecha()}</td>
+                                            <td class="text-nowrap">${asesoria.getHora()}</td>
+                                            <td>${asesoria.getTema()}</td>
+                                            <td class="text-nowrap text-right">${asesoria.cantidadVisitas()}</td>
+                                            <td class="text-nowrap">
+                                                <core:choose>
+                                                    <core:when test="${asesoria.getEstado() == 1}"><spring:message code="form.label.status.pendiente" /></core:when>
+                                                    <core:when test="${asesoria.getEstado() == 2}"><spring:message code="form.label.status.en_proceso" /></core:when>
+                                                    <core:otherwise><spring:message code="form.label.status.realizado" /></core:otherwise>
+                                                </core:choose>
+                                            </td>
+                                        </tr>
+                                        </core:forEach>
+                                    </core:when>
+
+                                    <core:otherwise>
+                                    <tr>
+                                        <th scope="row" class="text-center" colspan="5"><spring:message code="form.error.no_info" /></th>
+                                    </tr>
+                                    </core:otherwise>
+                                </core:choose>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- /Principal -->
             </div>
