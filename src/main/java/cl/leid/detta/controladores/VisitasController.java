@@ -63,10 +63,10 @@ public class VisitasController {
             // Verificar si existe
             if (visita.isPresent()) {
                 // Agregar visita al modelo
-                model.addAttribute("visita", visita);
+                model.addAttribute("visita", visita.get());
 
                 // Mostrar detalles
-                return "asesorias/visita.detalle";
+                return "asesorias/visitas.detalles";
             }
 
             // Depuración
@@ -101,6 +101,7 @@ public class VisitasController {
         if (asesoria.isPresent()) {
             // Inicializar visita
             Visita visita = new Visita();
+            visita.setAsesoria(asesoria.get());
 
             // Verificiar si el id está presente en la url
             if (id.isPresent()) {
@@ -110,7 +111,7 @@ public class VisitasController {
                 // Verificar si no existe
                 if (!aux.isPresent()) {
                     // Redireccionar
-                    return "redirect:/asesoria/" + as + "?noid=" + id;
+                    return "redirect:/asesorias/" + as + "?noid=" + id;
                 }
 
                 // Reemplazar visita
