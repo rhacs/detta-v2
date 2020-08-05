@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -42,6 +43,7 @@ public class Visita {
     /**
      * Fecha en la que se realizara la {@link Visita}
      */
+    @NotNull
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
@@ -66,10 +68,11 @@ public class Visita {
      * <ul>
      * <li>1: Accidente</li>
      * <li>2: Fiscalización</li>
+     * <li>3: Prevención</li>
      * </ul>
      */
     @Min(1)
-    @Max(2)
+    @Max(3)
     @Column(name = "motivo", nullable = false)
     private int motivo;
 
