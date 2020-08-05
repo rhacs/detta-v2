@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -86,6 +88,7 @@ public class Asesoria {
     /**
      * Fecha para cuando está programada la {@link Asesoria}
      */
+    @NotNull
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
@@ -108,7 +111,7 @@ public class Asesoria {
     /**
      * {@link Visita}s de la {@link Asesoria}
      */
-    @OneToMany(mappedBy = "asesoria")
+    @OneToMany(mappedBy = "asesoria", fetch = FetchType.EAGER)
     private Set<Visita> visitas;
 
     /**
