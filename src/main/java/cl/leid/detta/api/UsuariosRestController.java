@@ -104,7 +104,7 @@ public class UsuariosRestController {
      * @param usuario objeto {@link Usuario} con la información a agregar
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @PostMapping(path = "/new")
+    @PostMapping
     public ResponseEntity<Usuario> agregarRegistro(@RequestBody @Valid Usuario usuario) {
         // Codificar contraseña
         usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getPassword()));
@@ -130,7 +130,7 @@ public class UsuariosRestController {
      * @param locale  objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @PutMapping(path = "/{id:\\d+}/edit")
+    @PutMapping(path = "/{id:\\d+}")
     public ResponseEntity<Usuario> editarRegistro(@RequestBody @Valid Usuario usuario, @PathVariable int id,
             Locale locale) {
         // Buscar información del Usuario
@@ -162,7 +162,7 @@ public class UsuariosRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @DeleteMapping(path = "/{id:\\d+}/del")
+    @DeleteMapping(path = "/{id:\\d+}")
     public ResponseEntity<Usuario> eliminarRegistro(@PathVariable int id, Locale locale) {
         // Buscar información del registro
         Optional<Usuario> usuario = usuariosRepositorio.findById(id);
