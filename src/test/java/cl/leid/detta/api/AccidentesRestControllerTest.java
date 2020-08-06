@@ -41,4 +41,11 @@ class AccidentesRestControllerTest {
                 .andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$[1].id", is(121)));
     }
 
+    @Test
+    void verDetallesElementShouldExist() throws Exception {
+        mvc.perform(get("/api/accidentes/{id}", 4).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.fecha").exists());
+    }
+
 }
