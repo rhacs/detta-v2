@@ -11,6 +11,10 @@
         <!-- Título de la página -->
         <title>detta <core:if test="${not empty titulo}"> [${titulo}]</core:if></title>
 
+        <!-- Favicons -->
+        <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/res/img/detta-32.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="${pageContext.request.contextPath}/res/img/detta-192.png">
+
         <!-- Hojas de Estilo -->
         <!-- Bootstrap -->
         <link rel="stylesheet"
@@ -31,6 +35,6 @@
             crossorigin="anonymous" />
 
         <!-- detta -->
-        <link rel="stylesheet" href="<core:url value="/res/css/estilo.css" />">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilo.css">
     </head>
     <!-- /Head -->
