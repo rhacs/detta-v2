@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +58,7 @@ public class UsuariosRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<Usuario>> verListado(Locale locale) {
         // Obtener listado de Usuarios
@@ -82,6 +84,7 @@ public class UsuariosRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @GetMapping(path = "/{id:\\d+}")
     public ResponseEntity<Usuario> verDetalles(@PathVariable int id, Locale locale) {
         // Buscar información del usuario
@@ -104,6 +107,7 @@ public class UsuariosRestController {
      * @param usuario objeto {@link Usuario} con la información a agregar
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Usuario> agregarRegistro(@RequestBody @Valid Usuario usuario) {
         // Codificar contraseña
@@ -130,6 +134,7 @@ public class UsuariosRestController {
      * @param locale  objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @PutMapping(path = "/{id:\\d+}")
     public ResponseEntity<Usuario> editarRegistro(@RequestBody @Valid Usuario usuario, @PathVariable int id,
             Locale locale) {
@@ -162,6 +167,7 @@ public class UsuariosRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(path = "/{id:\\d+}")
     public ResponseEntity<Usuario> eliminarRegistro(@PathVariable int id, Locale locale) {
         // Buscar información del registro
