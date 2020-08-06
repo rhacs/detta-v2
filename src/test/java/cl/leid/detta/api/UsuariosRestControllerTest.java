@@ -1,19 +1,19 @@
 package cl.leid.detta.api;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -35,22 +35,22 @@ class UsuariosRestControllerTest {
 
     @Test
     void verListadoTest() throws Exception {
-        // Simular petición a la API
-        MvcResult resultado = mvc
-                .perform(
-                        get("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(
-                        status()
-                        .isOk()
-                ).andReturn();
+        mvc.perform(get("/api/usuarios").contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$[0].nombre").value("Administrador Uno"));
+    }
 
-        // Convertir el resultado a String
-        String content = resultado.getResponse().getContentAsString();
+    @Test
+    void verDetallesShouldExistTest() throws Exception {
+        mvc.perform(get("/api/usuarios/{id}", 2).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.nombre").value("Profesional Uno"));
+    }
 
-        // Validar resultado
-        assertTrue(content.contains("admin@detta.cl"));
+    @Test
+    void verDetallesShouldNotExistTest() throws Exception {
+        mvc.perform(get("/api/usuarios/{id}", 44).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 }
