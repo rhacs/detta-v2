@@ -10,7 +10,7 @@ import cl.leid.detta.modelos.Visita;
 
 public interface VisitasRepositorio extends JpaRepository<Visita, Integer> {
     
-    public List<Asesoria> findByAsesoria(Asesoria asesoria);
-    public List<Asesoria> findByAsesoria(Asesoria asesoria, Sort sort);
+    public List<Visita> findByAsesoria(Asesoria asesoria);
+    public List<Visita> findByAsesoria(Asesoria asesoria, Sort sort);
 
 }
