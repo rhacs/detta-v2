@@ -10,13 +10,14 @@
         http://www.springframework.org/schema/security/spring-security.xsd
         ">
 
+    <global-method-security pre-post-annotations="enabled" />
+
     <!-- Configuración de seguridad -->
     <http>
         <!-- Interceptores: Permitir acceso a todos -->
         <intercept-url pattern="/login" access="permitAll" />
         <intercept-url pattern="/logout" access="permitAll" />
         <intercept-url pattern="/res/**" access="permitAll" />
-        <intercept-url pattern="/api/**" access="permitAll" />
 
         <!-- Interceptores: Permitir acceso sólo a administradores -->
         <intercept-url pattern="/profesionales/**" access="hasAuthority('ROLE_ADMIN')" />
@@ -52,12 +53,9 @@
         <logout delete-cookies="JSESSIONID" invalidate-session="true"
             logout-success-url="/login?logout=true" logout-url="/logout" />
 
-        <!-- Protección CSRF -->
-        <csrf token-repository-ref="tokenRepository" disabled="false" />
+        <!-- Desactivar CSRF -->
+        <csrf disabled="true" />
     </http>
-
-    <beans:bean id="tokenRepository"
-        class="org.springframework.security.web.csrf.CookieCsrfTokenRepository" />
 
     <!-- Administrador de Autenticación -->
     <authentication-manager>
