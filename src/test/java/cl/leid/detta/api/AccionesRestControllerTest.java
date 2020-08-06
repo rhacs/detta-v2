@@ -45,4 +45,10 @@ class AccionesRestControllerTest {
                 .andExpect(jsonPath("$.detalles").value("Eliminó una capacitación: 1"));
     }
 
+    @Test
+    void verDetallesShouldNotExistTest() throws Exception {
+        mvc.perform(get("/api/acciones/{id}", 100).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isNotFound()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
 }
