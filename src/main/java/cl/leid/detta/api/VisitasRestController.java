@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -113,6 +114,27 @@ public class VisitasRestController {
 
         // Devolver respuesta
         return ResponseEntity.status(HttpStatus.CREATED).body(visita);
+    }
+
+    // Solicitudes PUT
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Edita la información de un registro en el repositorio
+     * 
+     * @param as     identificador numérico de la {@link Asesoria}
+     * @param id     identificador numérico de la {@link Visita}
+     * @param visita objeto {@link Visita} con los cambios a almacenar
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @PutMapping(path = "/{id:\\d+}")
+    public ResponseEntity<Visita> editarRegistro(@PathVariable int as, @PathVariable int id,
+            @RequestBody @Valid Visita visita) {
+        // Guardar cambios
+        visita = visitasRepositorio.save(visita);
+
+        // Devolver respuesta
+        return ResponseEntity.status(HttpStatus.OK).body(visita);
     }
 
 }
