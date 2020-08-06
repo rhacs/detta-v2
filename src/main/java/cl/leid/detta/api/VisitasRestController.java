@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.leid.detta.api.exceptions.ConflictException;
 import cl.leid.detta.api.exceptions.EmptyRepositoryException;
 import cl.leid.detta.api.exceptions.InformationNotFoundException;
 import cl.leid.detta.modelos.Asesoria;
@@ -79,6 +80,12 @@ public class VisitasRestController {
         // Buscar información de la visita
         Visita visita = visitasRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
                 messageSource.getMessage("api.notfound", new Object[] { id }, locale)));
+
+        // Verificar si la visita no le pertenece a la asesoria
+        if (!visita.getAsesoria().equals(asesoria)) {
+            throw new ConflictException(
+                    messageSource.getMessage("api.asesoria_visita", new Object[] { id, as }, locale), "id", id);
+        }
 
         // Devolver objeto
         return ResponseEntity.ok(visita);
