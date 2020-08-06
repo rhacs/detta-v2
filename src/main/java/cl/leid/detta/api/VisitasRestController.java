@@ -62,4 +62,26 @@ public class VisitasRestController {
         return ResponseEntity.ok(visitas);
     }
 
+    /**
+     * Muestra el detalle de la {@link Visita} solicitada
+     * 
+     * @param as     identificador numérico de la {@link Asesoria}
+     * @param id     identificador numérico de la {@link Visita}
+     * @param locale objeto {@link Locale} con la información regional del cliente
+     * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
+     */
+    @GetMapping(path = "/{id:\\d+}")
+    public ResponseEntity<Visita> verDetalles(@PathVariable int as, @PathVariable int id, Locale locale) {
+        // Buscar información de la asesoría
+        Asesoria asesoria = asesoriasRepositorio.findById(as).orElseThrow(() -> new InformationNotFoundException(
+                messageSource.getMessage("api.notfound", new Object[] { as }, locale)));
+
+        // Buscar información de la visita
+        Visita visita = visitasRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
+                messageSource.getMessage("api.notfound", new Object[] { id }, locale)));
+
+        // Devolver objeto
+        return ResponseEntity.ok(visita);
+    }
+
 }
