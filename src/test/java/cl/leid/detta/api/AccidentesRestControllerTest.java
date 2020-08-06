@@ -48,4 +48,11 @@ class AccidentesRestControllerTest {
                 .andExpect(jsonPath("$.fecha").exists());
     }
 
+    @Test
+    void verDetallesElementShouldNotExist() throws Exception {
+        mvc.perform(get("/api/accidentes/{id}", 1000).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isNotFound()).andExpect(jsonPath("$.httpStatus").isString())
+                .andExpect(jsonPath("$.httpStatus").value("NOT_FOUND"));
+    }
+
 }
