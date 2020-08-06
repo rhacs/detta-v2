@@ -93,7 +93,7 @@ public class AccionesRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @PostMapping(path = "/new")
+    @PostMapping
     public ResponseEntity<Accion> agregarRegistro(@RequestBody @Valid Accion accion, Locale locale) {
         // Guardar registro
         accion = accionesRepositorio.save(accion);

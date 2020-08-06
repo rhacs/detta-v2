@@ -82,7 +82,7 @@ public class AccidentesRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id:\\d+}")
     public ResponseEntity<Accidente> verDetalles(@PathVariable int id, Locale locale) {
         // Buscar información del Accidente
         Accidente accidente = accidentesRepositorio.findById(id).orElseThrow(() -> new InformationNotFoundException(
@@ -104,7 +104,7 @@ public class AccidentesRestController {
      * @param accidente objeto {@link Accidente} con la información a agregar
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @PostMapping(path = "/new")
+    @PostMapping
     public ResponseEntity<Accidente> agregarRegistro(@RequestBody @Valid Accidente accidente) {
         // Guardar accidente en el repositorio
         Accidente savedAccidente = accidentesRepositorio.save(accidente);
@@ -124,7 +124,7 @@ public class AccidentesRestController {
      *                  cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @PutMapping(path = "/edit")
+    @PutMapping(path = "/{id:\\d+}")
     public ResponseEntity<Accidente> editarRegistro(@RequestBody @Valid Accidente accidente, Locale locale) {
         // Guardar cambios
         accidentesRepositorio.save(accidente);
@@ -143,7 +143,7 @@ public class AccidentesRestController {
      * @param locale objeto {@link Locale} con la información regional del cliente
      * @return un objeto {@link ResponseEntity} con la respuesta a la solicitud
      */
-    @DeleteMapping(path = "/{id:\\d+}/del")
+    @DeleteMapping(path = "/{id:\\d+}")
     public ResponseEntity<Accidente> eliminarRegistro(@PathVariable int id, Locale locale) {
         // Buscar información del Accidente
         Optional<Accidente> accidente = accidentesRepositorio.findById(id);
