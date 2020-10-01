@@ -40,7 +40,7 @@
         <org.hibernate-version>5.4.21.Final</org.hibernate-version>
 
         <!-- Hibernate Validator Engine -->
-        <org.hibernate.validator-version>6.1.5.Final</org.hibernate.validator-version>
+        <org.hibernate.validator-version>6.1.6.Final</org.hibernate.validator-version>
 
         <!-- Jackson -->
         <com.fasterxml.jackson.core-version>2.11.2</com.fasterxml.jackson.core-version>
