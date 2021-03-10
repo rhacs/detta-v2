@@ -46,7 +46,7 @@
         <com.fasterxml.jackson.core-version>2.11.3</com.fasterxml.jackson.core-version>
 
         <!-- Json in Java -->
-        <org.json-version>20200518</org.json-version>
+        <org.json-version>20210307</org.json-version>
 
         <!-- Apache Log4j -->
         <org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
