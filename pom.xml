@@ -49,7 +49,7 @@
         <org.json-version>20200518</org.json-version>
 
         <!-- Apache Log4j -->
-        <org.apache.logging.log4j-version>2.15.0</org.apache.logging.log4j-version>
+        <org.apache.logging.log4j-version>2.17.0</org.apache.logging.log4j-version>
 
         <!-- JUnit Jupiter -->
         <org.junit.jupiter-version>5.7.0</org.junit.jupiter-version>
